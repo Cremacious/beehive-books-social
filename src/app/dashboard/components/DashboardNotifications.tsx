@@ -5,7 +5,7 @@ import { Bell, ChevronRight } from 'lucide-react';
 const NotificationPreview = ({
   text,
   time,
-  icon = <Bell size={18} className="text-[#252525]" />,
+  icon = <Bell size={18} className="text-[#FFC300]" />,
   unread = false,
 }: {
   text: string;
@@ -14,9 +14,7 @@ const NotificationPreview = ({
   unread?: boolean;
 }) => (
   <div
-    className={`flex items-center gap-3 py-3 px-3 rounded-xl transition group cursor-pointer border border-transparent hover:border-[#FFC300] hover:bg-[#f5d878] ${
-      unread ? 'bg-[#f5d878]' : 'bg-white'
-    }`}
+    className="flex items-center gap-3 py-3 px-3 rounded-xl transition group cursor-pointer border border-transparent hover:border-[#FFC300]/30 hover:bg-[#252525] bg-[#1b1b1b]"
     tabIndex={0}
     role="button"
     aria-label={text}
@@ -24,21 +22,21 @@ const NotificationPreview = ({
     <div className="shrink-0 relative">
       {icon}
       {unread && (
-        <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#FFC300] rounded-full border-2 border-white" />
+        <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#FFC300] rounded-full border-2 border-[#1b1b1b]" />
       )}
     </div>
     <div className="flex-1 min-w-0">
-      <p className="text-sm text-[#252525] truncate font-medium group-hover:text-[#1E3A4B]">
+      <p className="text-sm text-white truncate font-medium group-hover:text-[#FFC300]">
         {text}
       </p>
-      <span className="text-xs text-[#5A7D9A]">{time}</span>
+      <span className="text-xs text-[#FFC300]/60">{time}</span>
     </div>
     <button
       className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-full hover:bg-[#FFC300]/20"
       title="Mark as read"
       tabIndex={-1}
     >
-      <ChevronRight size={18} className="text-[#252525]" />
+      <ChevronRight size={18} className="text-[#FFC300]" />
     </button>
   </div>
 );
@@ -61,20 +59,24 @@ const notifications = [
 
 const DashboardNotifications = () => {
   return (
-    <section className="bg-[#1b1b1b] p-0 rounded-2xl shadow-xl border border-[#EEE] flex flex-col">
-      <div className="flex items-center justify-between px-6 pt-5 pb-2">
-        <h3 className="text-lg font-bold text-[#252525] flex items-center gap-2">
-          <Bell size={22} className=" text-yellow-400" />
-          <span className="text-yellow-400">Notifications</span>
-        </h3>
-        <button
-          className="text-xs  text-yellow-400 font-semibold hover:underline focus:outline-none"
-          onClick={() => {}}
-        >
+    <section className="bg-[#1b1b1b] rounded-2xl shadow-xl p-6 border border-[#2a2a2a] flex flex-col">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-[#FFC300]/10 rounded-xl flex items-center justify-center">
+            <span className="text-2xl">🔔</span>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-white">Notifications</h3>
+            <p className="text-sm text-[#FFC300]/60">
+              Stay updated with your community
+            </p>
+          </div>
+        </div>
+        <button className="text-sm text-[#FFC300] hover:text-white transition-colors">
           View all
         </button>
       </div>
-      <div className="flex flex-col gap-1 px-2 pb-3">
+      <div className="flex flex-col gap-2">
         {notifications.slice(0, 3).map((notif) => (
           <NotificationPreview key={notif.id} {...notif} />
         ))}

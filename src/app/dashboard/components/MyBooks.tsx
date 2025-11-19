@@ -57,7 +57,6 @@ const BookCard = ({
   genre: string;
 }) => (
   <div className="flex flex-col w-full cursor-pointer group rounded-2xl shadow-lg bg-[#2a2a2a] hover:shadow-2xl transition-all overflow-hidden border border-[#3a3a3a]">
-    {/* Image Section - Top 60% */}
     <div className="relative w-full h-40 overflow-hidden">
       <Image
         src={coverImage}
@@ -68,7 +67,6 @@ const BookCard = ({
       />
     </div>
 
-    {/* Info Section - Bottom 40% with dedicated space */}
     <div className="flex flex-col gap-2 p-4 bg-[#2a2a2a] min-h-[120px]">
       <h3
         className="text-sm font-bold text-white truncate leading-tight"
@@ -89,14 +87,13 @@ const BookCard = ({
 const MyBooks = () => {
   return (
     <section className="mb-8 bg-linear-[#1b1b1b] rounded-3xl shadow-2xl p-6 md:p-8 border border-[#2a2a2a]">
-      {/* Modern Header with Icon and Stats */}
       <div className="flex justify-between items-center mb-6 pb-5 border-b border-[#FFC300]/20 relative">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-[#FFC300]/10 rounded-xl flex items-center justify-center">
             <span className="text-2xl">📚</span>
           </div>
           <div>
-            <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#FFC300] to-[#FFD700] bg-clip-text text-transparent">
+            <h3 className="text-2xl md:text-3xl font-bold bg-linear-to-r from-[#FFC300] to-[#FFD700] bg-clip-text text-transparent">
               My Books
             </h3>
             <p className="text-xs text-[#FFC300]/60 font-medium mt-0.5">
@@ -106,9 +103,8 @@ const MyBooks = () => {
           </div>
         </div>
 
-        {/* Right: Action Button */}
         <button
-          className="hidden md:flex px-5 py-2.5 bg-gradient-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 items-center gap-2 group"
+          className="hidden md:flex px-5 py-2.5 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 items-center gap-2 group"
           onClick={() => console.log('New Book button clicked (Desktop)')}
         >
           <Plus
@@ -118,19 +114,13 @@ const MyBooks = () => {
           <span>New Book</span>
         </button>
 
-        {/* Decorative Element */}
-        <div className="absolute -bottom-px left-0 w-20 h-0.5 bg-gradient-to-r from-[#FFC300] to-transparent" />
+        <div className="absolute -bottom-px left-0 w-20 h-0.5 bg-linear-to-r from-[#FFC300] to-transparent" />
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {userBooks.map((book) => (
+        {userBooks.slice(0, 4).map((book) => (
           <BookCard key={book.id} {...book} />
         ))}
-        {/* Add New Book Card */}
-        <div className="flex flex-col items-center justify-center w-full min-h-[260px] cursor-pointer rounded-2xl border-2 border-dashed border-[#FFC300]/40 bg-[#2a2a2a] hover:border-[#FFC300] hover:bg-[#2a2a2a]/80 transition-all">
-          <Plus size={32} className="text-[#FFC300] mb-2" />
-          <span className="text-sm text-[#FFC300] font-medium">Add Book</span>
-        </div>
       </div>
     </section>
   );
