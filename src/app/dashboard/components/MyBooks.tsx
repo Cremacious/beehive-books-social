@@ -1,5 +1,6 @@
 'use client';
 import { Plus } from 'lucide-react';
+import Image from 'next/image';
 import coverImage from '@/assets/stock/cover.jpeg';
 
 const userData = {
@@ -58,10 +59,11 @@ const BookCard = ({
   <div className="flex flex-col w-full cursor-pointer group rounded-2xl shadow-lg bg-[#2a2a2a] hover:shadow-2xl transition-all overflow-hidden border border-[#3a3a3a]">
     {/* Image Section - Top 60% */}
     <div className="relative w-full h-40 overflow-hidden">
-      <img
-        src={coverImage.src}
+      <Image
+        src={coverImage}
         alt={title}
-        className="w-full h-full object-cover select-none pointer-events-none group-hover:scale-105 transition-transform duration-300"
+        fill
+        className="object-cover select-none pointer-events-none group-hover:scale-105 transition-transform duration-300"
         draggable={false}
       />
     </div>
@@ -89,7 +91,6 @@ const MyBooks = () => {
     <section className="mb-8 bg-linear-[#1b1b1b] rounded-3xl shadow-2xl p-6 md:p-8 border border-[#2a2a2a]">
       {/* Modern Header with Icon and Stats */}
       <div className="flex justify-between items-center mb-6 pb-5 border-b border-[#FFC300]/20 relative">
-    
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-[#FFC300]/10 rounded-xl flex items-center justify-center">
             <span className="text-2xl">📚</span>

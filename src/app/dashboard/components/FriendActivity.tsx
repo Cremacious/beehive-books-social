@@ -42,6 +42,7 @@ const SocialItem = ({
   >
     <div className="shrink-0 relative">
       {avatar ? (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={avatar}
           alt={name}
