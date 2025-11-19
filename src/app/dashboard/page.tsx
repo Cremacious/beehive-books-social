@@ -1,37 +1,21 @@
-'use client';
-
-import { useRouter } from 'next/navigation';
-import { useSession, signOut } from '@/lib/auth-client';
-import { useEffect } from 'react';
+import React from 'react';
+import MyBooks from './components/MyBooks';
+import DashboardNotifications from './components/DashboardNotifications';
+import FriendActivity from './components/FriendActivity';
+import NewPage from '@/components/layout/NewPage';
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const { data: session, isPending } = useSession();
-
-  useEffect(() => {
-    if (!isPending && !session?.user) {
-      router.push('/sign-in');
-    }
-  }, [isPending, session, router]);
-
-  if (isPending)
-    return <p className="text-center mt-8 text-white">Loading...</p>;
-  if (!session?.user)
-    return <p className="text-center mt-8 text-white">Redirecting...</p>;
-
-  const { user } = session;
-
   return (
-    <main className="max-w-md h-screen flex items-center justify-center flex-col mx-auto p-6 space-y-4 text-white">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-      <p>Welcome, {user.name || 'User'}!</p>
-      <p>Email: {user.email}</p>
-      <button
-        onClick={() => signOut()}
-        className="w-full bg-white text-black font-medium rounded-md px-4 py-2 hover:bg-gray-200"
-      >
-        Sign Out
-      </button>
-    </main>
+    <NewPage>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 ">
+        <div className="col-span-3 flex-1 min-h-[400px] flex flex-col">
+          <MyBooks />
+        </div>
+        <div className="flex flex-col gap-8 flex-1 min-h-[400px] ">
+          <DashboardNotifications />
+          <FriendActivity />
+        </div>
+      </div>
+    </NewPage>
   );
 }

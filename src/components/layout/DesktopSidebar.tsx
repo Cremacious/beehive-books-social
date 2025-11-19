@@ -1,0 +1,56 @@
+'use client';
+
+import { Book, Home, Plus } from 'lucide-react';
+
+const userData = {
+  name: 'Chris Mackall',
+  totalBooks: 6,
+};
+
+const DesktopSidebar = () => {
+  return (
+    <div className="hidden md:flex w-64 bg-[#252525] flex-col p-6 shadow-xl space-y-8 h-screen sticky top-0">
+      <div className="flex items-center space-x-2 text-[#FFC300] text-2xl font-bold">
+        <Book size={30} className="transform rotate-12" />
+        <span>Beehive Books</span>
+      </div>
+
+      <button
+        className="px-6 py-3 bg-[#FFC300] text-[#1E3A4B] font-semibold rounded-xl shadow-md hover:bg-yellow-500 transition duration-150 flex items-center justify-center space-x-2"
+        onClick={() => console.log('New Book button clicked')}
+      >
+        <Plus size={20} />
+        <span>New Book</span>
+      </button>
+
+      <nav className="space-y-4 pt-4">
+        {['Home', 'My Hive', 'Discover', 'Book Clubs', 'Settings'].map(
+          (item) => (
+            <a
+              key={item}
+              href="#"
+              className={`flex items-center space-x-4 p-2 rounded-lg transition ${
+                item === 'My Hive'
+                  ? 'bg-[#1b1b1b] text-[#FFC300]'
+                  : 'text-gray-300 hover:bg-gray-800'
+              }`}
+            >
+              <Home size={20} />
+              <span className="font-medium">{item}</span>
+            </a>
+          )
+        )}
+      </nav>
+      <div className="mt-auto pt-6 border-t border-gray-700">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center text-white">
+            A
+          </div>
+          <span className="text-white font-medium">{userData.name}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DesktopSidebar;
