@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+
 
 export default function Home() {
   const router = useRouter();
@@ -21,7 +21,12 @@ export default function Home() {
         >
           Sign In
         </button>
-        <Button className="bg-red-500">Hey</Button>
+        <button
+          onClick={() => router.push('/dashboard')}
+          className="border border-white text-white font-medium px-6 py-2 rounded-md hover:bg-neutral-800"
+        >
+          Dashboard
+        </button>
       </div>
     </main>
   );

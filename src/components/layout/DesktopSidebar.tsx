@@ -1,13 +1,26 @@
 'use client';
 
 import { Book, Home, Plus } from 'lucide-react';
+import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 const userData = {
   name: 'Chris Mackall',
   totalBooks: 6,
 };
 
+const navLinks = [
+  { name: 'Home', href: '/dashboard' },
+  { name: 'My Books', href: '/my-books' },
+  { name: 'Discover', href: '#' },
+  { name: 'Book Clubs', href: '#' },
+  { name: 'Settings', href: '#' },
+];
+
 const DesktopSidebar = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+
   return (
     <div className="hidden md:flex w-64 bg-[#252525] flex-col p-6 shadow-xl space-y-8 h-screen sticky top-0">
       <div className="flex items-center space-x-2 text-[#FFC300] text-2xl font-bold">
@@ -17,29 +30,27 @@ const DesktopSidebar = () => {
 
       <button
         className="px-6 py-3 bg-[#FFC300] text-[#1E3A4B] font-semibold rounded-xl shadow-md hover:bg-yellow-500 transition duration-150 flex items-center justify-center space-x-2"
-        onClick={() => console.log('New Book button clicked')}
+        onClick={() => router.push('/my-books/create')}
       >
         <Plus size={20} />
         <span>New Book</span>
       </button>
 
       <nav className="space-y-4 pt-4">
-        {['Home', 'My Hive', 'Discover', 'Book Clubs', 'Settings'].map(
-          (item) => (
-            <a
-              key={item}
-              href="#"
-              className={`flex items-center space-x-4 p-2 rounded-lg transition ${
-                item === 'My Hive'
-                  ? 'bg-[#1b1b1b] text-[#FFC300]'
-                  : 'text-gray-300 hover:bg-gray-800'
-              }`}
-            >
-              <Home size={20} />
-              <span className="font-medium">{item}</span>
-            </a>
-          )
-        )}
+        {navLinks.map((item) => (
+          <Link
+            key={item.name}
+            href={item.href}
+            className={`flex items-center space-x-4 p-2 rounded-lg transition ${
+              pathname === item.href
+                ? 'bg-[#1b1b1b] text-[#FFC300]'
+                : 'text-white hover:bg-[#1b1b1b]'
+            }`}
+          >
+            <Home size={20} />
+            <span className="font-medium">{item.name}</span>
+          </Link>
+        ))}
       </nav>
       <div className="mt-auto pt-6 border-t border-gray-700">
         <div className="flex items-center space-x-3">

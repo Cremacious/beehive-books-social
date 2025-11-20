@@ -40,14 +40,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${poppins.variable} antialiased min-h-screen bg-[#FFC300] flex flex-col md:flex-row font-sans`}
+        className={`${inter.variable} ${poppins.variable} antialiased min-h-screen `}
       >
-        <MobileHeader />
-        <DesktopSidebar />
-        <div className="w-full mx-auto max-w-md md:max-w-6xl p-4 md:p-2 flex flex-col items-center grow">
-          {children}
-        </div>
-        <BottomNavBar />
+        {children}
       </body>
     </html>
   );

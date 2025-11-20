@@ -51,29 +51,6 @@
   --ring: #ffab00;
 }
 
-.dark {
-  /* Beehive Books Theme - Dark Mode */
-  --background: #0f172a; /* Darker slate background */
-  --foreground: #fefefe; /* Soft white text */
-  --card: #1e293b; /* Dark slate cards */
-  --card-foreground: #fefefe;
-  --popover: #1e293b;
-  --popover-foreground: #fefefe;
-  --primary: #fdd835; /* Honey yellow primary in dark mode */
-  --primary-foreground: #1e293b;
-  --secondary: #334155; /* Muted slate secondary */
-  --secondary-foreground: #fefefe;
-  --muted: #334155;
-  --muted-foreground: #94a3b8;
-  --accent: #fdd835; /* Honey yellow accent */
-  --accent-foreground: #1e293b;
-  --destructive: #ef4444;
-  --border: rgba(254, 254, 254, 0.1);
-  --input: rgba(30, 41, 59, 0.8);
-  --ring: #fdd835;
-}
-
-/* Base Styles */
 * {
   border-color: var(--border);
   outline-color: rgba(255, 171, 0, 0.5);
@@ -86,57 +63,20 @@ body {
   line-height: 1.6;
 }
 
-/* Beehive Books Custom Components */
-.beehive-card {
-  background-color: var(--card);
-  color: var(--card-foreground);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--border);
-}
-
-.beehive-button {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-  border-radius: calc(var(--radius) / 2);
-  padding: 0.75rem 1.5rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font-primary);
-}
-
-.beehive-button:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-medium);
-}
-
-.beehive-button-secondary {
-  background-color: var(--secondary);
-  color: var(--secondary-foreground);
-}
-
-.beehive-input {
-  background-color: var(--input);
-  color: var(--foreground);
-  border: 1px solid var(--border);
-  border-radius: calc(var(--radius) / 2);
-  padding: 0.75rem 1rem;
-  font-family: var(--font-primary);
-  transition: all 0.2s ease;
-}
-
-.beehive-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(255, 171, 0, 0.1);
-}
-
-/* Responsive Design */
 @media (max-width: 768px) {
   :root {
     --radius: 12px;
+  }
+}
+
+@layer utilities {
+  .customDark1 {
+    background-color: #252525;
+  }
+  .customDark2 {
+    background-color: #1b1b1b;
+  }
+  .customDark3 {
+    background-color: #999696;
   }
 }
