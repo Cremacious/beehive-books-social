@@ -23,7 +23,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <MyBooks />
+        {/* <MyBooks /> */}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <DashboardNotifications />

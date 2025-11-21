@@ -1,10 +1,20 @@
 import NewPage from '@/components/layout/NewPage';
 import Image from 'next/image';
-import { BookOpen, Edit, MessageCircle, FileText, Hash } from 'lucide-react';
+import {
+  BookOpen,
+  Edit,
+  MessageCircle,
+  FileText,
+  Hash,
+  Plus,
+} from 'lucide-react';
 import coverImage from '@/assets/stock/cover.jpeg';
+import ChapterListItem from '../components/ChapterListItem';
+import AddChapterButton from './components/AddChapterButton';
+import EditBookButton from './components/EditBookButton';
 
 const book = {
-  id: 1,
+  id: 111,
   title: 'The Last Spire',
   author: 'Anya Sharma',
   genre: 'Mystery',
@@ -19,7 +29,8 @@ const book = {
   lastUpdated: '2024-11-10',
 };
 
-const chapters = [
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const chapters: any[] = [
   { id: 1, title: 'The Discovery', wordCount: 3200 },
   { id: 2, title: 'Whispers in the Dark', wordCount: 4100 },
   { id: 3, title: 'The Ancient Map', wordCount: 3800 },
@@ -38,10 +49,8 @@ const BookPage = () => {
   return (
     <NewPage>
       <div className="w-full space-y-8 ">
-        {/* Book Header Section */}
         <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Book Cover */}
             <div className="flex justify-center lg:justify-start">
               <div className="relative w-48 h-64 md:w-56 md:h-80 rounded-2xl overflow-hidden shadow-lg">
                 <Image
@@ -53,28 +62,29 @@ const BookPage = () => {
               </div>
             </div>
 
-            {/* Book Details */}
             <div className="lg:col-span-2 space-y-4">
-              <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
-                  {book.title}
-                </h1>
-                <p className="text-xl text-white mb-1">by {book.author}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
-                    {book.genre}
-                  </span>
-                  <span className="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-sm font-medium">
-                    {book.category}
-                  </span>
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
+                    {book.title}
+                  </h1>
+                  <p className="text-xl text-white mb-1">by {book.author}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
+                      {book.genre}
+                    </span>
+                    <span className="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-sm font-medium">
+                      {book.category}
+                    </span>
+                  </div>
                 </div>
+                <EditBookButton bookId={book.id} />
               </div>
 
               <p className="text-white leading-relaxed mb-6">
                 {book.description}
               </p>
 
-              {/* Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
                   <div className="flex items-center justify-center mb-1">
@@ -108,44 +118,45 @@ const BookPage = () => {
           </div>
         </div>
 
-        {/* Chapters Section */}
         <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10 min-h-[450px]">
-          <h2 className="text-2xl font-bold text-yellow-400 mb-6 flex items-center gap-2">
-            <BookOpen className="w-6 h-6 text-yellow-400" />
-            Chapters
-          </h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-yellow-400 flex items-center gap-2">
+              <BookOpen className="w-6 h-6 text-yellow-400" />
+              Chapters
+            </h2>
+            <AddChapterButton bookId={book.id} />
+          </div>
 
           <div className="space-y-4">
-            {chapters.map((chapter, index) => (
-              <div
-                key={chapter.id}
-                className="flex items-center justify-between p-4 bg-yellow-100 rounded-xl hover:bg-yellow-200 transition-colors"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-8 h-8 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                    {index + 1}
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900">
-                      {chapter.title}
-                    </h3>
-                    {/* <p className="text-sm text-slate-600">
-                      {chapter.wordCount} words
-                    </p> */}
-                  </div>
+            {chapters.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
+                <div className="w-24 h-24 bg-yellow-500/10 rounded-full flex items-center justify-center mb-6">
+                  <span className="text-4xl">🐝</span>
                 </div>
-
-                <div className="flex gap-2">
-                  <button className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition-colors">
-                    Read
-                  </button>
-                  <button className="px-4 py-2 border border-slate-300 hover:bg-slate-100 text-slate-700 rounded-lg font-medium transition-colors flex items-center gap-1">
-                    <Edit className="w-4 h-4" />
-                    Edit
-                  </button>
-                </div>
+                <h3 className="text-2xl font-bold text-yellow-400 mb-3">
+                  No Chapters Yet
+                </h3>
+                <p className="text-white/70 mb-8 max-w-md leading-relaxed">
+                  Your story is waiting to be told! Start building your novel by
+                  adding your first chapter. Each chapter is a step closer to
+                  completing your masterpiece.
+                </p>
+                <button className="px-8 py-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl font-semibold transition-all duration-200 flex items-center gap-3 shadow-lg hover:shadow-yellow-500/25 transform hover:scale-105">
+                  <Plus className="w-5 h-5" />
+                  Add Your First Chapter
+                </button>
               </div>
-            ))}
+            ) : (
+              chapters.map((chapter, index) => (
+                <ChapterListItem
+                  key={chapter.id}
+                  chapter={chapter}
+                  chapterId={chapter.id}
+                  index={index}
+                  bookId={book.id}
+                />
+              ))
+            )}
           </div>
         </div>
       </div>

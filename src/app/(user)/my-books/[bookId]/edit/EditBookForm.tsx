@@ -69,7 +69,7 @@ const privacyOptions = [
   },
 ];
 
-export default function CreateBookForm() {
+export default function EditBookForm() {
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
@@ -152,6 +152,7 @@ export default function CreateBookForm() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Category */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
@@ -362,7 +363,7 @@ export default function CreateBookForm() {
           >
             <Save className="w-5 h-5" />
             <span>
-              {form.formState.isSubmitting ? 'Creating Book...' : 'Create Book'}
+              {form.formState.isSubmitting ? 'Editing Book...' : 'Edit Book'}
             </span>
           </button>
         </div>
