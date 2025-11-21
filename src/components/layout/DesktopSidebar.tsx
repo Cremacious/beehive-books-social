@@ -16,7 +16,7 @@ const navLinks = [
   { name: 'My Books', href: '/my-books' },
   { name: 'Friends', href: '/friends' },
   { name: 'Discover', href: '#' },
-  { name: 'Book Clubs', href: '#' },
+  { name: 'Book Clubs', href: '/book-clubs' },
   { name: 'Settings', href: '#' },
 ];
 

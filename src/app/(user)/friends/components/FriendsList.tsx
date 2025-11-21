@@ -1,7 +1,7 @@
 'use client';
 
 import { BookOpen, Heart, MessageCircle, Users, UsersIcon } from 'lucide-react';
-import FriendCard from './FriendCard';
+import FriendCard from '../../../../components/shared/FriendCard';
 
 const friends = [
   {
