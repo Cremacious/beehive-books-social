@@ -10,11 +10,11 @@ export default function UserLayout({
   return (
     <>
       <div
-        className={`antialiased min-h-screen bg-[#FFC300] flex flex-col md:flex-row font-sans`}
+        className={`antialiased min-h-screen flex flex-col md:flex-row font-sans bg-linear-to-b from-yellow-400 to-yellow-500`}
       >
         <MobileHeader />
         <DesktopSidebar />
-        <div className="w-full mx-auto max-w-md lg:max-w-7xl p-2 md:p-4 flex flex-col items-center grow justify-center">
+        <div className="w-full mx-auto max-w-screen-2xl p-2 md:p-8 flex flex-col items-center grow justify-center">
           {children}
         </div>
         <BottomNavBar />

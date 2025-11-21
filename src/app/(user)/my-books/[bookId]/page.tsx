@@ -118,7 +118,7 @@ const BookPage = () => {
           </div>
         </div>
 
-        <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10 min-h-[450px]">
+        <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10 min-h-[450px] max-w-5xl mx-auto">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-yellow-400 flex items-center gap-2">
               <BookOpen className="w-6 h-6 text-yellow-400" />
@@ -127,7 +127,7 @@ const BookPage = () => {
             <AddChapterButton bookId={book.id} />
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-4 ">
             {chapters.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
                 <div className="w-24 h-24 bg-yellow-500/10 rounded-full flex items-center justify-center mb-6">

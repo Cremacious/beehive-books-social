@@ -9,6 +9,7 @@ import {
   Reply,
   User,
 } from 'lucide-react';
+import EditChapterButton from './EditChapterButton';
 
 const chapter = {
   id: 1,
@@ -109,10 +110,7 @@ const ChapterPage = () => {
                 </div>
               </div>
             </div>
-            <button className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2">
-              <Edit className="w-4 h-4" />
-              Edit
-            </button>
+            <EditChapterButton />
           </div>
 
           <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-xl p-6 mb-8">

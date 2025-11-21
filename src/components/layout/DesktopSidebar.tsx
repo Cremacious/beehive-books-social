@@ -3,6 +3,8 @@
 import { Book, Home, Plus } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import logoImg from '@/assets/logo.png';
+import Image from 'next/image';
 
 const userData = {
   name: 'Chris Mackall',
@@ -12,6 +14,7 @@ const userData = {
 const navLinks = [
   { name: 'Home', href: '/dashboard' },
   { name: 'My Books', href: '/my-books' },
+  { name: 'Friends', href: '/friends' },
   { name: 'Discover', href: '#' },
   { name: 'Book Clubs', href: '#' },
   { name: 'Settings', href: '#' },
@@ -22,9 +25,10 @@ const DesktopSidebar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="hidden md:flex w-64 bg-[#252525] flex-col p-6 shadow-xl space-y-8 h-screen sticky top-0">
+    <div className="hidden md:flex w-80 bg-[#252525] flex-col p-6 shadow-xl space-y-8 h-screen sticky top-0">
       <div className="flex items-center space-x-2 text-[#FFC300] text-2xl font-bold">
-        <Book size={30} className="transform rotate-12" />
+        {/* <Book size={30} className="transform rotate-12" /> */}
+        <Image src={logoImg} alt="Beehive Books Logo" width={60} height={60} />
         <span>Beehive Books</span>
       </div>
 
