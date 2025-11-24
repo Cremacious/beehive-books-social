@@ -16,8 +16,11 @@ import {
   Heart,
   Clock,
 } from 'lucide-react';
+import EditClubButton from '../components/EditClubButton';
+import { Button } from '@/components/ui/button';
+import ViewMembersButton from '../components/ViewMembersButton';
+import Link from 'next/link';
 
-// Placeholder data for the club
 const club = {
   id: 1,
   name: 'Mystery Masters',
@@ -29,7 +32,7 @@ const club = {
   clubCover: '/assets/stock/cover.jpeg',
   members: 12,
   privacy: 'Private',
-  userRole: 'Owner', // Owner, Moderator, Member
+  userRole: 'Owner',
   createdDate: '2024-10-15',
   rules:
     'Post weekly discussion questions, respect all opinions, no spoilers in titles, be kind and constructive in feedback.',
@@ -195,10 +198,7 @@ const ClubPage = () => {
               Share
             </button>
             {(club.userRole === 'Owner' || club.userRole === 'Moderator') && (
-              <button className="px-4 py-2 bg-[#FFC300] text-[#1E3A4B] rounded-lg hover:bg-[#FFD700] transition-all flex items-center gap-2 font-medium">
-                <Settings className="w-4 h-4" />
-                Manage
-              </button>
+              <EditClubButton clubId={club.id} />
             )}
           </div>
         </div>
@@ -307,6 +307,12 @@ const ClubPage = () => {
                   <Plus className="w-4 h-4" />
                   New Discussion
                 </button>
+                <Link
+                  className="bg-yellow-400"
+                  href={`/book-clubs/${club.id}/discussions`}
+                >
+                  View Discussions
+                </Link>
               </div>
 
               <div className="space-y-4">
@@ -355,6 +361,7 @@ const ClubPage = () => {
                     Invite
                   </button>
                 )}
+                <ViewMembersButton clubId={club.id} />
               </div>
 
               <div className="space-y-3">
@@ -417,9 +424,11 @@ const ClubPage = () => {
                   <Vote className="w-5 h-5 text-[#FFC300]" />
                   Reading List
                 </h3>
-                <button className="px-3 py-1 bg-[#FFC300]/20 text-[#FFC300] rounded-lg hover:bg-[#FFC300]/30 transition-all text-sm">
-                  <Plus className="w-3 h-3" />
-                </button>
+                <Link href={`/book-clubs/${club.id}/reading-list`}>
+                  <button className="px-3 py-1 bg-[#FFC300]/20 text-[#FFC300] rounded-lg hover:bg-[#FFC300]/30 transition-all text-sm">
+                    View List
+                  </button>
+                </Link>
               </div>
 
               <div className="space-y-3">

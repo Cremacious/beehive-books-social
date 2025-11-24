@@ -13,7 +13,6 @@ import {
   Mail,
 } from 'lucide-react';
 
-// Placeholder data for club members
 const clubMembers = [
   {
     id: 1,
@@ -71,19 +70,17 @@ const clubMembers = [
   },
 ];
 
-// Placeholder club data
 const clubData = {
   id: 1,
   name: 'Mystery Masters',
   memberCount: clubMembers.length,
-  userRole: 'Owner', // Owner, Moderator, Member
+  userRole: 'Owner',
 };
 
 const ClubMembersPage = () => {
   return (
     <NewPage>
       <div className="w-full space-y-8">
-        {/* Header */}
         <div className="customDark2 rounded-3xl shadow-2xl p-6 md:p-8 border border-[#2a2a2a]">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-4">
@@ -110,7 +107,6 @@ const ClubMembersPage = () => {
           <div className="absolute -bottom-px left-0 w-24 h-1 bg-linear-to-r from-[#FFC300] to-transparent rounded-bl-3xl" />
         </div>
 
-        {/* Search and Filter */}
         <div className="customDark2 rounded-2xl shadow-xl p-6 md:p-8 border border-[#2a2a2a]">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
@@ -149,7 +145,6 @@ const ClubMembersPage = () => {
           </div>
         </div>
 
-        {/* Members Grid */}
         <div className="customDark2 rounded-2xl shadow-xl p-6 md:p-8 border border-[#2a2a2a]">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -172,7 +167,6 @@ const ClubMembersPage = () => {
                   bio={member.bio}
                 />
 
-                {/* Member Status and Role Overlay */}
                 <div className="absolute top-3 right-3 flex items-center gap-2">
                   <div
                     className={`w-3 h-3 rounded-full ${
@@ -191,7 +185,6 @@ const ClubMembersPage = () => {
                   )}
                 </div>
 
-                {/* Reading Progress */}
                 <div className="absolute bottom-20 left-4 right-4">
                   <div className="bg-[#1a1a1a]/90 backdrop-blur-sm rounded-lg p-2">
                     <div className="flex justify-between text-xs text-white/70 mb-1">
@@ -207,7 +200,6 @@ const ClubMembersPage = () => {
                   </div>
                 </div>
 
-                {/* Management Actions (for owners/mods) */}
                 {(clubData.userRole === 'Owner' ||
                   clubData.userRole === 'Moderator') &&
                   member.role !== 'Owner' && (
@@ -217,7 +209,6 @@ const ClubMembersPage = () => {
                           <MoreVertical className="w-4 h-4 text-white" />
                         </button>
 
-                        {/* Dropdown Menu */}
                         <div className="absolute top-full left-0 mt-2 w-48 bg-[#1a1a1a] border border-[#FFC300]/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                           <div className="py-2">
                             {clubData.userRole === 'Owner' &&
@@ -247,7 +238,6 @@ const ClubMembersPage = () => {
             ))}
           </div>
 
-          {/* Empty State */}
           {clubMembers.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
               <div className="w-24 h-24 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6">
@@ -268,7 +258,6 @@ const ClubMembersPage = () => {
           )}
         </div>
 
-        {/* Invite Section (for owners/mods) */}
         {(clubData.userRole === 'Owner' ||
           clubData.userRole === 'Moderator') && (
           <div className="customDark2 rounded-2xl shadow-xl p-6 md:p-8 border border-[#2a2a2a]">

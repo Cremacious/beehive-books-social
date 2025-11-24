@@ -12,7 +12,7 @@ import {
 import CreateClubButton from './components/CreateClubButton';
 import Link from 'next/link';
 
-// Placeholder data for user's clubs
+
 const userClubs = [
   {
     id: 1,
