@@ -12,12 +12,13 @@ const userData = {
 };
 
 const navLinks = [
-  { name: 'Home', href: '/dashboard' },
+  { name: 'Dashboard', href: '/dashboard' },
   { name: 'My Books', href: '/my-books' },
   { name: 'Friends', href: '/friends' },
-  { name: 'Discover', href: '#' },
   { name: 'Book Clubs', href: '/book-clubs' },
-  { name: 'Settings', href: '#' },
+  { name: 'Reading Lists', href: '/reading-lists' },
+  { name: 'Writing Prompts', href: '/prompts' },
+  { name: 'Settings', href: '/settings' },
 ];
 
 const DesktopSidebar = () => {
