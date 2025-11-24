@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import defaultImage from '@/assets/stock/stock-profile.jpg';
+import { Button } from '@/components/ui/button';
 
 const FriendCard = ({
   id,
@@ -13,7 +14,7 @@ const FriendCard = ({
   bio: string;
 }) => {
   return (
-    <div className="customDark rounded-xl p-4 h-80 flex flex-col items-center text-center">
+    <div className="customDark1 rounded-xl p-4 h-80 flex flex-col items-center text-center">
       <div className="w-20 h-20 rounded-full overflow-hidden mb-3 border-2 border-yellow-500/30">
         <Image
           src={defaultImage}
@@ -32,10 +33,9 @@ const FriendCard = ({
             (bio.split('. ').length > 3 ? '.' : '')}
         </p>
       </div>
-
-      <button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+      <Button className="w-full" variant={'beeYellow'}>
         View Profile
-      </button>
+      </Button>
     </div>
   );
 };

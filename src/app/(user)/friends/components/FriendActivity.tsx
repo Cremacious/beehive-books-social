@@ -1,6 +1,6 @@
 'use client';
 
-import { Circle } from 'lucide-react';
+import { Circle, PencilLine } from 'lucide-react';
 
 const friends = [
   {
@@ -54,7 +54,7 @@ const FriendActivity = () => {
   return (
     <div className="customDark2 rounded-2xl shadow-xl p-6">
       <h2 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
-        <Circle className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+        <PencilLine className="w-5 h-5 fill-yellow-400 text-yellow-400" />
         Friend Activity
       </h2>
       <div className="space-y-4">

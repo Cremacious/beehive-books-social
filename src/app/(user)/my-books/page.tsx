@@ -1,6 +1,8 @@
 import NewPage from '@/components/layout/NewPage';
 import MyBooksDisplay from './components/MyBooksDisplay';
 import { Plus, BookOpen } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 const MyBooksPage = () => {
   return (
@@ -21,10 +23,20 @@ const MyBooksPage = () => {
                 </p>
               </div>
             </div>
-            <button className="px-8 py-4 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-2xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center gap-3">
+            <Link href="/my-books/create">
+              <Button
+                variant={'beeYellow'}
+                size={'lg'}
+                className="flex items-center justify-center space-x-2 w-full"
+              >
+                <Plus size={20} />
+                New Book
+              </Button>
+            </Link>
+            {/* <button className="px-8 py-4 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-2xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center gap-3">
               <Plus className="w-5 h-5" />
               <span>New Book</span>
-            </button>
+            </button> */}
           </div>
           <div className="absolute -bottom-px left-0 w-24 h-1 bg-linear-to-r from-[#FFC300] to-transparent rounded-bl-3xl" />
         </div>

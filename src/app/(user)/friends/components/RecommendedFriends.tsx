@@ -1,6 +1,7 @@
 'use client';
 
-import { UserPlus, Users } from 'lucide-react';
+import { UserPlus, Users, Earth } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const recommendations = [
   {
@@ -26,8 +27,7 @@ const recommendations = [
 const RecommendedFriends = () => {
   return (
     <div className=" p-6">
-      <h2 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
-        <Users className="w-5 h-5" />
+      <h2 className="text-lg font-bold text-yellow-400 mb-4 flex items-center gap-2">
         People You Might Know
       </h2>
       <div className="space-y-4">
@@ -47,10 +47,14 @@ const RecommendedFriends = () => {
                 <p className="text-white/60 text-sm">3 mutual friends</p>
               </div>
             </div>
-            <button className="w-full mt-4 bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+            <Button
+              size={'sm'}
+              variant={'beeYellow'}
+              className="w-full mt-4 flex items-center justify-center gap-2"
+            >
               <UserPlus className="w-4 h-4" />
               Add Friend
-            </button>
+            </Button>
           </div>
         ))}
       </div>

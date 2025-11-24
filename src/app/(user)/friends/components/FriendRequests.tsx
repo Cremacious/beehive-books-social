@@ -1,6 +1,7 @@
 'use client';
 
 import { Check, UserPlus, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const friendRequests: friendRequestType = [
   {
@@ -59,20 +60,26 @@ const FriendRequests = () => {
                       {request.name}
                     </h4>
                     <p className="text-white/60 text-sm">
-              
                       {request.mutualFriends} mutual friends
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-2 mt-4">
-                  <button className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+                  <Button
+                    size={'sm'}
+                    variant={'beeYellow'}
+                    className="flex-1 flex items-center justify-center gap-2"
+                  >
                     <Check className="w-4 h-4" />
                     Accept
-                  </button>
-                  <button className="flex-1 bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+                  </Button>
+                  <Button
+                    size={'sm'}
+                    className="flex-1 bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                  >
                     <X className="w-4 h-4" />
                     Decline
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}

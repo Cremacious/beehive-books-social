@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import logoImg from '@/assets/logo.png';
 import Image from 'next/image';
+import { Button } from '../ui/button';
 
 const userData = {
   name: 'Chris Mackall',
@@ -32,14 +33,15 @@ const DesktopSidebar = () => {
         <Image src={logoImg} alt="Beehive Books Logo" width={60} height={60} />
         <span>Beehive Books</span>
       </div>
-
-      <button
-        className="px-6 py-3 bg-[#FFC300] text-[#1E3A4B] font-semibold rounded-xl shadow-md hover:bg-yellow-500 transition duration-150 flex items-center justify-center space-x-2"
-        onClick={() => router.push('/my-books/create')}
-      >
-        <Plus size={20} />
-        <span>New Book</span>
-      </button>
+      <Link href="/my-books/create">
+        <Button
+          variant={'beeYellow'}
+          className="flex items-center justify-center space-x-2 w-full"
+        >
+          <Plus size={20} />
+          New Book
+        </Button>
+      </Link>
 
       <nav className="space-y-4 pt-4">
         {navLinks.map((item) => (

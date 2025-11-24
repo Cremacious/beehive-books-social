@@ -3,6 +3,7 @@
 import BookCard from '@/components/BookCard';
 import SearchMyBooks from './SearchMyBooks';
 import BookPagination from './BookPagination';
+import { Library } from 'lucide-react';
 
 const userBooks = [
   {
@@ -66,8 +67,8 @@ const MyBooksDisplay = () => {
     <div className="space-y-8">
       <div className="customDark2 rounded-2xl shadow-xl p-6 md:p-8 border border-[#2a2a2a]">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-            <span className="text-lg">📚</span>
+          <div className="w-12 h-12 p-1 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
+            <Library className="w-10 h-10 text-[#FFC300]" />
           </div>
           <h2 className="text-2xl font-bold text-white">Your Library</h2>
         </div>
@@ -103,13 +104,12 @@ const MyBooksDisplay = () => {
             ))}
           </div>
         )}
+        {userBooks.length > 0 && (
+          <div className="customDark2 rounded-2xl shadow-xl p-6 border border-[#2a2a2a]">
+            <BookPagination />
+          </div>
+        )}
       </div>
-
-      {userBooks.length > 0 && (
-        <div className="customDark2 rounded-2xl shadow-xl p-6 border border-[#2a2a2a]">
-          <BookPagination />
-        </div>
-      )}
     </div>
   );
 };
