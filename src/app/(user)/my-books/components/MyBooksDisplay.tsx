@@ -65,14 +65,16 @@ const userBooks = [
 const MyBooksDisplay = () => {
   return (
     <div className="space-y-8">
-      <div className="customDark2 rounded-2xl shadow-xl p-6 md:p-8 border border-[#2a2a2a]">
+      <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 ">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 p-1 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
             <Library className="w-10 h-10 text-[#FFC300]" />
           </div>
           <h2 className="text-2xl font-bold text-white">Your Library</h2>
         </div>
-        <SearchMyBooks />
+        <div className="max-w-3xl mx-auto">
+          <SearchMyBooks />
+        </div>
 
         {userBooks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
@@ -92,20 +94,22 @@ const MyBooksDisplay = () => {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {userBooks.map((book) => (
-              <BookCard
-                key={book.id}
-                id={book.id}
-                title={book.title}
-                author={book.author}
-                genre={book.genre}
-              />
-            ))}
+          <div className="max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {userBooks.map((book) => (
+                <BookCard
+                  key={book.id}
+                  id={book.id}
+                  title={book.title}
+                  author={book.author}
+                  genre={book.genre}
+                />
+              ))}
+            </div>
           </div>
         )}
         {userBooks.length > 0 && (
-          <div className="customDark2 rounded-2xl shadow-xl p-6 border border-[#2a2a2a]">
+          <div className="mt-4">
             <BookPagination />
           </div>
         )}

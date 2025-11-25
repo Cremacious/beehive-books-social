@@ -104,7 +104,7 @@ const ClubMembersPage = () => {
               </button>
             )}
           </div>
-          <div className="absolute -bottom-px left-0 w-24 h-1 bg-linear-to-r from-[#FFC300] to-transparent rounded-bl-3xl" />
+ 
         </div>
 
         <div className="customDark2 rounded-2xl shadow-xl p-6 md:p-8 border border-[#2a2a2a]">

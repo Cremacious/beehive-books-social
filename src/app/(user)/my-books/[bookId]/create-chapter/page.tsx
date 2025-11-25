@@ -6,7 +6,7 @@ const CreateChapterPage = () => {
   return (
     <NewPage>
       <div className="w-full max-w-4xl mx-auto space-y-8">
-        <div className="customDark2 rounded-3xl shadow-2xl p-6 md:p-8 border border-[#2a2a2a]">
+        <div className="darkContainer2 rounded-3xl shadow-2xl p-6 md:p-8 border ">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-[#FFC300]/10 rounded-2xl flex items-center justify-center">
               <PenTool className="w-6 h-6 text-[#FFC300]" />
@@ -20,7 +20,6 @@ const CreateChapterPage = () => {
               </p>
             </div>
           </div>
-          <div className="absolute -bottom-px left-0 w-24 h-1 bg-linear-to-r from-[#FFC300] to-transparent rounded-bl-3xl" />
         </div>
 
         <CreateChapterForm />

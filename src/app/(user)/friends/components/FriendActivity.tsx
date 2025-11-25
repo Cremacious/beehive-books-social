@@ -52,7 +52,7 @@ const friends = [
 
 const FriendActivity = () => {
   return (
-    <div className="customDark2 rounded-2xl shadow-xl p-6">
+    <div className="darkContainer2 rounded-2xl shadow-xl p-4 md:p-6">
       <h2 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
         <PencilLine className="w-5 h-5 fill-yellow-400 text-yellow-400" />
         Friend Activity
@@ -61,7 +61,7 @@ const FriendActivity = () => {
         {friends.map((friend) => (
           <div
             key={friend.id}
-            className="flex items-start gap-4 p-4 bg-[#1a1a1a] rounded-xl"
+            className="flex items-start gap-4 p-4 darkContainer3 rounded-xl"
           >
             <div className="relative">
               <div className="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center">

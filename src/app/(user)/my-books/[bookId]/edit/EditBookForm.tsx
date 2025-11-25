@@ -15,6 +15,7 @@ import {
   Save,
   Image as ImageIcon,
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const formSchema = z.object({
   title: z.string().min(1, 'Book title is required'),
@@ -118,7 +119,7 @@ export default function EditBookForm() {
             {...form.register('title')}
             type="text"
             placeholder="Enter your book title..."
-            className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
+            className="w-full p-4 searchStyle"
           />
           {form.formState.errors.title && (
             <p className="text-red-400 text-sm flex items-center gap-2">
@@ -141,7 +142,7 @@ export default function EditBookForm() {
             {...form.register('author')}
             type="text"
             placeholder="Your pen name or real name..."
-            className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
+            className="w-full p-4 searchStyle"
           />
           {form.formState.errors.author && (
             <p className="text-red-400 text-sm flex items-center gap-2">
@@ -164,7 +165,7 @@ export default function EditBookForm() {
             </div>
             <select
               {...form.register('category')}
-              className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
+              className="w-full p-4 searchStyle"
             >
               <option value="" className="bg-[#1a1a1a] text-white">
                 Select a category...
@@ -196,7 +197,7 @@ export default function EditBookForm() {
             </div>
             <select
               {...form.register('genre')}
-              className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
+              className="w-full p-4 searchStyle"
             >
               <option value="" className="bg-[#1a1a1a] text-white">
                 Select a genre...
@@ -238,7 +239,7 @@ export default function EditBookForm() {
             {...form.register('description')}
             placeholder="Tell readers what your book is about. What makes it special? What can they expect?"
             rows={6}
-            className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all resize-none"
+            className="w-full searchStyle p-4  resize-y"
           />
           {form.formState.errors.description && (
             <p className="text-red-400 text-sm flex items-center gap-2">
@@ -266,10 +267,10 @@ export default function EditBookForm() {
             {privacyOptions.map((option) => (
               <label
                 key={option.value}
-                className={`p-4 border rounded-xl cursor-pointer transition-all ${
+                className={`p-4  rounded-xl cursor-pointer transition-all ${
                   form.watch('privacy') === option.value
                     ? 'border-[#FFC300] bg-[#FFC300]/10'
-                    : 'border-[#FFC300]/20 bg-[#1a1a1a] hover:border-[#FFC300]/40'
+                    : ' bg-[#1a1a1a] hover:border-[#FFC300]/40'
                 }`}
               >
                 <input
@@ -356,16 +357,17 @@ export default function EditBookForm() {
         </div>
 
         <div className="flex justify-end pt-6 border-t border-[#FFC300]/10">
-          <button
+          <Button
+            variant={'beeYellow'}
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="px-8 py-4 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className=" items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed "
           >
             <Save className="w-5 h-5" />
             <span>
               {form.formState.isSubmitting ? 'Editing Book...' : 'Edit Book'}
             </span>
-          </button>
+          </Button>
         </div>
       </form>
     </div>

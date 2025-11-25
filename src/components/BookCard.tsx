@@ -16,7 +16,7 @@ const BookCard = ({
 }) => {
   return (
     <Link href={`/my-books/${id}`}>
-      <div className="flex flex-col w-full group rounded-2xl shadow-lg bg-[#2a2a2a] hover:shadow-2xl transition-all overflow-hidden border border-[#3a3a3a]">
+      <div className="flex flex-col w-full group rounded-2xl shadow-lg darkContainer3 overflow-hidden ">
         <div className="relative w-full h-40 overflow-hidden">
           <Image
             src={coverImage}

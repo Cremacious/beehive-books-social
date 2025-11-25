@@ -4,7 +4,7 @@ import { Earth, Search } from 'lucide-react';
 
 const SearchFriends = () => {
   return (
-    <div className="p-6">
+    <div className="p-4 md:p-6">
       <h2 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
         <Earth className="w-5 h-5" />
         Find Friends

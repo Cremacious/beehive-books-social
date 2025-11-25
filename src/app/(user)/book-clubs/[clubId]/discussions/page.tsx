@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
+import CreateDiscussionModal from './components/CreateDiscussionModal';
 
 const discussions = [
   {
@@ -62,23 +63,11 @@ const discussions = [
 
 const club = {
   name: 'Mystery Masters',
-  userRole: 'Member', 
+  userRole: 'Member',
 };
 
 const ClubDiscussionPage = () => {
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newDiscussion, setNewDiscussion] = useState({
-    title: '',
-    content: '',
-  });
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
-
-  const handleCreateDiscussion = () => {
-
-    console.log('Creating discussion:', newDiscussion);
-    setShowCreateModal(false);
-    setNewDiscussion({ title: '', content: '' });
-  };
 
   const sortedDiscussions = [...discussions].sort((a, b) => {
     const dateA = new Date(a.createdAt);
@@ -91,7 +80,6 @@ const ClubDiscussionPage = () => {
   return (
     <NewPage>
       <div className="w-full space-y-8">
-    
         <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10">
           <div className="flex items-center justify-between">
             <div>
@@ -102,16 +90,9 @@ const ClubDiscussionPage = () => {
                 Join conversations about {club.name}
               </p>
             </div>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="px-6 py-3 bg-[#FFC300] text-black font-bold rounded-xl hover:bg-[#FFD700] transition-all flex items-center gap-2"
-            >
-              <Plus className="w-5 h-5" />
-              New Discussion
-            </button>
+            {/* <CreateDiscussionModal /> */}
           </div>
         </div>
-
 
         <div className="customDark2 rounded-2xl shadow-xl p-6 border border-[#2a2a2a]">
           <div className="flex gap-4">
@@ -139,13 +120,13 @@ const ClubDiscussionPage = () => {
           </div>
         </div>
 
-  
         <div className="customDark2 rounded-2xl shadow-xl p-6 md:p-8 border border-[#2a2a2a]">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
               <MessageSquare className="w-5 h-5 text-[#FFC300]" />
               All Discussions ({discussions.length})
             </h2>
+            <CreateDiscussionModal />
           </div>
 
           <div className="space-y-4">
@@ -185,7 +166,6 @@ const ClubDiscussionPage = () => {
             ))}
           </div>
 
- 
           {sortedDiscussions.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
               <div className="w-24 h-24 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6">
@@ -198,10 +178,7 @@ const ClubDiscussionPage = () => {
                 Start the conversation! Create the first discussion for your
                 book club.
               </p>
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="px-8 py-4 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center gap-3"
-              >
+              <button className="px-8 py-4 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center gap-3">
                 <Plus className="w-5 h-5" />
                 Start First Discussion
               </button>
@@ -209,62 +186,6 @@ const ClubDiscussionPage = () => {
           )}
         </div>
       </div>
-
-
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#1a1a1a] rounded-2xl p-8 max-w-2xl w-full border border-[#FFC300]/20">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-white">
-                Create New Discussion
-              </h3>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="text-white/50 hover:text-white"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="space-y-4">
-              <input
-                type="text"
-                value={newDiscussion.title}
-                onChange={(e) =>
-                  setNewDiscussion({ ...newDiscussion, title: e.target.value })
-                }
-                placeholder="Discussion title..."
-                className="w-full bg-[#2a2a2a] border border-[#FFC300]/20 rounded-lg p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50"
-              />
-              <textarea
-                value={newDiscussion.content}
-                onChange={(e) =>
-                  setNewDiscussion({
-                    ...newDiscussion,
-                    content: e.target.value,
-                  })
-                }
-                placeholder="Start the conversation..."
-                rows={6}
-                className="w-full bg-[#2a2a2a] border border-[#FFC300]/20 rounded-lg p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 resize-none"
-              />
-            </div>
-            <div className="flex gap-3 mt-6">
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="flex-1 px-4 py-3 bg-[#2a2a2a] hover:bg-[#3a3a2a] text-white rounded-lg font-medium transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleCreateDiscussion}
-                className="flex-1 px-4 py-3 bg-[#FFC300] hover:bg-[#FFD700] text-black rounded-lg font-medium transition-colors"
-              >
-                Create Discussion
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </NewPage>
   );
 };

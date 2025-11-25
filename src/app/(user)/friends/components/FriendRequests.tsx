@@ -38,7 +38,7 @@ type friendRequestType = {
 
 const FriendRequests = () => {
   return (
-    <div className="customDark2 rounded-2xl shadow-xl p-6">
+    <div className="darkContainer2 rounded-2xl shadow-xl p-4 md:p-6">
       <h2 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
         <UserPlus className="w-5 h-5" />
         Friend Requests
@@ -48,7 +48,7 @@ const FriendRequests = () => {
         {friendRequests.length > 0 ? (
           <div className="space-y-3">
             {friendRequests.map((request) => (
-              <div key={request.id} className="bg-[#1a1a1a] rounded-xl p-4">
+              <div key={request.id} className="darkContainer3 rounded-xl p-4">
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center">
                     <span className="text-yellow-400 font-semibold">

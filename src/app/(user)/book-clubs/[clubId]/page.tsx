@@ -16,10 +16,14 @@ import {
   Heart,
   Clock,
 } from 'lucide-react';
-import EditClubButton from '../components/EditClubButton';
 import { Button } from '@/components/ui/button';
 import ViewMembersButton from '../components/ViewMembersButton';
 import Link from 'next/link';
+import coverImage from '@/assets/stock/club-cover.jpg';
+import ClubProgress from '../components/ClubProgress';
+import ClubDiscussionPreview from '../components/ClubDiscussionPreview';
+import ClubMembersPreview from '../components/ClubMembersPreview';
+import ClubReadingListPreview from '../components/ClubReadingListPreview';
 
 const club = {
   id: 1,
@@ -33,6 +37,7 @@ const club = {
   members: 12,
   privacy: 'Private',
   userRole: 'Owner',
+  role: 'Owner',
   createdDate: '2024-10-15',
   rules:
     'Post weekly discussion questions, respect all opinions, no spoilers in titles, be kind and constructive in feedback.',
@@ -159,12 +164,12 @@ const ClubPage = () => {
         <div className="relative">
           <div className="h-48 md:h-64 rounded-3xl overflow-hidden relative">
             <Image
-              src={club.clubCover}
+              src={coverImage}
               alt={club.name}
               fill
               className="object-cover"
             />
-            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute inset-0 darkContainer2" />
             <div className="absolute bottom-6 left-6 md:left-8 text-white">
               <h1 className="text-3xl md:text-4xl font-bold mb-2">
                 {club.name}
@@ -193,19 +198,23 @@ const ClubPage = () => {
           </div>
 
           <div className="absolute top-6 right-6 flex gap-3">
-            <button className="px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all flex items-center gap-2">
+            <Button variant={'beeDark'}>
               <Share className="w-4 h-4" />
               Share
-            </button>
+            </Button>
             {(club.userRole === 'Owner' || club.userRole === 'Moderator') && (
-              <EditClubButton clubId={club.id} />
+              <Link href={`/book-clubs/${club.id}/settings`}>
+                <Button variant={'beeYellow'}>
+                  <Settings className="w-4 h-4 text-black" /> Edit Club
+                </Button>
+              </Link>
             )}
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <div className="customDark2 rounded-2xl shadow-xl p-6 md:p-8 border border-[#2a2a2a]">
+            <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
                   <BookOpen className="w-4 h-4 text-[#FFC300]" />
@@ -237,188 +246,18 @@ const ClubPage = () => {
                 </div>
               )}
             </div>
-
-            <div className="customDark2 rounded-2xl shadow-xl p-6 md:p-8 border border-[#2a2a2a]">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-                  <BookOpen className="w-4 h-4 text-[#FFC300]" />
-                </div>
-                <h2 className="text-xl font-bold text-white">
-                  Currently Reading
-                </h2>
-              </div>
-
-              <div className="flex items-start gap-6">
-                <div className="w-24 h-32 rounded-lg overflow-hidden shrink-0">
-                  <Image
-                    src={club.cover}
-                    alt={club.currentBook}
-                    width={96}
-                    height={128}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    {club.currentBook}
-                  </h3>
-                  <p className="text-[#FFC300]/80 text-lg mb-4">
-                    by {club.author}
-                  </p>
-
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm text-white/70 mb-2">
-                        <span>Club Progress</span>
-                        <span>75% Complete</span>
-                      </div>
-                      <div className="w-full bg-[#2a2a2a] rounded-full h-3">
-                        <div
-                          className="bg-[#FFC300] h-3 rounded-full"
-                          style={{ width: '75%' }}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                      <button className="px-4 py-2 bg-[#FFC300]/20 text-[#FFC300] rounded-lg hover:bg-[#FFC300]/30 transition-all flex items-center gap-2">
-                        <Target className="w-4 h-4" />
-                        Update Progress
-                      </button>
-                      <button className="px-4 py-2 bg-[#FFC300]/20 text-[#FFC300] rounded-lg hover:bg-[#FFC300]/30 transition-all flex items-center gap-2">
-                        <MessageCircle className="w-4 h-4" />
-                        Start Discussion
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="customDark2 rounded-2xl shadow-xl p-6 md:p-8 border border-[#2a2a2a]">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-                    <MessageCircle className="w-4 h-4 text-[#FFC300]" />
-                  </div>
-                  <h2 className="text-xl font-bold text-white">Discussions</h2>
-                </div>
-                <button className="px-4 py-2 bg-[#FFC300]/20 text-[#FFC300] rounded-lg hover:bg-[#FFC300]/30 transition-all flex items-center gap-2">
-                  <Plus className="w-4 h-4" />
-                  New Discussion
-                </button>
-                <Link
-                  className="bg-yellow-400"
-                  href={`/book-clubs/${club.id}/discussions`}
-                >
-                  View Discussions
-                </Link>
-              </div>
-
-              <div className="space-y-4">
-                {discussions.map((discussion) => (
-                  <div
-                    key={discussion.id}
-                    className="bg-[#1a1a1a] rounded-xl p-4 border border-[#FFC300]/20 hover:border-[#FFC300]/40 transition-all cursor-pointer"
-                  >
-                    <h4 className="font-semibold text-white mb-2">
-                      {discussion.title}
-                    </h4>
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-4">
-                        <span className="text-[#FFC300]/60">
-                          by {discussion.author}
-                        </span>
-                        <span className="text-white/70 flex items-center gap-1">
-                          <MessageCircle className="w-3 h-3" />
-                          {discussion.replies} replies
-                        </span>
-                        <span className="text-white/70 flex items-center gap-1">
-                          <Heart className="w-3 h-3" />
-                          {discussion.likes}
-                        </span>
-                      </div>
-                      <span className="text-white/70">
-                        {discussion.lastActivity}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ClubProgress club={club} />
+            <ClubDiscussionPreview discussions={discussions} />
           </div>
 
           <div className="space-y-6">
-            <div className="customDark2 rounded-2xl shadow-xl p-6 border border-[#2a2a2a]">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Users className="w-5 h-5 text-[#FFC300]" />
-                  Members ({members.length})
-                </h3>
-                {(club.userRole === 'Owner' ||
-                  club.userRole === 'Moderator') && (
-                  <button className="px-3 py-1 bg-[#FFC300]/20 text-[#FFC300] rounded-lg hover:bg-[#FFC300]/30 transition-all text-sm">
-                    Invite
-                  </button>
-                )}
-                <ViewMembersButton clubId={club.id} />
-              </div>
+            <ClubMembersPreview club={club} members={members} />
+            <ClubReadingListPreview
+              clubId={club.id}
+              readingList={readingList}
+            />
 
-              <div className="space-y-3">
-                {members.slice(0, 5).map((member) => (
-                  <div
-                    key={member.id}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-[#FFC300]/20 rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 text-[#FFC300]" />
-                      </div>
-                      <div>
-                        <div className="text-white text-sm font-medium">
-                          {member.name}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {member.role === 'Owner' && (
-                            <Crown className="w-3 h-3 text-yellow-500" />
-                          )}
-                          {member.role === 'Moderator' && (
-                            <Shield className="w-3 h-3 text-blue-400" />
-                          )}
-                          <span
-                            className={`text-xs ${
-                              member.role === 'Owner'
-                                ? 'text-yellow-400'
-                                : member.role === 'Moderator'
-                                ? 'text-blue-400'
-                                : 'text-gray-400'
-                            }`}
-                          >
-                            {member.role}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`w-2 h-2 rounded-full ${
-                        member.status === 'online'
-                          ? 'bg-green-400'
-                          : member.status === 'away'
-                          ? 'bg-yellow-400'
-                          : 'bg-gray-400'
-                      }`}
-                    />
-                  </div>
-                ))}
-                {members.length > 5 && (
-                  <button className="w-full text-center text-[#FFC300] hover:text-[#FFD700] transition-all text-sm py-2">
-                    View all {members.length} members
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div className="customDark2 rounded-2xl shadow-xl p-6 border border-[#2a2a2a]">
+            {/* <div className="customDark2 rounded-2xl shadow-xl p-6 border border-[#2a2a2a]">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                   <Vote className="w-5 h-5 text-[#FFC300]" />
@@ -467,7 +306,7 @@ const ClubPage = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

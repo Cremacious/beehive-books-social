@@ -1,9 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-/* Beehive Books Design System */
 :root {
-  /* Brand Colors */
   --honey-yellow: #fdd835;
   --warm-yellow: #fff8e1;
   --amber: #ffab00;
@@ -12,13 +10,11 @@
   --soft-white: #fefefe;
   --cream: #faf9f7;
 
-  /* Semantic Colors */
   --success: #22c55e;
   --warning: #f59e0b;
   --error: #ef4444;
   --info: #3b82f6;
 
-  /* Design System */
   --font-primary: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont,
     sans-serif;
   --font-display: var(--font-poppins), 'Poppins', -apple-system,
@@ -27,33 +23,26 @@
   --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
   --shadow-strong: 0 8px 32px rgba(0, 0, 0, 0.16);
 
-  /* Layout */
   --radius: 16px;
 
-  /* Beehive Books Theme - Light Mode */
-  --background: #f8da55; /* Honey yellow background */
-  --foreground: #1e293b; /* Dark slate text */
-  --card: #fefefe; /* Soft white cards */
+  --background: #f8da55;
+  --foreground: #1e293b;
+  --card: #fefefe;
   --card-foreground: #1e293b;
   --popover: #fefefe;
   --popover-foreground: #1e293b;
-  --primary: #1e293b; /* Dark slate primary */
+  --primary: #1e293b;
   --primary-foreground: #fefefe;
-  --secondary: #fff8e1; /* Warm yellow secondary */
+  --secondary: #fff8e1;
   --secondary-foreground: #1e293b;
   --muted: #fff8e1;
   --muted-foreground: #64748b;
-  --accent: #ffab00; /* Amber accent */
+  --accent: #ffab00;
   --accent-foreground: #1e293b;
   --destructive: #ef4444;
-  --border: rgba(30, 41, 59, 0.1);
+  --border: #f8da55;
   --input: rgba(254, 254, 254, 0.9);
   --ring: #ffab00;
-}
-
-* {
-  border-color: var(--border);
-  outline-color: rgba(255, 171, 0, 0.5);
 }
 
 body {
@@ -74,9 +63,33 @@ body {
     background-color: #252525;
   }
   .customDark2 {
-    background-color: #1b1b1b;
+    background-color: #202020;
   }
   .customDark3 {
-    background-color: #999696;
+    background-color: #1a1a1a;
+  }
+}
+
+@layer components {
+  .darkContainer1 {
+    @apply bg-[#252525] border-b-6 border-[#222222];
+  }
+  .darkContainer2 {
+    @apply bg-[#202020] border-b-4 border-[#1d1d1d];
+  }
+  .darkContainer3 {
+    @apply bg-[#1a1a1a] border-b-4 border-[#161616];
+  }
+  .highlightYellow {
+    @apply hover:bg-[#FFC300]/20 hover:border-[#FFC300]/20 transition-colors;
+  }
+  .backgroundYellow {
+    @apply bg-[#FFC300]/10 text-[#FFC300]  hover:bg-[#FFC300]/20 transition-all;
+  }
+  .searchStyle {
+    @apply bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl text-white placeholder-white/80 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all;
+  }
+  .yellowBadge {
+    @apply bg-yellow-500 text-slate-800 rounded-full flex items-center justify-center text-sm font-bold;
   }
 }

@@ -10,8 +10,8 @@ import {
 } from 'lucide-react';
 import coverImage from '@/assets/stock/cover.jpeg';
 import ChapterListItem from '../components/ChapterListItem';
-import AddChapterButton from './components/AddChapterButton';
-import EditBookButton from './components/EditBookButton';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const book = {
   id: 111,
@@ -49,8 +49,8 @@ const BookPage = () => {
   return (
     <NewPage>
       <div className="w-full space-y-8 ">
-        <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10 ">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div className="flex justify-center lg:justify-start">
               <div className="relative w-48 h-64 md:w-56 md:h-80 rounded-2xl overflow-hidden shadow-lg">
                 <Image
@@ -68,17 +68,25 @@ const BookPage = () => {
                   <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
                     {book.title}
                   </h1>
-                  <p className="text-xl text-white mb-1">by {book.author}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
+                  <p className="text-xl text-white mb-4">by {book.author}</p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="backgroundYellow  px-3 py-1 rounded-full text-sm font-medium">
                       {book.genre}
                     </span>
-                    <span className="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-sm font-medium">
+                    <span className="backgroundYellow px-3 py-1 rounded-full text-sm font-medium">
                       {book.category}
                     </span>
                   </div>
                 </div>
-                <EditBookButton bookId={book.id} />
+                <Link
+                  className="hidden md:flex items-center gap-2 "
+                  href={`/my-books/${book.id}/edit`}
+                >
+                  <Button size={'lg'} variant={'beeYellow'} className="">
+                    <Edit className="w-4 h-4 text-black" />
+                    Edit Book
+                  </Button>
+                </Link>
               </div>
 
               <p className="text-white leading-relaxed mb-6">
@@ -104,7 +112,7 @@ const BookPage = () => {
                   </div>
                   <p className="text-sm text-white">Words</p>
                 </div>
-                <div className="text-center">
+                <div className="text-center col-span-2 md:col-span-1">
                   <div className="flex items-center justify-center mb-1">
                     <MessageCircle className="w-5 h-5 text-yellow-500 mr-1" />
                     <span className="text-2xl font-bold text-white">
@@ -116,15 +124,49 @@ const BookPage = () => {
               </div>
             </div>
           </div>
+
+          <Link className="md:hidden" href={`/my-books/${book.id}/edit`}>
+            <Button size={'lg'} variant={'beeYellow'} className="w-full mt-6">
+              <Edit className="w-4 h-4 text-black" />
+              Edit Book
+            </Button>
+          </Link>
         </div>
 
-        <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10 min-h-[450px] max-w-5xl mx-auto">
+        <div className="darkContainer2 rounded-2xl shadow-xl p-2 md:p-10 min-h-[450px] max-w-5xl mx-auto">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-yellow-400 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-yellow-400 flex items-center gap-2 p-2">
               <BookOpen className="w-6 h-6 text-yellow-400" />
               Chapters
             </h2>
-            <AddChapterButton bookId={book.id} />
+            <div>
+              <Link
+                className="md:flex hidden"
+                href={`/my-books/${book.id}/create-chapter`}
+              >
+                <Button
+                  size={'lg'}
+                  variant={'beeYellow'}
+                  className="flex items-center gap-2"
+                >
+                  <Plus className="w-5 h-5 text-black" />
+                  Add Chapter
+                </Button>
+              </Link>
+              <Link
+                className="md:hidden block"
+                href={`/my-books/${book.id}/create-chapter`}
+              >
+                <Button
+                  size={'sm'}
+                  variant={'beeYellow'}
+                  className="flex items-center gap-2"
+                >
+                  <Plus className="w-5 h-5 text-black" />
+                  Add Chapter
+                </Button>
+              </Link>
+            </div>
           </div>
 
           <div className="space-y-4 ">

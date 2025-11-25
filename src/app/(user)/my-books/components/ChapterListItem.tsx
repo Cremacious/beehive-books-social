@@ -1,7 +1,8 @@
 'use client';
+import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ChapterListItem = ({
@@ -21,30 +22,26 @@ const ChapterListItem = ({
   return (
     <div
       key={chapter.id}
-      className="flex items-center justify-between p-4 bg-yellow-100 rounded-xl hover:bg-yellow-200 transition-colors mb-4"
+      className="flex flex-col md:flex-row md:items-center md:justify-between p-4 md:p-6 darkContainer3 highlightYellow rounded-xl mb-4"
     >
-      <div className="flex items-center gap-4">
-        <div className="w-8 h-8 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
-          {index + 1}
-        </div>
+      <div className="flex items-center gap-4 mb-4 md:mb-0">
+        <div className="yellowBadge w-8 h-8">{index + 1}</div>
         <div>
-          <h3 className="font-semibold text-slate-900">{chapter.title}</h3>
+          <h3 className="font-semibold text-white">{chapter.title}</h3>
         </div>
       </div>
 
-      <div className="flex gap-2">
-        <button
-          onClick={() => {
-            router.push(`/my-books/${bookId}/${chapterId}`);
-          }}
-          className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition-colors"
-        >
-          Read
-        </button>
-        <button className="px-4 py-2 border border-slate-300 hover:bg-slate-100 text-slate-700 rounded-lg font-medium transition-colors flex items-center gap-1">
-          <Edit className="w-4 h-4" />
-          Edit
-        </button>
+      <div className="flex gap-2 justify-center">
+        <Link href={`/my-books/${bookId}/${chapterId}`}>
+          <Button variant={'beeYellow'}>Read</Button>
+        </Link>
+
+        <Link href={`/my-books/${bookId}/${chapterId}/edit`}>
+          <Button variant={'beeDark'} className="flex items-center gap-2">
+            <Edit className="w-4 h-4" />
+            Edit
+          </Button>
+        </Link>
       </div>
     </div>
   );

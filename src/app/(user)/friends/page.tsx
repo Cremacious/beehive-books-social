@@ -108,13 +108,13 @@ const FriendsPage = () => {
     <NewPage>
       <div className="w-full space-y-8">
         {/* Header */}
-        <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10">
+        <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
                 My Friends
               </h1>
-              <p className="text-white/70">
+              <p className="text-[#FFC300]/60 mt-2 text-lg font-medium">
                 Connect with fellow writers and readers in your literary
                 community
               </p>
@@ -123,16 +123,14 @@ const FriendsPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column  */}
           <div className="lg:col-span-1 space-y-6">
             <FriendRequests />
-            <div className="customDark2 rounded-2xl shadow-xl p-2">
+            <div className="darkContainer2 rounded-2xl shadow-xl p-2">
               <SearchFriends />
               <RecommendedFriends />
             </div>
           </div>
 
-          {/* Right Column y */}
           <div className="lg:col-span-2 space-y-6">
             <FriendActivity />
 
