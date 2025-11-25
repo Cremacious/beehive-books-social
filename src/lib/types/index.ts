@@ -3,7 +3,7 @@ export type ReadingListType = {
   title: string;
   author: string;
   votes: number;
-  status: string
+  status: string;
 };
 export type MemberType = {
   id: number;
