@@ -9,6 +9,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import { useState } from 'react';
+import ReadingListItem from './components/ReadingListItem';
 
 const readingList = {
   id: 1,
@@ -91,7 +92,7 @@ const ReadingListPage = () => {
   const addBook = () => {
     if (newBook.title.trim() && newBook.author.trim()) {
       const book = {
-        id: Date.now(), // Simple ID generation
+        id: Date.now(),
         title: newBook.title.trim(),
         author: newBook.author.trim(),
         isRead: false,
@@ -110,7 +111,7 @@ const ReadingListPage = () => {
   return (
     <NewPage>
       <div className="w-full max-w-6xl mx-auto space-y-8">
-        <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10">
+        <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-4">
@@ -160,10 +161,9 @@ const ReadingListPage = () => {
           </div>
         </div>
 
-        <div className="customDark2 rounded-2xl shadow-xl p-6 md:p-8 border border-[#2a2a2a]">
-          {/* Quick Add Form */}
+        <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 ">
           <form
-            className="flex flex-col md:flex-row items-center gap-4 mb-8 bg-[#1a1a1a] p-4 rounded-xl border border-[#FFC300]/10"
+            className="flex flex-col md:flex-row items-center gap-4 mb-8 p-4 rounded-xl "
             onSubmit={(e) => {
               e.preventDefault();
               addBook();
@@ -210,60 +210,11 @@ const ReadingListPage = () => {
 
           <div className="space-y-4">
             {books.map((book) => (
-              <div
+              <ReadingListItem
                 key={book.id}
-                className="bg-[#1a1a1a] rounded-xl p-6 border border-[#FFC300]/10 hover:border-[#FFC300]/30 transition-all"
-              >
-                <div className="flex items-start gap-6">
-                  <div className="w-16 h-24 bg-[#FFC300]/10 rounded-lg flex items-center justify-center shrink-0">
-                    <BookOpen className="w-8 h-8 text-[#FFC300]/60" />
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-white mb-2">
-                          {book.title}
-                        </h3>
-                        <p className="text-white/70 mb-3">by {book.author}</p>
-                        <div className="flex items-center gap-4 text-white/60 text-sm">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-3 h-3" />
-                            Added {book.dateAdded}
-                          </div>
-                          {book.rating && (
-                            <div className="flex items-center gap-1">
-                              <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                              {book.rating}/5
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => toggleReadStatus(book.id)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                          book.isRead
-                            ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
-                            : 'bg-[#FFC300]/20 text-[#FFC300] hover:bg-[#FFC300]/30'
-                        }`}
-                      >
-                        {book.isRead ? (
-                          <>
-                            <CheckCircle className="w-4 h-4" />
-                            Read
-                          </>
-                        ) : (
-                          <>
-                            <Circle className="w-4 h-4" />
-                            Mark as Read
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                book={book}
+                toggleReadStatus={toggleReadStatus}
+              />
             ))}
           </div>
 

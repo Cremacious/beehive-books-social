@@ -12,6 +12,7 @@ import {
 import { useState } from 'react';
 import Link from 'next/link';
 import CreateDiscussionModal from './components/CreateDiscussionModal';
+import DiscussionListItem from '../../components/DiscussionListItem';
 
 const discussions = [
   {
@@ -80,7 +81,7 @@ const ClubDiscussionPage = () => {
   return (
     <NewPage>
       <div className="w-full space-y-8">
-        <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10">
+        <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
@@ -90,79 +91,49 @@ const ClubDiscussionPage = () => {
                 Join conversations about {club.name}
               </p>
             </div>
-            {/* <CreateDiscussionModal /> */}
           </div>
         </div>
 
-        <div className="customDark2 rounded-2xl shadow-xl p-6 border border-[#2a2a2a]">
-          <div className="flex gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/50" />
-              <input
-                type="text"
-                placeholder="Search discussions..."
-                className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-lg py-3 pl-10 pr-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
-              />
-            </div>
-            <div className="flex items-center gap-2 min-w-fit">
-              <span className="text-white/60 text-sm">Sort:</span>
-              <select
-                value={sortOrder}
-                onChange={(e) =>
-                  setSortOrder(e.target.value as 'newest' | 'oldest')
-                }
-                className="bg-[#1a1a1a] border border-[#FFC300]/20 rounded-lg px-3 py-3 text-white text-sm focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 min-w-[140px]"
-              >
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div className="customDark2 rounded-2xl shadow-xl p-6 md:p-8 border border-[#2a2a2a]">
-          <div className="flex items-center justify-between mb-6">
+        <div className="darkContainer2 rounded-2xl shadow-xl p-2 md:p-8 max-w-5xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between md:mb-6">
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
               <MessageSquare className="w-5 h-5 text-[#FFC300]" />
-              All Discussions ({discussions.length})
+              All Discussions
+              <span className="yellowBadge w-7 h-7">{discussions.length}</span>
             </h2>
-            <CreateDiscussionModal />
+            <div className="mt-4 md:mt-0">
+              <CreateDiscussionModal size="default" />
+            </div>
+          </div>
+          <div className="p-6 max-w-3xl mx-auto">
+            <div className="flex gap-4 flex-col md:flex-row ">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/50" />
+                <input
+                  type="text"
+                  placeholder="Search discussions..."
+                  className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-lg py-3 pl-10 pr-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
+                />
+              </div>
+              <div className="flex items-center gap-2 min-w-fit">
+                <span className="text-white/60 text-sm">Sort:</span>
+                <select
+                  value={sortOrder}
+                  onChange={(e) =>
+                    setSortOrder(e.target.value as 'newest' | 'oldest')
+                  }
+                  className="bg-[#1a1a1a] border border-[#FFC300]/20 rounded-lg px-3 py-3 text-white text-sm focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 min-w-[140px]"
+                >
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-8 max-w-4xl mx-auto">
             {sortedDiscussions.map((discussion) => (
-              <Link
-                key={discussion.id}
-                href={`/book-clubs/${111}/discussions/${discussion.id}`}
-              >
-                <div className="bg-[#1a1a1a] rounded-xl p-6 hover:bg-[#2a2a2a] transition-all cursor-pointer border border-[#FFC300]/10">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-white mb-2">
-                        {discussion.title}
-                      </h3>
-                      <div className="flex items-center gap-4 text-white/60 text-sm">
-                        <div className="flex items-center gap-2">
-                          <User className="w-4 h-4" />
-                          {discussion.author}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <MessageSquare className="w-4 h-4" />
-                          {discussion.replies} replies
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Heart className="w-4 h-4" />
-                          {discussion.likes} likes
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4" />
-                          {discussion.lastActivity}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
+              <DiscussionListItem discussion={discussion} key={discussion.id} />
             ))}
           </div>
 

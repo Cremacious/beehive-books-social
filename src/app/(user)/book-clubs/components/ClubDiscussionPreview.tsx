@@ -2,6 +2,7 @@ import { Heart, MessageCircle, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { DiscussionType } from '@/lib/types';
 import { Button } from '@/components/ui/button';
+import CreateDiscussionModal from '../[clubId]/discussions/components/CreateDiscussionModal';
 
 const ClubDiscussionPreview = ({
   discussions,
@@ -18,18 +19,13 @@ const ClubDiscussionPreview = ({
           <h2 className="text-xl font-bold text-white">Discussions</h2>
         </div>
         <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+          <CreateDiscussionModal size="sm" />
           <Link href={`/book-clubs/1/discussions`} className="w-full md:w-auto">
             <Button
-            size={'sm'}
+              size={'sm'}
               variant={'beeYellow'}
-              className="w-full md:w-auto flex items-center gap-2"
+              className="w-full md:w-auto"
             >
-              <Plus className="w-4 h-4" />
-              New Discussion
-            </Button>
-          </Link>
-          <Link href={`/book-clubs/1/discussions`} className="w-full md:w-auto">
-            <Button size={'sm'} variant={'beeYellow'} className="w-full md:w-auto">
               View Discussions
             </Button>
           </Link>

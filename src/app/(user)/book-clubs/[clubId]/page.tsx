@@ -256,57 +256,6 @@ const ClubPage = () => {
               clubId={club.id}
               readingList={readingList}
             />
-
-            {/* <div className="customDark2 rounded-2xl shadow-xl p-6 border border-[#2a2a2a]">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Vote className="w-5 h-5 text-[#FFC300]" />
-                  Reading List
-                </h3>
-                <Link href={`/book-clubs/${club.id}/reading-list`}>
-                  <button className="px-3 py-1 bg-[#FFC300]/20 text-[#FFC300] rounded-lg hover:bg-[#FFC300]/30 transition-all text-sm">
-                    View List
-                  </button>
-                </Link>
-              </div>
-
-              <div className="space-y-3">
-                {readingList.map((book) => (
-                  <div
-                    key={book.id}
-                    className="bg-[#1a1a1a] rounded-lg p-3 border border-[#FFC300]/20"
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-1">
-                        <h4 className="text-white text-sm font-medium truncate">
-                          {book.title}
-                        </h4>
-                        <p className="text-[#FFC300]/60 text-xs truncate">
-                          by {book.author}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Vote className="w-3 h-3 text-[#FFC300]" />
-                        <span className="text-[#FFC300] text-xs">
-                          {book.votes}
-                        </span>
-                      </div>
-                    </div>
-                    <div
-                      className={`text-xs px-2 py-1 rounded-full text-center ${
-                        book.status === 'completed'
-                          ? 'bg-green-500/20 text-green-400'
-                          : book.status === 'current'
-                          ? 'bg-[#FFC300]/20 text-[#FFC300]'
-                          : 'bg-gray-500/20 text-gray-400'
-                      }`}
-                    >
-                      {book.status}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div> */}
           </div>
         </div>
       </div>

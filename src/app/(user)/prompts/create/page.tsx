@@ -46,7 +46,7 @@ const PromptsCreatePage = () => {
   return (
     <NewPage>
       <div className="w-full max-w-2xl mx-auto space-y-8">
-        <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10">
+        <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
           <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
             Create Writing Prompt
           </h1>

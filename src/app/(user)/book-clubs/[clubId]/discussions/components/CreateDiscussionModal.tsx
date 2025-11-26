@@ -3,7 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Plus, X } from 'lucide-react';
 import { useState } from 'react';
 
-const CreateDiscussionModal = () => {
+const CreateDiscussionModal = ({
+  size,
+}: {
+  size?: 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg' | null;
+}) => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newDiscussion, setNewDiscussion] = useState({
     title: '',
@@ -18,6 +22,7 @@ const CreateDiscussionModal = () => {
   return (
     <div>
       <Button
+        size={size}
         onClick={() => {
           setShowCreateModal(true);
         }}

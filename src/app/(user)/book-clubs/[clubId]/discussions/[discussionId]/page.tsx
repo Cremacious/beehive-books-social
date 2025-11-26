@@ -6,13 +6,13 @@ import {
   MessageSquare,
   Heart,
   Reply,
-  Send,
   Clock,
   Eye,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
-
+import DiscussionReply from './components/DiscussionReply';
+import DiscussionReplySection from './components/DiscussionReplySection';
+import { getRoleColor, formatDate } from '@/lib/utils';
 
 const discussion = {
   id: 1,
@@ -110,42 +110,9 @@ I'm curious about the author's research process. Has anyone read any interviews 
 ];
 
 const DiscussionThreadPage = () => {
-  const [newReply, setNewReply] = useState('');
-
-  const handleSubmitReply = () => {
-    if (newReply.trim()) {
-      // Placeholder - in real app, this would submit to API
-      console.log('Submitting reply:', newReply);
-      setNewReply('');
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  const getRoleColor = (role: string) => {
-    switch (role) {
-      case 'Owner':
-        return 'text-red-400';
-      case 'Moderator':
-        return 'text-blue-400';
-      default:
-        return 'text-green-400';
-    }
-  };
-
   return (
     <NewPage>
       <div className="w-full max-w-6xl mx-auto space-y-6">
-        {/* Header with Back Button */}
         <div className="flex items-center gap-4 mb-6">
           <Link
             href="/book-clubs/1/discussions"
@@ -156,10 +123,8 @@ const DiscussionThreadPage = () => {
           </Link>
         </div>
 
-        {/* Main Discussion Post */}
-        <div className="customDark2 rounded-lg shadow-xl border border-[#2a2a2a] overflow-hidden">
-          {/* Post Header */}
-          <div className="bg-[#1a1a1a] border-b border-[#2a2a2a] px-6 py-4">
+        <div className="overflow-hidden">
+          <div className="px-6 py-4 darkContainer2 rounded-2xl shadow-xl mb-4">
             <h1 className="text-2xl font-bold text-white mb-2">
               {discussion.title}
             </h1>
@@ -179,12 +144,10 @@ const DiscussionThreadPage = () => {
             </div>
           </div>
 
-          {/* Original Post Content */}
-          <div className="p-6">
+          <div className="p-6 darkContainer2 rounded-2xl shadow-xl">
             <div className="flex gap-4">
-              {/* Author Info Sidebar */}
               <div className="w-48 shrink-0">
-                <div className="bg-[#1a1a1a] rounded-lg p-4 border border-[#2a2a2a]">
+                <div className="darkContainer3 rounded-2xl p-4 ">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-12 h-12 bg-[#FFC300]/20 rounded-full flex items-center justify-center">
                       <User className="w-6 h-6 text-[#FFC300]" />
@@ -214,7 +177,6 @@ const DiscussionThreadPage = () => {
                 </div>
               </div>
 
-              {/* Post Content */}
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-4 text-sm text-white/60">
                   <Clock className="w-4 h-4" />
@@ -238,141 +200,13 @@ const DiscussionThreadPage = () => {
           </div>
         </div>
 
-        {/* Replies Section */}
         <div className="space-y-4">
           {replies.map((reply, index) => (
-            <div
-              key={reply.id}
-              className={`customDark2 rounded-lg shadow-xl border border-[#2a2a2a] overflow-hidden ${
-                index % 2 === 0 ? 'bg-[#0a0a0a]' : 'bg-[#0d0d0d]'
-              }`}
-            >
-              <div className="p-6">
-                <div className="flex gap-4">
-                  {/* Author Info Sidebar */}
-                  <div className="w-48 shrink-0">
-                    <div className="bg-[#1a1a1a] rounded-lg p-4 border border-[#2a2a2a]">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-12 h-12 bg-[#FFC300]/20 rounded-full flex items-center justify-center">
-                          <User className="w-6 h-6 text-[#FFC300]" />
-                        </div>
-                        <div>
-                          <div className="font-semibold text-white">
-                            {reply.author.name}
-                          </div>
-                          <div
-                            className={`text-xs ${getRoleColor(
-                              reply.author.role
-                            )}`}
-                          >
-                            {reply.author.role}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-xs text-white/60 space-y-1">
-                        <div>
-                          Joined:{' '}
-                          {new Date(reply.author.joinDate).toLocaleDateString()}
-                        </div>
-                        <div>Posts: {reply.author.postCount}</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Reply Content */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-4 text-sm text-white/60">
-                      <Clock className="w-4 h-4" />
-                      Posted {formatDate(reply.createdAt)}
-                    </div>
-                    <div className="text-white/90 leading-relaxed whitespace-pre-line">
-                      {reply.content}
-                    </div>
-                    <div className="flex items-center gap-4 mt-4 pt-4 border-t border-[#2a2a2a]">
-                      <button className="flex items-center gap-2 text-white/60 hover:text-[#FFC300] transition-colors">
-                        <Heart className="w-4 h-4" />
-                        Like ({reply.likes})
-                      </button>
-                      <button className="flex items-center gap-2 text-white/60 hover:text-[#FFC300] transition-colors">
-                        <Reply className="w-4 h-4" />
-                        Reply
-                      </button>
-                    </div>
-
-                    {/* Nested Replies */}
-                    {reply.replies && reply.replies.length > 0 && (
-                      <div className="mt-6 space-y-4">
-                        {reply.replies.map((nestedReply) => (
-                          <div
-                            key={nestedReply.id}
-                            className="ml-8 pl-4 border-l-2 border-[#FFC300]/30 bg-[#1a1a1a] rounded-lg p-4"
-                          >
-                            <div className="flex gap-3 mb-3">
-                              <div className="w-8 h-8 bg-[#FFC300]/20 rounded-full flex items-center justify-center shrink-0">
-                                <User className="w-4 h-4 text-[#FFC300]" />
-                              </div>
-                              <div>
-                                <div className="font-semibold text-white text-sm">
-                                  {nestedReply.author.name}
-                                </div>
-                                <div
-                                  className={`text-xs ${getRoleColor(
-                                    nestedReply.author.role
-                                  )}`}
-                                >
-                                  {nestedReply.author.role}
-                                </div>
-                              </div>
-                              <div className="text-xs text-white/60 ml-auto">
-                                {formatDate(nestedReply.createdAt)}
-                              </div>
-                            </div>
-                            <div className="text-white/90 leading-relaxed text-sm">
-                              {nestedReply.content}
-                            </div>
-                            <div className="flex items-center gap-4 mt-3 pt-3 border-t border-[#2a2a2a]">
-                              <button className="flex items-center gap-2 text-white/60 hover:text-[#FFC300] transition-colors text-xs">
-                                <Heart className="w-3 h-3" />
-                                Like ({nestedReply.likes})
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <DiscussionReply key={reply.id} reply={reply} index={index} />
           ))}
         </div>
 
-        {/* Reply Form */}
-        <div className="customDark2 rounded-lg shadow-xl border border-[#2a2a2a] p-6">
-          <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-[#FFC300]" />
-            Post a Reply
-          </h3>
-          <div className="space-y-4">
-            <textarea
-              value={newReply}
-              onChange={(e) => setNewReply(e.target.value)}
-              placeholder="Share your thoughts about this discussion..."
-              className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-lg p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 resize-vertical min-h-[120px]"
-              rows={4}
-            />
-            <div className="flex justify-end">
-              <button
-                onClick={handleSubmitReply}
-                disabled={!newReply.trim()}
-                className="px-6 py-3 bg-[#FFC300] hover:bg-[#FFD700] disabled:bg-[#FFC300]/50 disabled:cursor-not-allowed text-black font-bold rounded-lg transition-colors flex items-center gap-2"
-              >
-                <Send className="w-4 h-4" />
-                Post Reply
-              </button>
-            </div>
-          </div>
-        </div>
+        <DiscussionReplySection />
       </div>
     </NewPage>
   );
