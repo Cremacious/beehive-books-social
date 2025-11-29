@@ -25,7 +25,7 @@ const PromptEntryListItem = ({ entry }: PromptEntryListItemProps) => {
       <div className="text-white/80 leading-relaxed whitespace-pre-line">
         {entry.content}
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-4">
         <Link href={`/prompts/44/${entry.id}`}>
           <Button variant={'beeYellow'}>Read</Button>
         </Link>
