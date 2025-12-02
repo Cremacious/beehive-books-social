@@ -17,6 +17,7 @@ import {
   BookText,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useBookStore } from '@/stores/useBookStore';
 
 const formSchema = z.object({
   title: z.string().min(1, 'Book title is required'),
@@ -72,6 +73,10 @@ const privacyOptions = [
 ];
 
 export default function CreateBookForm() {
+  const createBook = useBookStore((state) => state.createBook);
+  const isLoading = useBookStore((state) => state.isLoading);
+  const error = useBookStore((state) => state.error);
+
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
@@ -91,16 +96,16 @@ export default function CreateBookForm() {
     }
   };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log({ ...values, coverImage });
+      await createBook({ ...values });
       toast.success('Book created successfully! 🐝', {
         description:
           'Your new book has been created. Start writing your first chapter!',
       });
-    } catch (error) {
-      console.error('Form submission error', error);
-      toast.error('Failed to create book. Please try again.');
+    } catch (err) {
+      console.error('Form submission error', err);
+      toast.error(error || 'Failed to create book. Please try again.');
     }
   }
 
@@ -362,13 +367,11 @@ export default function CreateBookForm() {
           <Button
             variant={'beeYellow'}
             type="submit"
-            disabled={form.formState.isSubmitting}
+            disabled={isLoading}
             className=" items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed "
           >
             <Save className="w-5 h-5" />
-            <span>
-              {form.formState.isSubmitting ? 'Creating Book...' : 'Create Book'}
-            </span>
+            <span>{isLoading ? 'Creating Book...' : 'Create Book'}</span>
           </Button>
         </div>
       </form>

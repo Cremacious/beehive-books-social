@@ -22,6 +22,7 @@ model User {
   updatedAt     DateTime  @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
+  books         Book[]
 
   @@unique([email])
   @@map("user")
@@ -70,4 +71,61 @@ model Verification {
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("verification")
+}
+
+enum Privacy {
+  PUBLIC
+  PRIVATE
+  FRIENDS
+}
+
+model Book {
+  id            String    @id @default(cuid())
+  title         String
+  author        String
+  genre         String
+  category      String
+  description   String
+  chapterCount  Int       @default(0)
+  wordCount     Int       @default(0)
+  commentCount  Int       @default(0)
+  cover         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  privacy       Privacy
+  chapters      Chapter[]
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("book")
+}
+
+model Chapter {
+  id            String    @id @default(cuid())
+  title         String
+  commentCount  Int       @default(0)
+  authorNotes   String?
+  content       String
+  createdAt     DateTime  @default(now())
+  bookId        String
+  book          Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  comments      Comment[]
+
+  @@map("chapter")
+}
+
+model Comment {
+  id            String    @id @default(cuid())
+  authorName    String
+  avatar        String?
+  content       String
+  timestamp     DateTime  @default(now())
+  likes         Int       @default(0)
+  chapterId     String
+  chapter       Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  parentId      String?
+  parent        Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies       Comment[] @relation("CommentReplies")
+
+  @@map("comment")
 }
