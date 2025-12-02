@@ -3,6 +3,7 @@ import MyBooksDisplay from './components/MyBooksDisplay';
 import { Plus, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { bookDisplayData } from '@/lib/sampleData/books.sample';
 
 const MyBooksPage = () => {
   return (
@@ -35,7 +36,7 @@ const MyBooksPage = () => {
             </Link>
           </div>
         </div>
-        <MyBooksDisplay />
+        <MyBooksDisplay books={bookDisplayData} />
       </div>
     </NewPage>
   );

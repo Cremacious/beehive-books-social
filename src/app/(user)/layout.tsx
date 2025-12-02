@@ -1,16 +1,22 @@
 import BottomNavBar from '@/components/layout/BottomNavBar';
 import DesktopSidebar from '@/components/layout/DesktopSidebar';
 import MobileHeader from '@/components/layout/MobileHeader';
+import { getCurrentServerUser } from '@/lib/auth-server';
+import { redirect } from 'next/navigation';
 
-export default function UserLayout({
+export default async function UserLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getCurrentServerUser();
+  if (!user) {
+    redirect('/sign-in');
+  }
   return (
     <>
       <div
-        className={`antialiased min-h-screen flex flex-col md:flex-row font-sans bg-linear-to-b from-yellow-400 to-yellow-500`}
+        className={`antialiased min-h-screen flex flex-col md:flex-row font-sans bg-[#303030]`}
       >
         <MobileHeader />
         <DesktopSidebar />

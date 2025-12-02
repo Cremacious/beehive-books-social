@@ -12,38 +12,10 @@ import coverImage from '@/assets/stock/cover.jpeg';
 import ChapterListItem from '../components/ChapterListItem';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { bookDetailData } from '@/lib/sampleData/books.sample';
 
-const book = {
-  id: 111,
-  title: 'The Last Spire',
-  author: 'Anya Sharma',
-  genre: 'Mystery',
-  category: 'Fiction',
-  description:
-    'In the shadowed valleys of Eldoria, where ancient secrets whisper through the mist, a young archaeologist uncovers a forbidden artifact that awakens forces long dormant. As alliances fracture and betrayals unfold, she must navigate a web of intrigue to prevent catastrophe. A thrilling mystery that blends historical lore with modern suspense.',
-  chaptersCount: 12,
-  wordCount: 45230,
-  commentCount: 47,
-  cover: '/assets/stock/cover.jpeg',
-  publishedDate: '2024-03-15',
-  lastUpdated: '2024-11-10',
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const chapters: any[] = [
-  { id: 1, title: 'The Discovery', wordCount: 3200 },
-  { id: 2, title: 'Whispers in the Dark', wordCount: 4100 },
-  { id: 3, title: 'The Ancient Map', wordCount: 3800 },
-  { id: 4, title: 'Shadows of the Past', wordCount: 4200 },
-  { id: 5, title: 'The Hidden Chamber', wordCount: 3600 },
-  { id: 6, title: 'Betrayal', wordCount: 3900 },
-  { id: 7, title: 'The Ritual', wordCount: 4300 },
-  { id: 8, title: 'Awakening', wordCount: 4100 },
-  { id: 9, title: 'The Chase', wordCount: 3800 },
-  { id: 10, title: 'Confrontation', wordCount: 4500 },
-  { id: 11, title: 'Revelation', wordCount: 4200 },
-  { id: 12, title: 'The Final Stand', wordCount: 4800 },
-];
+const book = bookDetailData;
+const chapters = book.chapters;
 
 const BookPage = () => {
   return (

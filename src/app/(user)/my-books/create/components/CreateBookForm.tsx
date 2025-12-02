@@ -65,9 +65,9 @@ const privacyOptions = [
     description: 'Only you can access your book',
   },
   {
-    value: 'draft',
-    label: 'Draft',
-    description: 'Work in progress, not visible to others',
+    value: 'friends',
+    label: 'Friends Only',
+    description: 'Only you and your friends can read your book',
   },
 ];
 

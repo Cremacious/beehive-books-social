@@ -30,6 +30,16 @@ export default function Home() {
               Dashboard
             </button>
           </Link>
+          <Link href="/sign-in">
+            <button className="bg-black text-yellow-400 border border-yellow-400 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-400 hover:text-black transition text-lg">
+              Sign In
+            </button>
+          </Link>
+          <Link href="/sign-up">
+            <button className="bg-black text-yellow-400 border border-yellow-400 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-400 hover:text-black transition text-lg">
+              Sign Up
+            </button>
+          </Link>
         </div>
       </section>
 

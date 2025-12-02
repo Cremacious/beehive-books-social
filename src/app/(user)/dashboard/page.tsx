@@ -1,5 +1,5 @@
 import React from 'react';
-import MyBooks from './components/MyBooks';
+// import MyBooks from './components/MyBooks';
 import DashboardNotifications from './components/DashboardNotifications';
 import FriendActivity from './components/FriendActivity';
 import WritingStats from './components/WritingStats';
@@ -9,10 +9,14 @@ import ReadingList from './components/ReadingList';
 // import Achievements from './components/Achievements';
 import QuickActions from './components/QuickActions';
 import NewPage from '@/components/layout/NewPage';
+import { getCurrentServerUser } from '@/lib/auth-server';
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const user = await getCurrentServerUser();
+
   return (
     <NewPage>
+      <div className="text-white">{user?.name}</div>
       <div className="space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">

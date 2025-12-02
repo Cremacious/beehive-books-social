@@ -13,9 +13,9 @@ const ChapterListItem = ({
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   chapter: any;
-  chapterId: number;
+  chapterId: string;
   index: number;
-  bookId: number;
+  bookId: string;
 }) => {
   const router = useRouter();
 

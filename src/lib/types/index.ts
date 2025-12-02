@@ -22,7 +22,7 @@ export type DiscussionType = {
   likes: number;
 };
 export type ChapterType = {
-  id: number;
+  id: string;
   title: string;
   wordCount: number;
   commentCount: number;
@@ -31,7 +31,7 @@ export type ChapterType = {
 };
 
 export type CommentType = {
-  id: number;
+  id: string;
   author: string;
   avatar: string | null;
   content: string;
