@@ -7,6 +7,7 @@ export const bookSchema = z.object({
   genre: z.string().min(1, 'Genre is required'),
   description: z.string().min(1, 'Description is required'),
   privacy: z.string().min(1, 'Privacy setting is required'),
+  cover: z.string().optional(),
 });
 
 export const chapterSchema = z.object({

@@ -4,11 +4,21 @@ import { MessageCircle, Hash, Edit, NotebookPen } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import ChapterCommentSection from '../components/ChapterCommentSection';
-import { chapterDetailData } from '@/lib/sampleData/books.sample';
+// import { chapterDetailData } from '@/lib/sampleData/books.sample';
+import { getChapterByIdAction } from '@/actions/book.actions';
 
-const chapter = chapterDetailData;
+// const chapter = chapterDetailData;
 
-const ChapterPage = () => {
+// TODO: word count calculation
+
+const ChapterPage = async ({
+  params,
+}: {
+  params: Promise<{ bookId: string; chapterId: string }>;
+}) => {
+  const { chapterId } = await params;
+  const chapter = await getChapterByIdAction(chapterId);
+
   return (
     <NewPage>
       <div className="w-full max-w-4xl mx-auto space-y-8">
@@ -21,9 +31,10 @@ const ChapterPage = () => {
               <div className="flex items-center gap-6 text-white/70">
                 <div className="flex items-center gap-2">
                   <Hash className="w-4 h-4 text-yellow-500" />
-                  <span className="font-medium">
+
+                  {/* <span className="font-medium">
                     {chapter.wordCount.toLocaleString()} words
-                  </span>
+                  </span> */}
                 </div>
                 <div className="flex items-center gap-2">
                   <MessageCircle className="w-4 h-4 text-yellow-500" />
@@ -68,7 +79,7 @@ const ChapterPage = () => {
           </div>
         </div>
 
-        <ChapterCommentSection chapter={chapter} comments={chapter.comments} />
+        <ChapterCommentSection chapter={chapter}  />
       </div>
     </NewPage>
   );

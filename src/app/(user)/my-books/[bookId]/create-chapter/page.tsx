@@ -2,9 +2,13 @@ import NewPage from '@/components/layout/NewPage';
 import CreateChapterForm from './CreateChapterForm';
 import { PenTool } from 'lucide-react';
 
-const CreateChapterPage = () => {
+const CreateChapterPage = async ({params} : {params : Promise<{bookId: string}>}) => {
+
+  const { bookId } = await params;
+
   return (
     <NewPage>
+ 
       <div className="w-full max-w-4xl mx-auto space-y-8">
         <div className="darkContainer2 rounded-3xl shadow-2xl p-6 md:p-8 border ">
           <div className="flex items-center gap-4">
@@ -22,7 +26,7 @@ const CreateChapterPage = () => {
           </div>
         </div>
 
-        <CreateChapterForm />
+        <CreateChapterForm bookId={bookId} />
       </div>
     </NewPage>
   );

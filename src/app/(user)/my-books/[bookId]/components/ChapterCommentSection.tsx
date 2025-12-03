@@ -7,21 +7,40 @@ import {
   Send,
   User,
 } from 'lucide-react';
-import { CommentType, ChapterType } from '@/lib/types';
+
 import { Button } from '@/components/ui/button';
 
-const ChapterCommentSection = ({
-  chapter,
-  comments,
-}: {
-  chapter: ChapterType;
-  comments: CommentType[];
-}) => {
+// TODO: Replace with actual types 
+
+interface Comment {
+  id: string;
+  authorName: string;
+  avatar: string | null;
+  content: string;
+  timestamp: Date;
+  likes: number;
+  replies?: Comment[];
+}
+
+interface Chapter {
+  id: string;
+  title: string;
+  commentCount: number;
+  authorNotes: string | null;
+  content: string;
+  comments: Comment[];
+}
+
+interface ChapterCommentSectionProps {
+  chapter: Chapter;
+}
+
+const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-4 md:p-10">
       <h2 className="text-2xl font-bold text-yellow-400 mb-8 flex items-center gap-3">
         <MessageCircle className="w-6 h-6" />
-        Comments{' '}
+        Comments
         <span className="yellowBadge w-7 h-7">{chapter.commentCount}</span>
       </h2>
 
@@ -47,7 +66,7 @@ const ChapterCommentSection = ({
       </div>
 
       <div className="space-y-6">
-        {comments.map((comment) => (
+        {chapter.comments.map((comment) => (
           <div
             key={comment.id}
             className="border-b border-yellow-500/10 pb-6 last:border-b-0 last:pb-0"
@@ -59,10 +78,10 @@ const ChapterCommentSection = ({
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="font-semibold text-white">
-                    {comment.author}
+                    {comment.authorName}
                   </span>
                   <span className="text-white/50 text-sm">
-                    {comment.timestamp}
+                    {new Date(comment.timestamp).toLocaleString()}
                   </span>
                   <button className="text-white/50 hover:text-white/70 transition-colors">
                     <MoreVertical className="w-4 h-4" />
@@ -92,10 +111,10 @@ const ChapterCommentSection = ({
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-1">
                             <span className="font-semibold text-white text-sm">
-                              {reply.author}
+                              {reply.authorName}
                             </span>
                             <span className="text-white/50 text-xs">
-                              {reply.timestamp}
+                              {new Date(reply.timestamp).toLocaleString()}
                             </span>
                           </div>
                           <p className="text-white/70 text-sm leading-relaxed">

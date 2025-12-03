@@ -11,6 +11,7 @@ interface MyBooksDisplayProps {
   title: string;
   author: string;
   genre: string;
+  cover: string | null;
 }
 
 const BOOKS_PER_PAGE = 9;
@@ -62,6 +63,7 @@ const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
                   title={book.title}
                   author={book.author}
                   genre={book.genre}
+                  coverImage={book.cover}
                 />
               ))}
             </div>

@@ -45,6 +45,7 @@ const userBooks = [
     title: 'Novel Mar Trine',
     author: 'Anya Sharma',
     genre: 'Historical',
+
   },
 ];
 
@@ -81,11 +82,11 @@ const MyBooks = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {/* <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {userBooks.slice(0, 4).map((book) => (
           <BookCard key={book.id} {...book} />
         ))}
-      </div>
+      </div> */}
     </section>
   );
 };

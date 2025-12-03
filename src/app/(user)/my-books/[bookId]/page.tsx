@@ -8,13 +8,12 @@ import {
   Hash,
   Plus,
 } from 'lucide-react';
-import coverImage from '@/assets/stock/cover.jpeg';
 import ChapterListItem from '../components/ChapterListItem';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 // import { bookDetailData } from '@/lib/sampleData/books.sample';
 import { getBookByIdAction } from '@/actions/book.actions';
-
+import defaultImage from '@/assets/stock/cover.jpeg';
 // const book = bookDetailData;
 // const chapters = book.chapters;
 
@@ -35,7 +34,7 @@ const BookPage = async ({
             <div className="flex justify-center lg:justify-start">
               <div className="relative w-48 h-64 md:w-56 md:h-80 rounded-2xl overflow-hidden shadow-lg">
                 <Image
-                  src={coverImage}
+                  src={book.cover ?? defaultImage}
                   alt={book.title}
                   fill
                   className="object-cover"

@@ -1,25 +1,28 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import coverImage from '@/assets/stock/cover.jpeg';
+import defaultImage from '@/assets/stock/cover.jpeg'
+
 
 const BookCard = ({
   id,
   title,
   author,
   genre,
+  coverImage,
 }: {
   id: string;
   title: string;
   author: string;
   genre: string;
+  coverImage: string | null;
 }) => {
   return (
     <Link href={`/my-books/${id}`}>
       <div className="flex flex-col w-full group rounded-2xl shadow-lg darkContainer3 overflow-hidden ">
         <div className="relative w-full h-40 overflow-hidden">
           <Image
-            src={coverImage}
+            src={coverImage ?? defaultImage}
             alt={title}
             fill
             className="object-cover select-none pointer-events-none group-hover:scale-105 transition-transform duration-300"

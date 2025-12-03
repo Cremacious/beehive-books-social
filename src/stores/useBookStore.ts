@@ -9,7 +9,7 @@ import { bookSchema, chapterSchema } from '@/lib/schemas';
 interface BookStoreType {
   isLoading: boolean;
   error: string | null;
-  createBook: (data: z.infer<typeof bookSchema>) => Promise<void>;
+  createBook: (data: z.infer<typeof bookSchema>, file?: File) => Promise<void>;
   createChapter: (
     bookId: string,
     data: z.infer<typeof chapterSchema>
@@ -19,11 +19,26 @@ interface BookStoreType {
 export const useBookStore = create<BookStoreType>((set) => ({
   isLoading: false,
   error: null,
-  createBook: async (data: z.infer<typeof bookSchema>) => {
+  createBook: async (data: z.infer<typeof bookSchema>, file?: File) => {
     set({ isLoading: true, error: null });
     try {
       console.log('Store creating book');
-      await createBookAction(data);
+      let coverUrl: string | undefined;
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        const uploadData = await response.json();
+        if (uploadData.url) {
+          coverUrl = uploadData.url;
+        } else {
+          throw new Error(uploadData.error || 'Upload failed');
+        }
+      }
+      await createBookAction({ ...data, cover: coverUrl });
       console.log('Book created in store');
       set({ isLoading: false });
     } catch (error) {

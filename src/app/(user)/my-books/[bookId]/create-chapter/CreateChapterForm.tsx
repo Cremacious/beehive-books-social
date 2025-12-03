@@ -1,5 +1,4 @@
 'use client';
-import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -8,14 +7,14 @@ import { Button } from '@/components/ui/button';
 import { chapterSchema } from '@/lib/schemas/index';
 import { useBookStore } from '@/stores/useBookStore';
 
-export default function CreateChapterForm() {
+export default function CreateChapterForm({ bookId }: { bookId: string }) {
   const createChapter = useBookStore((state) => state.createChapter);
   const form = useForm<z.infer<typeof chapterSchema>>({
     resolver: zodResolver(chapterSchema),
   });
 
   async function onSubmit(values: z.infer<typeof chapterSchema>) {
-    await createChapter('bookId-placeholder', values);
+    await createChapter(bookId, values);
   }
 
   return (

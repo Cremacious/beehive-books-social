@@ -20,7 +20,6 @@ export async function getUserBooksAction() {
       },
     });
 
-    console.log(books);
     return books;
   } catch (error) {
     console.error('Error fetching user books:', error);
@@ -78,7 +77,7 @@ export async function createBookAction(data: z.infer<typeof bookSchema>) {
         genre: parsedData.genre,
         description: parsedData.description,
         privacy: privacyEnum,
-        cover: null,
+        cover: parsedData.cover || null,
         userId: user.id,
       },
     });
@@ -119,7 +118,7 @@ export async function editBookAction(
         genre: parsedData.genre,
         description: parsedData.description,
         privacy: privacyEnum,
-        cover: null,
+        cover: parsedData.cover || null,
       },
     });
 
@@ -186,6 +185,34 @@ export async function addChapterToBookAction(
     return chapter;
   } catch (error) {
     console.error('Error adding chapter to book:', error);
+    throw error;
+  }
+}
+
+export async function getChapterByIdAction(chapterId: string) {
+  try {
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user) {
+      throw new Error(error || 'User not authenticated');
+    }
+    const chapter = await prisma.chapter.findFirst({
+      where: {
+        id: chapterId,
+      },
+      include: {
+        comments: {
+          include: {
+            replies: true,
+          },
+        },
+      },
+    });
+    if (!chapter) {
+      throw new Error('Chapter not found or access denied');
+    }
+    return chapter;
+  } catch (error) {
+    console.error('Error fetching chapter by ID:', error);
     throw error;
   }
 }

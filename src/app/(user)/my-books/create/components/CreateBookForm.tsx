@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -67,19 +66,20 @@ const privacyOptions = [
 export default function CreateBookForm() {
   const createBook = useBookStore((state) => state.createBook);
   const isLoading = useBookStore((state) => state.isLoading);
-  const error = useBookStore((state) => state.error);
 
-  const [coverImage, setCoverImage] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const form = useForm<z.infer<typeof bookSchema>>({
     resolver: zodResolver(bookSchema),
   });
 
-  const handleCoverUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCoverUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
-      setCoverImage(file);
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onload = (e) => {
         setCoverPreview(e.target?.result as string);
@@ -89,7 +89,7 @@ export default function CreateBookForm() {
   };
 
   async function onSubmit(values: z.infer<typeof bookSchema>) {
-    await createBook({ ...values });
+    await createBook(values, selectedFile || undefined);
   }
 
   return (
