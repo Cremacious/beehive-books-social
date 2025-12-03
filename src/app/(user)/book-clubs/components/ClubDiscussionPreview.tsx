@@ -1,14 +1,16 @@
-import { Heart, MessageCircle, Plus } from 'lucide-react';
+import { Heart, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
-import { DiscussionType } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import CreateDiscussionModal from '../[clubId]/discussions/components/CreateDiscussionModal';
+import { DiscussionFullType } from '@/lib/types';
+import { formatLastActivity, countTotalReplies } from '@/lib/utils';
 
-const ClubDiscussionPreview = ({
-  discussions,
-}: {
-  discussions: DiscussionType[];
-}) => {
+interface ClubDiscussionPreviewProps {
+  discussions: DiscussionFullType[];
+}
+
+const ClubDiscussionPreview = ({ discussions }: ClubDiscussionPreviewProps) => {
+
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
@@ -33,42 +35,52 @@ const ClubDiscussionPreview = ({
       </div>
 
       <div className="space-y-4">
-        {discussions.map((discussion) => (
-          <div
-            key={discussion.id}
-            className="rounded-xl p-4 darkContainer3 highlightYellow"
-          >
-            <h4 className="font-semibold text-white mb-2">
-              {discussion.title}
-            </h4>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-sm">
-              <div className="flex items-center gap-4">
-                <span className="text-[#FFC300]/60">
-                  by {discussion.author}
-                </span>
-                <span className="text-white/70 flex items-center gap-1">
-                  <MessageCircle className="w-3 h-3" />
-                  {discussion.replies} replies
-                </span>
-                <span className="text-white/70 flex items-center gap-1">
-                  <Heart className="w-3 h-3" />
-                  {discussion.likes}
-                </span>
-                <span className="text-white/70">{discussion.lastActivity}</span>
-              </div>
-              <div className="flex">
-                <Link
-                  className="w-full"
-                  href={`/book-clubs/1/discussions/${discussion.id}`}
-                >
-                  <Button className="w-full" variant="beeYellow" size="sm">
-                    Read
-                  </Button>
-                </Link>
+        {discussions.map((discussion) => {
+          const repliesCount = countTotalReplies(discussion.comments);
+          const lastActivity =
+            discussion.comments.length > 0
+              ? formatLastActivity(
+                  discussion.comments[discussion.comments.length - 1].createdAt
+                )
+              : formatLastActivity(discussion.createdAt);
+
+          return (
+            <div
+              key={discussion.id}
+              className="rounded-xl p-4 darkContainer3 highlightYellow"
+            >
+              <h4 className="font-semibold text-white mb-2">
+                {discussion.title}
+              </h4>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-sm">
+                <div className="flex items-center gap-4">
+                  <span className="text-[#FFC300]/60">
+                    by {discussion.author.user.name}
+                  </span>
+                  <span className="text-white/70 flex items-center gap-1">
+                    <MessageCircle className="w-3 h-3" />
+                    {repliesCount} replies
+                  </span>
+                  <span className="text-white/70 flex items-center gap-1">
+                    <Heart className="w-3 h-3" />
+                    {discussion.likes}
+                  </span>
+                  <span className="text-white/70">{lastActivity}</span>
+                </div>
+                <div className="flex">
+                  <Link
+                    className="w-full"
+                    href={`/book-clubs/1/discussions/${discussion.id}`}
+                  >
+                    <Button className="w-full" variant="beeYellow" size="sm">
+                      Read
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

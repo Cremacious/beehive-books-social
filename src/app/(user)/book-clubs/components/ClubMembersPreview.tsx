@@ -1,15 +1,18 @@
-import { Crown, Settings, Shield, User, Users } from 'lucide-react';
-import { MemberType, BookClubType } from '@/lib/types';
+import { Crown, Shield, User, Users } from 'lucide-react';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { ClubMemberType } from '@/lib/types';
 
-const ClubMembersPreview = ({
-  members,
-  club,
-}: {
-  members: MemberType[];
-  club: BookClubType;
-}) => {
+interface ClubMembersPreviewProps {
+  members: ClubMemberType[];
+  club: {
+    id: string;
+    userRole?: string; 
+  };
+}
+
+const ClubMembersPreview = ({ members, club }: ClubMembersPreviewProps) => {
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-6">
       <div className="flex items-center justify-between mb-4">
@@ -40,20 +43,20 @@ const ClubMembersPreview = ({
               </div>
               <div>
                 <div className="text-white text-sm font-medium">
-                  {member.name}
+                  {member.user.name}
                 </div>
                 <div className="flex items-center gap-2">
-                  {member.role === 'Owner' && (
+                  {member.role === 'OWNER' && (
                     <Crown className="w-3 h-3 text-yellow-500" />
                   )}
-                  {member.role === 'Moderator' && (
+                  {member.role === 'MEMBER' && (
                     <Shield className="w-3 h-3 text-blue-400" />
                   )}
                   <span
                     className={`text-xs ${
-                      member.role === 'Owner'
+                      member.role === 'OWNER'
                         ? 'text-yellow-400'
-                        : member.role === 'Moderator'
+                        : member.role === 'MEMBER'
                         ? 'text-blue-400'
                         : 'text-gray-400'
                     }`}

@@ -1,4 +1,3 @@
-'use client';
 import NewPage from '@/components/layout/NewPage';
 import {
   ArrowLeft,
@@ -13,101 +12,10 @@ import Link from 'next/link';
 import DiscussionReply from './components/DiscussionReply';
 import DiscussionReplySection from './components/DiscussionReplySection';
 import { getRoleColor, formatDate } from '@/lib/utils';
+import { discussionSample } from '@/lib/sampleData/club.sample';
 
-const discussion = {
-  id: 1,
-  title: 'Chapter 5 Discussion - The Twist!',
-  createdAt: '2024-11-20T14:30:00Z',
-  views: 47,
-  likes: 12,
-  author: {
-    id: 1,
-    name: 'Sarah Chen',
-    avatar: null,
-    role: 'Moderator',
-    joinDate: '2024-10-16',
-    postCount: 156,
-  },
-  content: `I've been thinking a lot about the twist in Chapter 5, and I wanted to start a discussion about it. Without spoiling too much for those who haven't read it yet, I found the revelation about Alicia's past to be both surprising and perfectly foreshadowed.
 
-What did everyone think of how the author built up to this moment? Were there any clues you caught that I might have missed? And how does this change your perception of the other characters?
-
-I'm particularly interested in discussing:
-- The symbolism of the broken mirror
-- Whether the twist felt earned or came out of nowhere
-- How this affects Alicia's character development
-
-Looking forward to hearing everyone's thoughts!`,
-};
-
-const replies = [
-  {
-    id: 1,
-    author: {
-      id: 2,
-      name: 'David Kim',
-      avatar: null,
-      role: 'Member',
-      joinDate: '2024-10-18',
-      postCount: 89,
-    },
-    content: `Great points, Sarah! I actually caught the mirror symbolism early on - the way it's described as "fractured reflections" really stood out to me. It made perfect sense in hindsight.
-
-What really surprised me was how the twist actually made me re-evaluate the entire first four chapters. Suddenly, all those seemingly random details about Alicia's daily routine took on new meaning. Did anyone else feel like they needed to go back and re-read those sections?`,
-    createdAt: '2024-11-20T16:45:00Z',
-    likes: 8,
-    replies: [],
-  },
-  {
-    id: 2,
-    author: {
-      id: 3,
-      name: 'Mike Rodriguez',
-      avatar: null,
-      role: 'Member',
-      joinDate: '2024-10-20',
-      postCount: 67,
-    },
-    content: `I agree with David - the foreshadowing was masterful. But I have to admit, I was so focused on the mystery of "who did it" that I completely missed the "why" aspect. The psychological depth of Alicia's character really shines through in this chapter.
-
-One thing that bothered me slightly was the pacing. The reveal felt a bit rushed compared to the slow build-up. What do you think - should the author have spread the clues out more evenly throughout the book?`,
-    createdAt: '2024-11-20T18:22:00Z',
-    likes: 6,
-    replies: [
-      {
-        id: 3,
-        author: {
-          id: 1,
-          name: 'Sarah Chen',
-          avatar: null,
-          role: 'Moderator',
-          joinDate: '2024-10-16',
-          postCount: 156,
-        },
-        content: `That's a really good point about the pacing, Mike. I think the author was trying to maintain suspense, but you're right that it might have been more effective to distribute the clues more evenly. It would have made the payoff even more satisfying.`,
-        createdAt: '2024-11-20T19:15:00Z',
-        likes: 4,
-      },
-    ],
-  },
-  {
-    id: 4,
-    author: {
-      id: 4,
-      name: 'Emma Thompson',
-      avatar: null,
-      role: 'Member',
-      joinDate: '2024-10-22',
-      postCount: 43,
-    },
-    content: `I loved this chapter! The twist was perfectly executed. I caught a few clues but not all of them. The broken mirror symbolism was brilliant - it really represented how Alicia's perception of reality was shattered.
-
-I'm curious about the author's research process. Has anyone read any interviews with Alex Michaelides about how he developed this plot?`,
-    createdAt: '2024-11-21T09:30:00Z',
-    likes: 5,
-    replies: [],
-  },
-];
+const discussion = discussionSample;
 
 const DiscussionThreadPage = () => {
   return (
@@ -131,7 +39,7 @@ const DiscussionThreadPage = () => {
             <div className="flex items-center gap-4 text-sm text-white/60">
               <div className="flex items-center gap-2">
                 <Eye className="w-4 h-4" />
-                {discussion.views} views
+                {/* {discussion.views} views */}
               </div>
               <div className="flex items-center gap-2">
                 <Heart className="w-4 h-4" />
@@ -139,7 +47,7 @@ const DiscussionThreadPage = () => {
               </div>
               <div className="flex items-center gap-2">
                 <MessageSquare className="w-4 h-4" />
-                {replies.length + 1} posts
+                {discussion.comments.length + 1} posts
               </div>
             </div>
           </div>
@@ -154,7 +62,7 @@ const DiscussionThreadPage = () => {
                     </div>
                     <div>
                       <div className="font-semibold text-white">
-                        {discussion.author.name}
+                        {discussion.author.user.name}
                       </div>
                       <div
                         className={`text-xs ${getRoleColor(
@@ -169,7 +77,7 @@ const DiscussionThreadPage = () => {
                     <div>
                       Joined:{' '}
                       {new Date(
-                        discussion.author.joinDate
+                        discussion.author.joinedAt
                       ).toLocaleDateString()}
                     </div>
                     <div>Posts: {discussion.author.postCount}</div>
@@ -201,7 +109,7 @@ const DiscussionThreadPage = () => {
         </div>
 
         <div className="space-y-4">
-          {replies.map((reply, index) => (
+          {discussion.comments.map((reply, index) => (
             <DiscussionReply key={reply.id} reply={reply} index={index} />
           ))}
         </div>

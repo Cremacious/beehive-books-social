@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { DiscussionFullType } from './types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -25,4 +26,24 @@ export const getRoleColor = (role: string) => {
     default:
       return 'text-green-400';
   }
+};
+
+export const formatLastActivity = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffHours = diffMs / (1000 * 60 * 60);
+  const diffDays = diffHours / 24;
+
+  if (diffHours < 1) return 'Less than an hour ago';
+  if (diffHours < 24) return `${Math.floor(diffHours)} hours ago`;
+  return `${Math.floor(diffDays)} days ago`;
+};
+
+export const countTotalReplies = (
+  comments: DiscussionFullType['comments']
+): number => {
+  return comments.reduce((total, comment) => {
+    return total + 1 + countTotalReplies(comment.replies);
+  }, 0);
 };

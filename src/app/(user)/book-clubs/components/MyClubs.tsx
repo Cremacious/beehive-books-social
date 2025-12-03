@@ -1,10 +1,20 @@
 import { BookOpen, Crown, Plus, Shield, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { BookClubType } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 
-const MyClubs = ({ userClubs }: { userClubs: BookClubType[] }) => {
+interface UserBookClubs {
+  id: string;
+  name: string;
+  description: string;
+  currentBook: string;
+  cover: string;
+  members: number;
+  role: string;
+  privacy: string;
+}
+
+const MyClubs = ({ userClubs }: { userClubs: UserBookClubs[] }) => {
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 ">
       <div className="flex items-center gap-3 mb-6">

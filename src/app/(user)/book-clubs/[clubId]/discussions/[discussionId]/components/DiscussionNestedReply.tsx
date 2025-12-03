@@ -1,25 +1,11 @@
 import { Heart, User } from 'lucide-react';
 import { formatDate, getRoleColor } from '@/lib/utils';
-
-interface NestedReply {
-  id: number;
-  author: {
-    id: number;
-    name: string;
-    avatar: null | string;
-    role: string;
-    joinDate: string;
-    postCount: number;
-  };
-  content: string;
-  createdAt: string;
-  likes: number;
-}
+import { DiscussionCommentType } from '@/lib/types';
 
 const DiscussionNestedReply = ({
   nestedReply,
 }: {
-  nestedReply: NestedReply;
+  nestedReply: DiscussionCommentType;
 }) => {
   return (
     <div
@@ -32,7 +18,7 @@ const DiscussionNestedReply = ({
         </div>
         <div>
           <div className="font-semibold text-white text-sm">
-            {nestedReply.author.name}
+            {nestedReply.author.user.name}
           </div>
           <div className={`text-xs ${getRoleColor(nestedReply.author.role)}`}>
             {nestedReply.author.role}

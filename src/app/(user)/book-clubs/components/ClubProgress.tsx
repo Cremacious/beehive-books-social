@@ -1,11 +1,35 @@
 'use client';
 
-import { BookOpen, MessageCircle, Target } from 'lucide-react';
+import { BookOpen, Target } from 'lucide-react';
 import Image from 'next/image';
-import { BookClubType } from '@/lib/types';
 import { Button } from '@/components/ui/button';
+import {
+  ClubMemberType,
+  DiscussionFullType,
+  ClubReadingListItemType,
+} from '@/lib/types';
 
-const ClubProgress = ({ club }: { club: BookClubType }) => {
+interface ClubProgressInterface {
+  id: string;
+  name: string;
+  description: string;
+  currentBook: {
+    id: string;
+    title: string;
+    author: string;
+  };
+  cover: string;
+  memberCount: number;
+  privacy: string;
+  createdAt: string;
+  rules: string;
+  tags: string[];
+  members: ClubMemberType[];
+  discussions: DiscussionFullType[];
+  readingList: ClubReadingListItemType[];
+}
+
+const ClubProgress = ({ club }: { club: ClubProgressInterface }) => {
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 ">
       <div className="flex items-center gap-3 mb-6">
@@ -19,7 +43,7 @@ const ClubProgress = ({ club }: { club: BookClubType }) => {
         <div className="w-24 h-32 rounded-lg overflow-hidden shrink-0">
           <Image
             src={club.cover}
-            alt={club.currentBook}
+            alt={club.currentBook.title}
             width={96}
             height={128}
             className="w-full h-full object-cover"
@@ -27,9 +51,11 @@ const ClubProgress = ({ club }: { club: BookClubType }) => {
         </div>
         <div className="flex-1">
           <h3 className="text-2xl font-bold text-white mb-2">
-            {club.currentBook}
+            {club.currentBook.title}
           </h3>
-          <p className="text-[#FFC300]/80 text-lg mb-4">by {club.author}</p>
+          <p className="text-[#FFC300]/80 text-lg mb-4">
+            by {club.currentBook.author}
+          </p>
 
           <div className="space-y-4">
             <div>

@@ -1,75 +1,12 @@
 import NewPage from '@/components/layout/NewPage';
-import Image from 'next/image';
-import {
-  Users,
-  Plus,
-  Search,
-  BookOpen,
-  Crown,
-  Shield,
-  User,
-} from 'lucide-react';
+import { Users, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import FindClubs from './components/FindClubs';
 import MyClubs from './components/MyClubs';
+import { userClubsSample } from '@/lib/sampleData/club.sample';
 
-const userClubs = [
-  {
-    id: 1,
-    name: 'Mystery Masters',
-    description: 'A club for mystery and thriller enthusiasts',
-    currentBook: 'The Silent Patient',
-    cover: '/assets/stock/cover.jpeg',
-    members: 12,
-    role: 'Owner',
-    privacy: 'Private',
-    author: 'Jane Doe',
-    clubCover: '/assets/stock/cover.jpeg',
-    userRole: 'Owner',
-    createdDate: '2024-01-01',
-    genre: 'Mystery',
-    location: 'Online',
-    rules: 'Be respectful, No spoilers without warning',
-    tags: ['mystery', 'thriller'],
-  },
-  {
-    id: 2,
-    name: 'Fantasy Fanatics',
-    description: 'Exploring worlds of magic and adventure',
-    currentBook: 'The Name of the Wind',
-    cover: '/assets/stock/cover.jpeg',
-    members: 8,
-    role: 'Member',
-    privacy: 'Public',
-    author: 'John Smith',
-    clubCover: '/assets/stock/cover.jpeg',
-    userRole: 'Member',
-    createdDate: '2024-02-15',
-    genre: 'Fantasy',
-    location: 'Online',
-    rules: 'Respect all opinions, Stay on topic',
-    tags: ['fantasy', 'adventure'],
-  },
-  {
-    id: 3,
-    name: 'Romance Writers Hive',
-    description: 'For lovers of romance novels and heartfelt stories',
-    currentBook: 'Beach Read',
-    cover: '/assets/stock/cover.jpeg',
-    members: 15,
-    role: 'Moderator',
-    privacy: 'Private',
-    author: 'Emily Rose',
-    clubCover: '/assets/stock/cover.jpeg',
-    userRole: 'Moderator',
-    createdDate: '2024-03-10',
-    genre: 'Romance',
-    location: 'Online',
-    rules: 'Be kind, Share recommendations',
-    tags: ['romance', 'novels'],
-  },
-];
+const userClubs = userClubsSample;
 
 const BookClubsPage = () => {
   return (

@@ -56,3 +56,53 @@ export type BookClubType = {
   tags: string[];
   role: string;
 };
+
+export type UserType = {
+  id: string;
+  name: string;
+  image: string | null;
+};
+
+// New
+
+export type ClubMemberType = {
+  id: string;
+  user: UserType;
+  role: string;
+  joinedAt: string;
+  postCount: number;
+};
+
+export type DiscussionCommentType = {
+  id: string;
+  content: string;
+  createdAt: string;
+  likes: number;
+  author: ClubMemberType;
+  parentId: string | null;
+  replies: DiscussionCommentType[];
+};
+
+export type DiscussionFullType = {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  likes: number;
+  author: ClubMemberType;
+  comments: DiscussionCommentType[];
+};
+
+export type BookType = {
+  id: string;
+  title: string;
+  author: string;
+};
+
+export type ClubReadingListItemType = {
+  id: string;
+  book: BookType;
+  addedAt: string;
+  status: string;
+  order: number;
+};

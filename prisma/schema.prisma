@@ -23,6 +23,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   books         Book[]
+  clubMembers   ClubMember[]
 
   @@unique([email])
   @@map("user")
@@ -79,6 +80,16 @@ enum Privacy {
   FRIENDS
 }
 
+enum ClubRole {
+  OWNER
+  MEMBER
+}
+
+enum ReadingStatus {
+  CURRENT
+  UPCOMING
+}
+
 model Book {
   id            String    @id @default(cuid())
   title         String
@@ -96,6 +107,8 @@ model Book {
   chapters      Chapter[]
   userId        String
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clubsAsCurrent Club[]
+  readingListItems ClubReadingListItem[]
 
   @@map("book")
 }
@@ -128,4 +141,84 @@ model Comment {
   replies       Comment[] @relation("CommentReplies")
 
   @@map("comment")
+}
+
+model Club {
+  id            String    @id @default(cuid())
+  name          String
+  description   String
+  currentBookId String?
+  currentBook   Book?     @relation(fields: [currentBookId], references: [id])
+  cover         String?
+  memberCount   Int       @default(0)
+  privacy       Privacy
+  createdAt     DateTime  @default(now())
+  rules         String?
+  tags          String[]
+  discussions   Discussion[]
+  readingList   ClubReadingListItem[]
+  members       ClubMember[]
+
+  @@map("club")
+}
+
+model ClubMember {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clubId    String
+  club      Club      @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  role      ClubRole
+  joinedAt  DateTime  @default(now())
+  postCount Int       @default(0)
+  discussions Discussion[]
+  comments   DiscussionComment[]
+
+  @@unique([userId, clubId])
+  @@map("club_member")
+}
+
+model Discussion {
+  id         String    @id @default(cuid())
+  title      String
+  content    String
+  createdAt  DateTime  @default(now())
+  likes      Int       @default(0)
+  authorId   String
+  author     ClubMember @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  clubId     String
+  club       Club      @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  comments   DiscussionComment[]
+
+  @@map("discussion")
+}
+
+model DiscussionComment {
+  id            String    @id @default(cuid())
+  content       String
+  createdAt     DateTime  @default(now())
+  likes         Int       @default(0)
+  authorId      String
+  author        ClubMember @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  discussionId  String
+  discussion    Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  parentId      String?
+  parent        DiscussionComment? @relation("DiscussionCommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies       DiscussionComment[] @relation("DiscussionCommentReplies")
+
+  @@map("discussion_comment")
+}
+
+model ClubReadingListItem {
+  id       String    @id @default(cuid())
+  bookId   String
+  book     Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  clubId   String
+  club     Club      @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  addedAt  DateTime  @default(now())
+  status   ReadingStatus
+  order    Int
+
+  @@unique([bookId, clubId])
+  @@map("club_reading_list_item")
 }
