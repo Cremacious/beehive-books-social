@@ -18,15 +18,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBookStore } from '@/stores/useBookStore';
-
-const formSchema = z.object({
-  title: z.string().min(1, 'Book title is required'),
-  author: z.string().min(1, 'Author name is required'),
-  category: z.string().min(1, 'Category is required'),
-  genre: z.string().min(1, 'Genre is required'),
-  description: z.string().min(1, 'Description is required'),
-  privacy: z.string().min(1, 'Privacy setting is required'),
-});
+import { bookSchema } from '@/lib/schemas';
 
 const categories = [
   'Fiction',
@@ -80,8 +72,8 @@ export default function CreateBookForm() {
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof bookSchema>>({
+    resolver: zodResolver(bookSchema),
   });
 
   const handleCoverUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,17 +88,8 @@ export default function CreateBookForm() {
     }
   };
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      await createBook({ ...values });
-      toast.success('Book created successfully! 🐝', {
-        description:
-          'Your new book has been created. Start writing your first chapter!',
-      });
-    } catch (err) {
-      console.error('Form submission error', err);
-      toast.error(error || 'Failed to create book. Please try again.');
-    }
+  async function onSubmit(values: z.infer<typeof bookSchema>) {
+    await createBook({ ...values });
   }
 
   return (

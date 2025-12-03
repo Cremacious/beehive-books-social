@@ -12,12 +12,21 @@ import coverImage from '@/assets/stock/cover.jpeg';
 import ChapterListItem from '../components/ChapterListItem';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { bookDetailData } from '@/lib/sampleData/books.sample';
+// import { bookDetailData } from '@/lib/sampleData/books.sample';
+import { getBookByIdAction } from '@/actions/book.actions';
 
-const book = bookDetailData;
-const chapters = book.chapters;
+// const book = bookDetailData;
+// const chapters = book.chapters;
 
-const BookPage = () => {
+const BookPage = async ({
+  params,
+}: {
+  params: Promise<{ bookId: string }>;
+}) => {
+  const { bookId } = await params;
+
+  const book = await getBookByIdAction(bookId);
+
   return (
     <NewPage>
       <div className="w-full space-y-8 ">
@@ -70,7 +79,7 @@ const BookPage = () => {
                   <div className="flex items-center justify-center mb-1">
                     <FileText className="w-5 h-5 text-yellow-500 mr-1" />
                     <span className="text-2xl font-bold text-white">
-                      {book.chaptersCount}
+                      {book.chapterCount}
                     </span>
                   </div>
                   <p className="text-sm text-white">Chapters</p>
@@ -142,7 +151,7 @@ const BookPage = () => {
           </div>
 
           <div className="space-y-4 ">
-            {chapters.length === 0 ? (
+            {book.chapters.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
                 <div className="w-24 h-24 bg-yellow-500/10 rounded-full flex items-center justify-center mb-6">
                   <span className="text-4xl">🐝</span>
@@ -161,7 +170,7 @@ const BookPage = () => {
                 </button>
               </div>
             ) : (
-              chapters.map((chapter, index) => (
+              book.chapters.map((chapter, index) => (
                 <ChapterListItem
                   key={chapter.id}
                   chapter={chapter}

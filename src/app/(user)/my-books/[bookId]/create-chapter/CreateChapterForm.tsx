@@ -1,33 +1,21 @@
 'use client';
-import { useState } from 'react';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Save, FileText, BookOpen, NotebookPen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
-const formSchema = z.object({
-  chapterTitle: z.string().min(1, 'Chapter title is required'),
-  notes: z.string().optional(),
-  content: z.string().min(1, 'Chapter content is required'),
-});
+import { chapterSchema } from '@/lib/schemas/index';
+import { useBookStore } from '@/stores/useBookStore';
 
 export default function CreateChapterForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const createChapter = useBookStore((state) => state.createChapter);
+  const form = useForm<z.infer<typeof chapterSchema>>({
+    resolver: zodResolver(chapterSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      console.log(values);
-      toast.success('Chapter created successfully! 🐝', {
-        description: 'Your new chapter has been added to your book.',
-      });
-    } catch (error) {
-      console.error('Form submission error', error);
-      toast.error('Failed to create chapter. Please try again.');
-    }
+  async function onSubmit(values: z.infer<typeof chapterSchema>) {
+    await createChapter('bookId-placeholder', values);
   }
 
   return (

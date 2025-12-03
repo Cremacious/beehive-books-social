@@ -6,8 +6,8 @@ import BookPagination from './BookPagination';
 import { Library } from 'lucide-react';
 import { useState } from 'react';
 
-interface Book {
-  id: number;
+interface MyBooksDisplayProps {
+  id: string;
   title: string;
   author: string;
   genre: string;
@@ -15,7 +15,7 @@ interface Book {
 
 const BOOKS_PER_PAGE = 9;
 
-const MyBooksDisplay = ({ books }: { books: Book[] }) => {
+const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(books.length / BOOKS_PER_PAGE);
   const startIdx = (currentPage - 1) * BOOKS_PER_PAGE;
