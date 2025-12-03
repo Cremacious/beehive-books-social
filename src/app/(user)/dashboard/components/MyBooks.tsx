@@ -11,79 +11,43 @@ const userData = {
 
 const userBooks = [
   {
-    id: 1,
+    id: '56433',
     title: 'The Last Spire',
     author: 'Anya Sharma',
     genre: 'Mystery',
   },
   {
-    id: 2,
+    id: '2',
     title: 'Fantasy Fanatics',
     author: 'Anya Sharma',
     genre: 'Fantasy',
   },
   {
-    id: 3,
+    id: '3',
     title: 'Novel User Title',
     author: 'Anya Sharma',
     genre: 'Romance',
   },
   {
-    id: 4,
+    id: '4',
     title: 'Another Draft',
     author: 'Anya Sharma',
     genre: 'Sci-Fi',
   },
   {
-    id: 5,
+    id: '5',
     title: 'Novel Last Tpine',
     author: 'Anya Sharma',
     genre: 'Thriller',
   },
   {
-    id: 6,
+    id: '6',
     title: 'Novel Mar Trine',
     author: 'Anya Sharma',
     genre: 'Historical',
   },
 ];
 
-// const BookCard = ({
-//   title,
-//   author,
-//   genre,
-// }: {
-//   title: string;
-//   author: string;
-//   genre: string;
-// }) => (
-//   <div className="flex flex-col w-full cursor-pointer group rounded-2xl shadow-lg bg-[#2a2a2a] hover:shadow-2xl transition-all overflow-hidden border border-[#3a3a3a]">
-//     <div className="relative w-full h-40 overflow-hidden">
-//       <Image
-//         src={coverImage}
-//         alt={title}
-//         fill
-//         className="object-cover select-none pointer-events-none group-hover:scale-105 transition-transform duration-300"
-//         draggable={false}
-//       />
-//     </div>
-
-//     <div className="flex flex-col gap-2 p-4 bg-[#2a2a2a] min-h-[120px]">
-//       <h3
-//         className="text-sm font-bold text-white truncate leading-tight"
-//         title={title}
-//       >
-//         {title}
-//       </h3>
-//       <p className="text-xs text-[#FFC300] font-medium truncate">{author}</p>
-//       <div className="flex items-center justify-between mt-auto">
-//         <span className="text-[10px] bg-[#FFC300]/20 text-[#FFC300] px-2 py-1 rounded-md font-semibold">
-//           {genre}
-//         </span>
-//       </div>
-//     </div>
-//   </div>
-// );
 
 const MyBooks = () => {
   return (
