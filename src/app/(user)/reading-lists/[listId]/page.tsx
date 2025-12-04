@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import ReadingListItem from './components/ReadingListItem';
+import { getReadingListAction } from '@/actions/reading-list.actions';
 
 const readingList = {
   id: 1,

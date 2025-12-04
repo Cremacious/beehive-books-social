@@ -26,6 +26,7 @@ model User {
   clubMembers   ClubMember[]
   friendRequestsFrom FriendRequest[] @relation("FriendRequestsFrom")
   friendRequestsTo   FriendRequest[] @relation("FriendRequestsTo")
+  readingLists  ReadingList[]
 
   @@unique([email])
   @@map("user")
@@ -111,6 +112,35 @@ model FriendRequest {
   @@map("friend_request")
 }
 
+model ReadingList {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items       ReadingListItem[]
+
+  @@map("reading_list")
+}
+
+model ReadingListItem {
+  id            String   @id @default(cuid())
+  readingListId String
+  readingList   ReadingList @relation(fields: [readingListId], references: [id], onDelete: Cascade)
+  bookId        String?
+  book          Book?    @relation(fields: [bookId], references: [id], onDelete: SetNull)
+  // Allow adding books that aren't in the user's library
+  title         String
+  author        String
+  addedAt       DateTime @default(now())
+  isRead        Boolean  @default(false)
+
+  @@unique([readingListId, bookId])
+  @@map("reading_list_item")
+}
+
 model Book {
   id            String    @id @default(cuid())
   title         String
@@ -129,7 +159,8 @@ model Book {
   userId        String
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   clubsAsCurrent Club[]
-  readingListItems ClubReadingListItem[]
+  readingListItems ReadingListItem[]
+  clubReadingListItems ClubReadingListItem[]
 
   @@map("book")
 }
