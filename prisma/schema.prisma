@@ -24,6 +24,8 @@ model User {
   accounts      Account[]
   books         Book[]
   clubMembers   ClubMember[]
+  friendRequestsFrom FriendRequest[] @relation("FriendRequestsFrom")
+  friendRequestsTo   FriendRequest[] @relation("FriendRequestsTo")
 
   @@unique([email])
   @@map("user")
@@ -88,6 +90,25 @@ enum ClubRole {
 enum ReadingStatus {
   CURRENT
   UPCOMING
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model FriendRequest {
+  id        String               @id @default(cuid())
+  fromId    String
+  from      User                 @relation("FriendRequestsFrom", fields: [fromId], references: [id], onDelete: Cascade)
+  toId      String
+  to        User                 @relation("FriendRequestsTo", fields: [toId], references: [id], onDelete: Cascade)
+  status    FriendRequestStatus  @default(PENDING)
+  createdAt DateTime             @default(now())
+
+  @@unique([fromId, toId])
+  @@map("friend_request")
 }
 
 model Book {
@@ -222,3 +243,4 @@ model ClubReadingListItem {
   @@unique([bookId, clubId])
   @@map("club_reading_list_item")
 }
+

@@ -10,7 +10,7 @@ const EditChapterPage = async ({
 }) => {
   const { bookId, chapterId } = await params;
 
-  const chapter = await getChapterForEditAction(chapterId);
+  const chapter = await getChapterForEditAction(bookId, chapterId);
 
   return (
     <NewPage>

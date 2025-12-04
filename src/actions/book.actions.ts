@@ -2,7 +2,7 @@
 import { getAuthenticatedUser } from '@/lib/auth-server';
 import prisma from '@/lib/prisma';
 import { bookSchema, chapterSchema } from '@/lib/schemas';
-import { success, z } from 'zod';
+import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 
 //Books
@@ -212,12 +212,24 @@ export async function addChapterToBookAction(
 
     const parsedData = chapterSchema.parse(chapterData);
 
+    const wordCount = parsedData.content
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
+
     await prisma.chapter.create({
       data: {
         title: parsedData.chapterTitle,
         authorNotes: parsedData.notes || null,
         content: parsedData.content,
         bookId: book.id,
+      },
+    });
+
+    await prisma.book.update({
+      where: { id: bookId },
+      data: {
+        chapterCount: { increment: 1 },
+        wordCount: { increment: wordCount },
       },
     });
 
@@ -228,7 +240,10 @@ export async function addChapterToBookAction(
   }
 }
 
-export async function getChapterForEditAction(chapterId: string) {
+export async function getChapterForEditAction(
+  bookId: string,
+  chapterId: string
+) {
   try {
     const { user, error } = await getAuthenticatedUser();
     if (error || !user) {
@@ -244,7 +259,11 @@ export async function getChapterForEditAction(chapterId: string) {
       },
     });
 
-    if (!chapter || chapter.book.userId !== user.id) {
+    if (
+      !chapter ||
+      chapter.book.userId !== user.id ||
+      chapter.bookId !== bookId
+    ) {
       throw new Error('Chapter not found or access denied');
     }
 
@@ -260,6 +279,7 @@ export async function getChapterForEditAction(chapterId: string) {
 }
 
 export async function editChapterAction(
+  bookId: string,
   chapterId: string,
   chapterData: z.infer<typeof chapterSchema>
 ) {
@@ -278,11 +298,23 @@ export async function editChapterAction(
       },
     });
 
-    if (!chapter || chapter.book.userId !== user.id) {
+    if (
+      !chapter ||
+      chapter.book.userId !== user.id ||
+      chapter.bookId !== bookId
+    ) {
       throw new Error('Chapter not found or access denied');
     }
 
     const parsedData = chapterSchema.parse(chapterData);
+
+    const oldWordCount = chapter.content
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
+    const newWordCount = parsedData.content
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
+    const wordCountDiff = newWordCount - oldWordCount;
 
     await prisma.chapter.update({
       where: {
@@ -295,6 +327,13 @@ export async function editChapterAction(
       },
     });
 
+    if (wordCountDiff !== 0) {
+      await prisma.book.update({
+        where: { id: bookId },
+        data: { wordCount: { increment: wordCountDiff } },
+      });
+    }
+
     return { success: true, message: 'Chapter edited successfully' };
   } catch (error) {
     console.error('Error editing chapter:', error);
@@ -302,7 +341,7 @@ export async function editChapterAction(
   }
 }
 
-export async function deleteChapterAction(chapterId: string) {
+export async function deleteChapterAction(bookId: string, chapterId: string) {
   try {
     const { user, error } = await getAuthenticatedUser();
     if (error || !user) {
@@ -318,15 +357,33 @@ export async function deleteChapterAction(chapterId: string) {
       },
     });
 
-    if (!chapter || chapter.book.userId !== user.id) {
+    if (
+      !chapter ||
+      chapter.book.userId !== user.id ||
+      chapter.bookId !== bookId
+    ) {
       throw new Error('Chapter not found or access denied');
     }
+
+    const wordCount = chapter.content
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
 
     await prisma.chapter.delete({
       where: {
         id: chapterId,
       },
     });
+
+    await prisma.book.update({
+      where: { id: bookId },
+      data: {
+        chapterCount: { decrement: 1 },
+        wordCount: { decrement: wordCount },
+      },
+    });
+
+    revalidatePath(`/my-books/${bookId}`);
 
     return { success: true, message: 'Chapter deleted successfully' };
   } catch (error) {

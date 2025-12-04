@@ -26,6 +26,10 @@ const formSchema = z.object({
   privacy: z.string().min(1, 'Privacy setting is required'),
 });
 
+//TODO: Delete cloudinary image when book is deleted
+
+//TODO: Restructure imports for constants and schema
+
 const categories = [
   'Fiction',
   'Non-Fiction',
@@ -85,6 +89,7 @@ interface EditBookFormProps {
 
 export default function EditBookForm({ book }: EditBookFormProps) {
   const editBook = useBookStore((state) => state.editBook);
+  const deleteBook = useBookStore((state) => state.deleteBook);
 
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(book.cover);
@@ -117,8 +122,17 @@ export default function EditBookForm({ book }: EditBookFormProps) {
     editBook(book.id, values, coverImage || undefined);
   }
 
+  const handleDelete = () => {
+    deleteBook(book.id);
+  };
+
   return (
     <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10 border border-[#2a2a2a]">
+      <div className="flex justify-end pt-4">
+        <Button onClick={handleDelete} variant={'destructive'} type="button">
+          Delete Chapter
+        </Button>
+      </div>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">

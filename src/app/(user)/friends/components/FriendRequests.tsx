@@ -2,41 +2,36 @@
 
 import { Check, UserPlus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useFriendStore } from '@/stores/useFriendStore';
 
-const friendRequests: friendRequestType = [
-  {
-    id: 1,
-    name: 'Sarah Chen',
-    username: 'sarahwrites',
-    avatar: null,
-    mutualFriends: 3,
-    genres: ['Mystery', 'Thriller'],
-    bio: 'Mystery novelist working on my third book',
-  },
-  {
-    id: 2,
-    name: 'Mike Rodriguez',
-    username: 'mikereads',
-    avatar: null,
-    mutualFriends: 1,
-    genres: ['Sci-Fi', 'Fantasy'],
-    bio: 'Beta reader and book blogger',
-  },
-];
+interface PendingFriendRequest {
+  id: string;
+  fromId: string;
+  toId: string;
+  status: string;
+  createdAt: Date;
+  from: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
 
-type friendRequestType = {
-  id: number;
-  name: string;
-  username: string;
-  avatar: string | null;
-  mutualFriends: number;
-  genres: string[];
-  bio: string;
-}[];
+const FriendRequests = ({
+  pendingRequests,
+}: {
+  pendingRequests: PendingFriendRequest[];
+}) => {
+  const { acceptFriendRequest, declineFriendRequest } = useFriendStore();
 
-// const friendRequests: friendRequestType = [];
+  const handleAccept = async (requestId: string) => {
+    await acceptFriendRequest(requestId);
+  };
 
-const FriendRequests = () => {
+  const handleDecline = async (requestId: string) => {
+    await declineFriendRequest(requestId);
+  };
+
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-4 md:p-6">
       <h2 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
@@ -45,22 +40,22 @@ const FriendRequests = () => {
       </h2>
 
       <div className="mb-6">
-        {friendRequests.length > 0 ? (
+        {pendingRequests.length > 0 ? (
           <div className="space-y-3">
-            {friendRequests.map((request) => (
+            {pendingRequests.map((request) => (
               <div key={request.id} className="darkContainer3 rounded-xl p-4">
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center">
                     <span className="text-yellow-400 font-semibold">
-                      {request.name.charAt(0)}
+                      {request.from.name.charAt(0)}
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="font-semibold text-white truncate">
-                      {request.name}
+                      {request.from.name}
                     </h4>
                     <p className="text-white/60 text-sm">
-                      {request.mutualFriends} mutual friends
+                      {request.from.email}
                     </p>
                   </div>
                 </div>
@@ -69,6 +64,7 @@ const FriendRequests = () => {
                     size={'sm'}
                     variant={'beeYellow'}
                     className="flex-1 flex items-center justify-center gap-2"
+                    onClick={() => handleAccept(request.id)}
                   >
                     <Check className="w-4 h-4" />
                     Accept
@@ -76,6 +72,7 @@ const FriendRequests = () => {
                   <Button
                     size={'sm'}
                     className="flex-1 bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                    onClick={() => handleDecline(request.id)}
                   >
                     <X className="w-4 h-4" />
                     Decline

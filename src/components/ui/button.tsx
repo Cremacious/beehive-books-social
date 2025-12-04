@@ -16,7 +16,7 @@ const buttonVariants = cva(
         beeDark:
           'bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white rounded-lg font-bold transition-colors hover:cursor-pointer border-b-2 border-[#1a1a1a] shadow-lg',
         destructive:
-          'bg-[var(--destructive)] text-white hover:bg-[var(--destructive)]/90 shadow-md hover:shadow-lg',
+          'bg-[var(--destructive)] text-white hover:bg-[var(--destructive)]/90 shadow-md hover:shadow-lg border-b-2 border-red-700',
         outline:
           'border border-[var(--border)] bg-[var(--card)] text-[var(--card-foreground)] hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)] shadow-sm hover:shadow-md backdrop-blur-sm',
         secondary:

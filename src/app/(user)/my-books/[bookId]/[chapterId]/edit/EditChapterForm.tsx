@@ -24,6 +24,7 @@ export default function EditChapterForm({
   chapter,
 }: EditChapterFormProps) {
   const editChapter = useBookStore((state) => state.editChapter);
+  const deleteChapter = useBookStore((state) => state.deleteChapter);
   const form = useForm<z.infer<typeof chapterSchema>>({
     resolver: zodResolver(chapterSchema),
     defaultValues: {
@@ -37,8 +38,17 @@ export default function EditChapterForm({
     editChapter(bookId, chapterId, values);
   }
 
+  const handleDelete = () => {
+    deleteChapter(bookId, chapterId);
+  };
+
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-4 md:p-10 ">
+      <div className="flex justify-end pt-4">
+        <Button onClick={handleDelete} variant={'destructive'} type="button">
+          Delete Chapter
+        </Button>
+      </div>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
