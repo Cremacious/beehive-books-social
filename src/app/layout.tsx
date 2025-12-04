@@ -4,6 +4,7 @@ import './globals.css';
 import BottomNavBar from '@/components/layout/BottomNavBar';
 import DesktopSidebar from '@/components/layout/DesktopSidebar';
 import MobileHeader from '@/components/layout/MobileHeader';
+import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -43,6 +44,7 @@ export default function RootLayout({
         className={`${inter.variable} ${poppins.variable} antialiased min-h-screen `}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );

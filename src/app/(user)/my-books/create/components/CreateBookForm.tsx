@@ -88,8 +88,8 @@ export default function CreateBookForm() {
     }
   };
 
-  async function onSubmit(values: z.infer<typeof bookSchema>) {
-    await createBook(values, selectedFile || undefined);
+  function onSubmit(values: z.infer<typeof bookSchema>) {
+    createBook(values, selectedFile || undefined);
   }
 
   return (

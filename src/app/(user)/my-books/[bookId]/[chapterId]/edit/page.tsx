@@ -1,8 +1,17 @@
 import NewPage from '@/components/layout/NewPage';
 import EditChapterForm from './EditChapterForm';
 import { PenTool } from 'lucide-react';
+import { getChapterForEditAction } from '@/actions/book.actions';
 
-const EditChapterPage = () => {
+const EditChapterPage = async ({
+  params,
+}: {
+  params: Promise<{ bookId: string; chapterId: string }>;
+}) => {
+  const { bookId, chapterId } = await params;
+
+  const chapter = await getChapterForEditAction(chapterId);
+
   return (
     <NewPage>
       <div className="w-full max-w-4xl mx-auto space-y-8">
@@ -21,7 +30,11 @@ const EditChapterPage = () => {
             </div>
           </div>
         </div>
-        <EditChapterForm />
+        <EditChapterForm
+          bookId={bookId}
+          chapterId={chapterId}
+          chapter={chapter}
+        />
       </div>
     </NewPage>
   );

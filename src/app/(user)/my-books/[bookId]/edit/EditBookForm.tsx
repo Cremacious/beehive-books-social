@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -16,6 +15,7 @@ import {
   Image as ImageIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useBookStore } from '@/stores/useBookStore';
 
 const formSchema = z.object({
   title: z.string().min(1, 'Book title is required'),
@@ -54,28 +54,51 @@ const genres = [
 
 const privacyOptions = [
   {
-    value: 'public',
+    value: 'PUBLIC',
     label: 'Public',
     description: 'Anyone can read your book',
   },
   {
-    value: 'private',
+    value: 'PRIVATE',
     label: 'Private',
     description: 'Only you can access your book',
   },
   {
-    value: 'draft',
-    label: 'Draft',
-    description: 'Work in progress, not visible to others',
+    value: 'FRIENDS',
+    label: 'Friends',
+    description: 'Only friends can see your book',
   },
 ];
 
-export default function EditBookForm() {
+interface EditBookFormProps {
+  book: {
+    id: string;
+    title: string;
+    author: string;
+    category: string;
+    genre: string;
+    description: string;
+    privacy: string;
+    cover: string | null;
+  };
+}
+
+export default function EditBookForm({ book }: EditBookFormProps) {
+  const editBook = useBookStore((state) => state.editBook);
+
   const [coverImage, setCoverImage] = useState<File | null>(null);
-  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(book.cover);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: book.title,
+      author: book.author,
+      category: book.category,
+      genre: book.genre,
+      description: book.description,
+      privacy: book.privacy,
+    },
   });
 
   const handleCoverUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,16 +114,7 @@ export default function EditBookForm() {
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      console.log({ ...values, coverImage });
-      toast.success('Book created successfully! 🐝', {
-        description:
-          'Your new book has been created. Start writing your first chapter!',
-      });
-    } catch (error) {
-      console.error('Form submission error', error);
-      toast.error('Failed to create book. Please try again.');
-    }
+    editBook(book.id, values, coverImage || undefined);
   }
 
   return (

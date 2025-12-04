@@ -2,7 +2,10 @@
 import { getAuthenticatedUser } from '@/lib/auth-server';
 import prisma from '@/lib/prisma';
 import { bookSchema, chapterSchema } from '@/lib/schemas';
-import { z } from 'zod';
+import { success, z } from 'zod';
+import { revalidatePath } from 'next/cache';
+
+//Books
 
 export async function getUserBooksAction() {
   try {
@@ -55,43 +58,9 @@ export async function getBookByIdAction(bookId: string) {
   }
 }
 
-export async function createBookAction(data: z.infer<typeof bookSchema>) {
-  try {
-    const { user, error } = await getAuthenticatedUser();
-    if (error || !user) {
-      throw new Error(error || 'User not authenticated');
-    }
-
-    const privacyEnum = data.privacy.toUpperCase() as
-      | 'PUBLIC'
-      | 'PRIVATE'
-      | 'FRIENDS';
-
-    const parsedData = bookSchema.parse(data);
-
-    const book = await prisma.book.create({
-      data: {
-        title: parsedData.title,
-        author: parsedData.author,
-        category: parsedData.category,
-        genre: parsedData.genre,
-        description: parsedData.description,
-        privacy: privacyEnum,
-        cover: parsedData.cover || null,
-        userId: user.id,
-      },
-    });
-
-    return book;
-  } catch (error) {
-    console.error('Error creating book:', error);
-    throw error;
-  }
-}
-
-export async function editBookAction(
-  bookId: string,
-  data: z.infer<typeof bookSchema>
+export async function createBookAction(
+  data: z.infer<typeof bookSchema>,
+  coverUrl?: string
 ) {
   try {
     const { user, error } = await getAuthenticatedUser();
@@ -106,7 +75,47 @@ export async function editBookAction(
 
     const parsedData = bookSchema.parse(data);
 
-    const book = await prisma.book.updateMany({
+    await prisma.book.create({
+      data: {
+        title: parsedData.title,
+        author: parsedData.author,
+        category: parsedData.category,
+        genre: parsedData.genre,
+        description: parsedData.description,
+        privacy: privacyEnum,
+        cover: coverUrl || null,
+        userId: user.id,
+      },
+    });
+
+    revalidatePath('/my-books');
+
+    return { success: true, message: 'Book created successfully' };
+  } catch (error) {
+    console.error('Error creating book:', error);
+    return { success: false, message: 'Failed to create book' };
+  }
+}
+
+export async function editBookAction(
+  bookId: string,
+  data: z.infer<typeof bookSchema>,
+  coverUrl?: string
+) {
+  try {
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user) {
+      throw new Error(error || 'User not authenticated');
+    }
+
+    const privacyEnum = data.privacy.toUpperCase() as
+      | 'PUBLIC'
+      | 'PRIVATE'
+      | 'FRIENDS';
+
+    const parsedData = bookSchema.parse(data);
+
+    await prisma.book.updateMany({
       where: {
         id: bookId,
         userId: user.id,
@@ -118,14 +127,14 @@ export async function editBookAction(
         genre: parsedData.genre,
         description: parsedData.description,
         privacy: privacyEnum,
-        cover: parsedData.cover || null,
+        cover: coverUrl || null,
       },
     });
-
-    return book;
+    revalidatePath(`/my-books/${bookId}`);
+    return { success: true, message: 'Book updated successfully' };
   } catch (error) {
     console.error('Error editing book:', error);
-    throw error;
+    return { success: false, message: 'Failed to update bookXXX' };
   }
 }
 
@@ -136,17 +145,47 @@ export async function deleteBookAction(bookId: string) {
       throw new Error(error || 'User not authenticated');
     }
 
-    const deleted = await prisma.book.deleteMany({
+    await prisma.book.deleteMany({
       where: {
         id: bookId,
         userId: user.id,
       },
     });
 
-    return deleted;
+    return { success: true, message: 'Book deleted successfully' };
   } catch (error) {
     console.error('Error deleting book:', error);
-    throw error;
+    return { success: false, message: 'Failed to delete book' };
+  }
+}
+
+//Chapters
+
+export async function getChapterByIdAction(chapterId: string) {
+  try {
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user) {
+      throw new Error(error || 'User not authenticated');
+    }
+    const chapter = await prisma.chapter.findFirst({
+      where: {
+        id: chapterId,
+      },
+      include: {
+        comments: {
+          include: {
+            replies: true,
+          },
+        },
+      },
+    });
+    if (!chapter) {
+      throw new Error('Chapter not found or access denied');
+    }
+    return chapter;
+  } catch (error) {
+    console.error('Error fetching chapter by ID:', error);
+    throw Error('Error fetching chapter');
   }
 }
 
@@ -173,7 +212,7 @@ export async function addChapterToBookAction(
 
     const parsedData = chapterSchema.parse(chapterData);
 
-    const chapter = await prisma.chapter.create({
+    await prisma.chapter.create({
       data: {
         title: parsedData.chapterTitle,
         authorNotes: parsedData.notes || null,
@@ -182,37 +221,116 @@ export async function addChapterToBookAction(
       },
     });
 
-    return chapter;
+    return { success: true, message: 'Chapter added successfully' };
   } catch (error) {
     console.error('Error adding chapter to book:', error);
-    throw error;
+    return { success: false, message: 'Failed to add chapter' };
   }
 }
 
-export async function getChapterByIdAction(chapterId: string) {
+export async function getChapterForEditAction(chapterId: string) {
   try {
     const { user, error } = await getAuthenticatedUser();
     if (error || !user) {
       throw new Error(error || 'User not authenticated');
     }
+
     const chapter = await prisma.chapter.findFirst({
       where: {
         id: chapterId,
       },
       include: {
-        comments: {
-          include: {
-            replies: true,
-          },
-        },
+        book: true,
       },
     });
-    if (!chapter) {
+
+    if (!chapter || chapter.book.userId !== user.id) {
       throw new Error('Chapter not found or access denied');
     }
-    return chapter;
+
+    return {
+      title: chapter.title,
+      content: chapter.content,
+      notes: chapter.authorNotes,
+    };
   } catch (error) {
-    console.error('Error fetching chapter by ID:', error);
+    console.error('Error fetching chapter for edit:', error);
     throw error;
+  }
+}
+
+export async function editChapterAction(
+  chapterId: string,
+  chapterData: z.infer<typeof chapterSchema>
+) {
+  try {
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user) {
+      throw new Error(error || 'User not authenticated');
+    }
+
+    const chapter = await prisma.chapter.findFirst({
+      where: {
+        id: chapterId,
+      },
+      include: {
+        book: true,
+      },
+    });
+
+    if (!chapter || chapter.book.userId !== user.id) {
+      throw new Error('Chapter not found or access denied');
+    }
+
+    const parsedData = chapterSchema.parse(chapterData);
+
+    await prisma.chapter.update({
+      where: {
+        id: chapterId,
+      },
+      data: {
+        title: parsedData.chapterTitle,
+        authorNotes: parsedData.notes || null,
+        content: parsedData.content,
+      },
+    });
+
+    return { success: true, message: 'Chapter edited successfully' };
+  } catch (error) {
+    console.error('Error editing chapter:', error);
+    return { success: false, message: 'Failed to edit chapter' };
+  }
+}
+
+export async function deleteChapterAction(chapterId: string) {
+  try {
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user) {
+      throw new Error(error || 'User not authenticated');
+    }
+
+    const chapter = await prisma.chapter.findFirst({
+      where: {
+        id: chapterId,
+      },
+      include: {
+        book: true,
+      },
+    });
+
+    if (!chapter || chapter.book.userId !== user.id) {
+      throw new Error('Chapter not found or access denied');
+    }
+
+    await prisma.chapter.delete({
+      where: {
+        id: chapterId,
+      },
+    });
+
+    return { success: true, message: 'Chapter deleted successfully' };
+  } catch (error) {
+    console.error('Error deleting chapter:', error);
+    return { success: false, message: 'Failed to delete chapter' };
   }
 }
