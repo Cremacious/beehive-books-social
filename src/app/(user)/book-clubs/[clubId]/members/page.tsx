@@ -161,11 +161,11 @@ const ClubMembersPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {clubMembers.map((member) => (
               <div key={member.id} className="relative group">
-                <FriendCard
+                {/* <FriendCard
                   id={member.id}
                   name={member.name}
                   bio={member.bio}
-                />
+                /> */}
 
                 <div className="absolute top-3 right-3 flex items-center gap-2">
                   <div
