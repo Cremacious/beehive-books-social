@@ -1,7 +1,9 @@
+import { Button } from '@/components/ui/button';
 import { BookOpen, Calendar, CheckCircle, Circle, Star } from 'lucide-react';
+import { useReadingListStore } from '@/stores/useReadingListStore';
 
 export interface ReadingListBookItem {
-  id: number;
+  id: string;
   title: string;
   author: string;
   isRead: boolean;
@@ -12,10 +14,16 @@ export interface ReadingListBookItem {
 
 export interface ReadingListItemProps {
   book: ReadingListBookItem;
-  toggleReadStatus?: (id: number) => void;
+  toggleReadStatus?: (id: string) => void;
+  onDelete?: (id: string) => void;
 }
 
-const ReadingListItem = ({ book, toggleReadStatus }: ReadingListItemProps) => {
+const ReadingListItem = ({
+  book,
+  toggleReadStatus,
+  onDelete,
+}: ReadingListItemProps) => {
+  const isEditing = useReadingListStore((state) => state.isEditing);
   return (
     <div key={book.id} className="darkContainer3 rounded-2xl p-4 md:p-6 ">
       <div className="flex items-start gap-6">
@@ -43,26 +51,31 @@ const ReadingListItem = ({ book, toggleReadStatus }: ReadingListItemProps) => {
                 )}
               </div>
             </div>
-
-            <button
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                book.isRead
-                  ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
-                  : 'bg-[#FFC300]/20 text-[#FFC300] hover:bg-[#FFC300]/30'
-              }`}
-            >
-              {book.isRead ? (
-                <>
-                  <CheckCircle className="w-4 h-4" />
-                  Read
-                </>
-              ) : (
-                <>
-                  <Circle className="w-4 h-4" />
-                  Mark as Read
-                </>
+            <div className="flex flex-row gap-4">
+              <button
+                onClick={() => toggleReadStatus?.(book.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                  book.isRead
+                    ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                    : 'bg-[#FFC300]/20 text-[#FFC300] hover:bg-[#FFC300]/30'
+                }`}
+              >
+                {book.isRead ? (
+                  <>
+                    <CheckCircle className="w-4 h-4" />
+                    Read
+                  </>
+                ) : (
+                  <>
+                    <Circle className="w-4 h-4" />
+                    Mark as Read
+                  </>
+                )}
+              </button>
+              {isEditing && (
+                <Button onClick={() => onDelete?.(book.id)}>Delete</Button>
               )}
-            </button>
+            </div>
           </div>
         </div>
       </div>

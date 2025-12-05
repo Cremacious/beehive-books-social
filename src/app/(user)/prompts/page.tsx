@@ -202,6 +202,7 @@ const invitedPrompts = [
   },
 ];
 
+
 const PromptsPage = () => {
   return (
     <NewPage>

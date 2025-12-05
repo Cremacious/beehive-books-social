@@ -109,7 +109,7 @@ export async function deleteReadingListAction(listId: string) {
 const addBookToListSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   author: z.string().min(1, 'Author is required'),
-  bookId: z.string().optional(),
+  bookId: z.string().nullable(),
 });
 
 export async function addBookToListAction(listId: string, formData: FormData) {

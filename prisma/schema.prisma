@@ -27,6 +27,10 @@ model User {
   friendRequestsFrom FriendRequest[] @relation("FriendRequestsFrom")
   friendRequestsTo   FriendRequest[] @relation("FriendRequestsTo")
   readingLists  ReadingList[]
+  prompts       Prompt[]
+  invitedPrompts Prompt[] @relation("PromptInvitations")
+  promptEntries PromptEntry[]
+  promptComments PromptComment[]
 
   @@unique([email])
   @@map("user")
@@ -97,6 +101,11 @@ enum FriendRequestStatus {
   PENDING
   ACCEPTED
   DECLINED
+}
+
+enum PromptStatus {
+  OPEN
+  CLOSED
 }
 
 model FriendRequest {
@@ -273,5 +282,49 @@ model ClubReadingListItem {
 
   @@unique([bookId, clubId])
   @@map("club_reading_list_item")
+}
+
+model Prompt {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  createdAt     DateTime @default(now())
+  endDate       DateTime
+  status        PromptStatus @default(OPEN)
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invitedUsers  User[]   @relation("PromptInvitations")
+  entries       PromptEntry[]
+  responseCount Int      @default(0)
+
+  @@map("prompt")
+}
+
+model PromptEntry {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  promptId  String
+  prompt    Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments  PromptComment[]
+
+  @@map("prompt_entry")
+}
+
+model PromptComment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  entryId   String
+  entry     PromptEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    PromptComment? @relation("PromptCommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   PromptComment[] @relation("PromptCommentReplies")
+
+  @@map("prompt_comment")
 }
 

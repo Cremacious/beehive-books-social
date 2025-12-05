@@ -4,6 +4,25 @@ import prisma from '@/lib/prisma';
 import { bookSchema, chapterSchema } from '@/lib/schemas';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
+import cloudinary from '@/lib/cloudinary';
+
+async function deleteCloudinaryImage(imageUrl: string) {
+  try {
+    const urlParts = imageUrl.split('/');
+    const uploadIndex = urlParts.findIndex((part) => part === 'upload');
+    if (uploadIndex === -1) return;
+
+    const publicIdWithVersion = urlParts.slice(uploadIndex + 1).join('/');
+
+    const publicId = publicIdWithVersion
+      .replace(/^v\d+\//, '')
+      .replace(/\.[^/.]+$/, '');
+
+    await cloudinary.uploader.destroy(publicId);
+  } catch (error) {
+    console.error('Error deleting image from Cloudinary:', error);
+  }
+}
 
 //Books
 
@@ -108,6 +127,17 @@ export async function editBookAction(
       throw new Error(error || 'User not authenticated');
     }
 
+    const currentBook = await prisma.book.findFirst({
+      where: {
+        id: bookId,
+        userId: user.id,
+      },
+    });
+
+    if (!currentBook) {
+      return { success: false, message: 'Book not found' };
+    }
+
     const privacyEnum = data.privacy.toUpperCase() as
       | 'PUBLIC'
       | 'PRIVATE'
@@ -130,6 +160,11 @@ export async function editBookAction(
         cover: coverUrl || null,
       },
     });
+
+    if (coverUrl && currentBook.cover && coverUrl !== currentBook.cover) {
+      await deleteCloudinaryImage(currentBook.cover);
+    }
+
     revalidatePath(`/my-books/${bookId}`);
     return { success: true, message: 'Book updated successfully' };
   } catch (error) {
@@ -143,6 +178,21 @@ export async function deleteBookAction(bookId: string) {
     const { user, error } = await getAuthenticatedUser();
     if (error || !user) {
       throw new Error(error || 'User not authenticated');
+    }
+
+    const book = await prisma.book.findFirst({
+      where: {
+        id: bookId,
+        userId: user.id,
+      },
+    });
+
+    if (!book) {
+      return { success: false, message: 'Book not found' };
+    }
+
+    if (book.cover) {
+      await deleteCloudinaryImage(book.cover);
     }
 
     await prisma.book.deleteMany({

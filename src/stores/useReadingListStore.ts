@@ -11,7 +11,7 @@ import {
 } from '@/actions/reading-list.actions';
 import { toast } from 'sonner';
 
-interface ReadingListItem {
+export interface ReadingListItem {
   id: string;
   title: string;
   author: string;
@@ -20,7 +20,7 @@ interface ReadingListItem {
   bookId: string | null;
 }
 
-interface ReadingList {
+export interface ReadingList {
   id: string;
   title: string;
   description: string | null;
@@ -37,6 +37,7 @@ interface ReadingListStoreType {
   readingLists: ReadingList[];
   currentList: ReadingList | null;
   isLoading: boolean;
+  isEditing: boolean;
   createReadingList: (formData: FormData) => Promise<void>;
   editReadingList: (listId: string, formData: FormData) => Promise<void>;
   deleteReadingList: (listId: string) => Promise<void>;
@@ -45,12 +46,15 @@ interface ReadingListStoreType {
   toggleBookReadStatus: (listId: string, itemId: string) => Promise<void>;
   fetchReadingLists: () => Promise<void>;
   fetchReadingList: (listId: string) => Promise<void>;
+  setCurrentList: (list: ReadingList | null) => void;
+  setIsEditing: (editing: boolean) => void;
 }
 
 export const useReadingListStore = create<ReadingListStoreType>((set, get) => ({
   readingLists: [],
   currentList: null,
   isLoading: false,
+  isEditing: false,
 
   createReadingList: async (formData: FormData) => {
     set({ isLoading: true });
@@ -172,7 +176,6 @@ export const useReadingListStore = create<ReadingListStoreType>((set, get) => ({
             : null,
         }));
       }
-      toast.success('Book status updated!');
     } catch (error) {
       toast.error((error as Error).message || 'Failed to update book status');
     }
@@ -201,4 +204,6 @@ export const useReadingListStore = create<ReadingListStoreType>((set, get) => ({
       set({ isLoading: false });
     }
   },
+  setCurrentList: (list: ReadingList | null) => set({ currentList: list }),
+  setIsEditing: (editing: boolean) => set({ isEditing: editing }),
 }));

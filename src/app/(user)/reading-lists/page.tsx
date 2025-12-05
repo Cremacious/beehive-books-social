@@ -5,8 +5,6 @@ import { getReadingListsAction } from '@/actions/reading-list.actions';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-//Title, description, book count, created date, which have been marked as read or unread, and all the books in the list (with title and author). Books added to the list have a title, author, and a date the book was added to the list.
-
 const ReadingListsPage = async () => {
   const readingLists = await getReadingListsAction();
 
@@ -36,7 +34,7 @@ const ReadingListsPage = async () => {
                 Your Reading Lists
               </h2>
             </div>
-            <div className="">{readingLists.length} lists</div>
+ 
             <Link href="/reading-lists/create">
               <Button variant={'beeYellow'}>Create New List</Button>
             </Link>
