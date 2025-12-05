@@ -4,12 +4,46 @@ import PromptCard from './PromptCard';
 import PromptPagination from './PromptPagination';
 
 interface Prompt {
-  id: number;
+  id: string;
   title: string;
-  created: string;
-  endDate: string;
-  responses: number;
-  status: string;
+  description: string;
+  createdAt: Date;
+  endDate: Date;
+  status: 'OPEN' | 'CLOSED';
+  userId: string;
+  user?: {
+    id: string;
+    name: string;
+  };
+  invitedUsers: {
+    id: string;
+    name: string;
+  }[];
+  entries?: {
+    id: string;
+    content: string;
+    createdAt: Date;
+    promptId: string;
+    userId: string;
+    user: {
+      id: string;
+      name: string;
+    };
+    comments: {
+      id: string;
+      content: string;
+      createdAt: Date;
+      entryId: string;
+      userId: string;
+      user: {
+        id: string;
+        name: string;
+      };
+    }[];
+  }[];
+  _count?: {
+    entries: number;
+  };
 }
 
 interface PromptsListProps {

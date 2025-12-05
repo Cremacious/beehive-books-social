@@ -4,15 +4,16 @@ import Link from 'next/link';
 
 interface PromptEntryListItemProps {
   entry: {
-    id: number;
+    id: string;
     author: string;
     avatar: string | null;
     content: string;
     submittedAt: string;
   };
+  promptId: string;
 }
 
-const PromptEntryListItem = ({ entry }: PromptEntryListItemProps) => {
+const PromptEntryListItem = ({ entry, promptId }: PromptEntryListItemProps) => {
   return (
     <div key={entry.id} className="darkContainer3 rounded-xl p-6">
       <div className="flex items-center gap-3 mb-2">
@@ -26,7 +27,7 @@ const PromptEntryListItem = ({ entry }: PromptEntryListItemProps) => {
         {entry.content}
       </div>
       <div className="flex justify-end mt-4">
-        <Link href={`/prompts/44/${entry.id}`}>
+        <Link href={`/prompts/${promptId}/${entry.id}`}>
           <Button variant={'beeYellow'}>Read</Button>
         </Link>
       </div>

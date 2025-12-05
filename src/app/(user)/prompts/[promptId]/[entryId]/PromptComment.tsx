@@ -1,7 +1,7 @@
 import { User } from 'lucide-react';
 
 export interface PromptCommentReply {
-  id: number;
+  id: string;
   author: string;
   avatar: string | null;
   content: string;
@@ -10,7 +10,7 @@ export interface PromptCommentReply {
 }
 
 export interface PromptComment {
-  id: number;
+  id: string;
   author: string;
   avatar: string | null;
   content: string;

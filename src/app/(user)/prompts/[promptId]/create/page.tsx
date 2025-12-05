@@ -1,28 +1,24 @@
-'use client'
 import NewPage from '@/components/layout/NewPage';
 import { Button } from '@/components/ui/button';
 import { User, Calendar } from 'lucide-react';
-import { useState } from 'react';
+import CreatePromptReplyForm from './CreatePromptReply';
+import { getPromptAction } from '@/actions/prompt.actions';
 
+// const prompt = {
+//   title: 'A Door in the Forest',
+//   creator: { name: 'Sarah Chen' },
+//   endDate: '2025-12-01',
+//   description:
+//     'Write a story or poem inspired by the idea of a mysterious door hidden deep in the forest. What lies beyond? Who finds it? Let your imagination run wild.',
+// };
 
-const prompt = {
-  title: 'A Door in the Forest',
-  creator: { name: 'Sarah Chen' },
-  endDate: '2025-12-01',
-  description:
-    'Write a story or poem inspired by the idea of a mysterious door hidden deep in the forest. What lies beyond? Who finds it? Let your imagination run wild.',
-};
-
-const CreatePromptReplyPage = () => {
-  const [replyText, setReplyText] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Add submit logic
-    alert('Reply submitted!');
-    setReplyText('');
-  };
-
+const CreatePromptReplyPage = async ({
+  params,
+}: {
+  params: Promise<{ promptId: string }>;
+}) => {
+  const { promptId } = await params;
+  const prompt = await getPromptAction(promptId);
   return (
     <NewPage>
       <div className="w-full max-w-2xl mx-auto space-y-8">
@@ -33,14 +29,12 @@ const CreatePromptReplyPage = () => {
           <div className="flex items-center gap-4 mb-4">
             <div className="flex items-center gap-2">
               <User className="w-5 h-5 text-[#FFC300]" />
-              <span className="text-white font-medium">
-                {prompt.creator.name}
-              </span>
+              <span className="text-white font-medium">{prompt.user.name}</span>
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-[#FFC300]" />
               <span className="text-white/60 text-sm">
-                Ends {prompt.endDate}
+                Ends {prompt.endDate.toLocaleDateString()}
               </span>
             </div>
           </div>
@@ -52,30 +46,7 @@ const CreatePromptReplyPage = () => {
           <h2 className="text-xl font-bold text-yellow-400 mb-4">
             Submit Your Entry
           </h2>
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label className="block text-white font-semibold mb-2">
-                Your Writing
-              </label>
-              <textarea
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                placeholder="Write your story or poem here..."
-                rows={8}
-                className="w-full bg-[#232323] border border-[#FFC300]/20 rounded-lg p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 resize-none"
-                required
-              />
-            </div>
-            <div className="flex justify-end pt-4 border-t border-[#FFC300]/10">
-              <Button
-                variant="beeYellow"
-                type="submit"
-                className="font-bold px-6 py-3"
-              >
-                Submit Entry
-              </Button>
-            </div>
-          </form>
+          <CreatePromptReplyForm promptId={promptId} />
         </div>
       </div>
     </NewPage>
