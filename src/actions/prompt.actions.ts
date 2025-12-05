@@ -225,7 +225,6 @@ export async function getPromptAction(promptId: string) {
     throw new Error('Access denied');
   }
 
-  // Transform comments in entries to match PromptComment interface
   const transformedPrompt = {
     ...prompt,
     entries: prompt.entries?.map((entry) => ({
@@ -233,11 +232,11 @@ export async function getPromptAction(promptId: string) {
       comments: entry.comments.map((comment) => ({
         id: comment.id,
         author: comment.user.name,
-        avatar: null, // Assuming no avatar
+        avatar: null,
         content: comment.content,
         timestamp: comment.createdAt.toISOString(),
         likes: 0,
-        replies: [], // For now, assuming no nested replies
+        replies: [],
       })),
     })),
   };
@@ -359,7 +358,6 @@ export async function submitPromptEntryAction(
 
     revalidatePath(`/prompts/${promptId}`);
 
-    // Transform comments to match PromptComment interface
     const transformedEntry = {
       ...entry,
       comments: entry.comments.map((comment) => ({
@@ -440,3 +438,5 @@ export async function getPromptEntryByIdAction(entryId: string) {
     console.log(error);
   }
 }
+
+

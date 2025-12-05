@@ -8,25 +8,39 @@ import InvitePrompts from './components/InvitePrompts';
 import { getAuthenticatedUser } from '@/lib/auth-server';
 import { getPromptAction } from '@/actions/prompt.actions';
 
-const PromptPage = async ({ params }: { params: { promptId: string } }) => {
+const PromptPage = async ({
+  params,
+}: {
+  params: Promise<{ promptId: string }>;
+}) => {
+  const { promptId } = await params;
+  const prompt = await getPromptAction(promptId);
   const friends = await getAllUserFriendsAction();
   const { user } = await getAuthenticatedUser();
   const currentUserId = user?.id;
-  const prompt = await getPromptAction(params.promptId);
 
   return (
     <NewPage>
       <div className="w-full max-w-4xl mx-auto space-y-8">
         <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
-            {prompt.title}
-          </h1>
-          <div className="flex items-center gap-3 mb-4">
-            <User className="w-5 h-5 text-[#FFC300]" />
-            <span className="text-white font-medium">{prompt.user.name}</span>
-            <span className="text-white/50 text-sm">
-              • Ends {new Date(prompt.endDate).toLocaleDateString()}
-            </span>
+          <div className="flex justify-between">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
+                {prompt.title}
+              </h1>
+              <div className="flex items-center gap-3 mb-4">
+                <User className="w-5 h-5 text-[#FFC300]" />
+                <span className="text-white font-medium">
+                  {prompt.user.name}
+                </span>
+                <span className="text-white/50 text-sm">
+                  • Ends {new Date(prompt.endDate).toLocaleDateString()}
+                </span>
+              </div>
+            </div>
+            <Link href={`/prompts/${promptId}/edit`}>
+              <Button variant={'beeYellow'}>Edit</Button>
+            </Link>
           </div>
           <p className="text-white/80 leading-relaxed mb-6">
             {prompt.description}
@@ -76,7 +90,7 @@ const PromptPage = async ({ params }: { params: { promptId: string } }) => {
               </span>
             </div>
 
-            <Link href={`/prompts/${params.promptId}/create`}>
+            <Link href={`/prompts/${promptId}/create`}>
               <Button variant={'beeYellow'}>Create Reply</Button>
             </Link>
           </div>
@@ -92,7 +106,7 @@ const PromptPage = async ({ params }: { params: { promptId: string } }) => {
                   content: entry.content,
                   submittedAt: entry.createdAt.toISOString().split('T')[0],
                 }}
-                promptId={params.promptId}
+                promptId={promptId}
               />
             ))}
           </div>
