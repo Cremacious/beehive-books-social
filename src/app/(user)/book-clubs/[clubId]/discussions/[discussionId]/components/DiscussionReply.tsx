@@ -46,7 +46,7 @@ const DiscussionReply = ({
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-4 text-sm text-white/60">
               <Clock className="w-4 h-4" />
-              Posted {formatDate(reply.createdAt)}
+              Posted {formatDate(reply.createdAt.toISOString())}
             </div>
             <div className="text-white/90 leading-relaxed whitespace-pre-line">
               {reply.content}
@@ -62,7 +62,7 @@ const DiscussionReply = ({
               </button>
             </div>
 
-            {/* Nested Replies */}
+
             {reply.replies && reply.replies.length > 0 && (
               <div className="mt-6 space-y-4">
                 {reply.replies.map((nestedReply) => (

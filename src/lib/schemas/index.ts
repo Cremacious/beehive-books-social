@@ -15,3 +15,17 @@ export const chapterSchema = z.object({
   notes: z.string().optional(),
   content: z.string().min(1, 'Chapter content is required'),
 });
+
+export const clubCreateSchema = z.object({
+  clubName: z.string().min(1, 'Club name is required'),
+  description: z.string().min(1, 'Club description is required'),
+  currentBookTitle: z.string().min(1, 'Current book title is required'),
+  currentBookAuthor: z.string().min(1, 'Current book author is required'),
+  currentBookChapters: z
+    .number()
+    .min(1, 'Number of chapters must be at least 1'),
+  privacy: z.enum(['public', 'private', 'invite-only']),
+  rules: z.string().nullable().optional(),
+  invites: z.string().nullable().optional(),
+  tags: z.array(z.string()).optional(),
+});

@@ -67,27 +67,28 @@ export type UserType = {
 
 export type ClubMemberType = {
   id: string;
+  userId: string;
   user: UserType;
   role: string;
-  joinedAt: string;
+  joinedAt: Date;
   postCount: number;
 };
 
 export type DiscussionCommentType = {
   id: string;
   content: string;
-  createdAt: string;
+  createdAt: Date;
   likes: number;
   author: ClubMemberType;
   parentId: string | null;
-  replies: DiscussionCommentType[];
+  replies?: DiscussionCommentType[];
 };
 
 export type DiscussionFullType = {
   id: string;
   title: string;
   content: string;
-  createdAt: string;
+  createdAt: Date;
   likes: number;
   author: ClubMemberType;
   comments: DiscussionCommentType[];

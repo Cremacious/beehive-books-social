@@ -15,15 +15,25 @@ import ClubProgress from '../components/ClubProgress';
 import ClubDiscussionPreview from '../components/ClubDiscussionPreview';
 import ClubMembersPreview from '../components/ClubMembersPreview';
 import ClubReadingListPreview from '../components/ClubReadingListPreview';
-import { clubSample } from '@/lib/sampleData/club.sample';
+
 import Link from 'next/link';
+import { getAuthenticatedUser } from '@/lib/auth-server';
+import { getClubByIdAction } from '@/actions/club.actions';
+import { getUserRoleInClub } from '@/lib/utils';
 
-const club = clubSample;
-const userID = 'member-2';
+const ClubPage = async ({
+  params,
+}: {
+  params: Promise<{ clubId: string }>;
+}) => {
+  const { user } = await getAuthenticatedUser();
+  if (!user) throw new Error('Unauthorized');
 
-const ClubPage = () => {
-  const currentMember = club.members.find((member) => member.id === userID);
-  const userRole = currentMember?.role || 'MEMBER';
+  const { clubId } = await params;
+
+  const club = await getClubByIdAction(clubId);
+
+  const userRole = getUserRoleInClub(club.members, user.id);
 
   return (
     <NewPage>
@@ -31,7 +41,7 @@ const ClubPage = () => {
         <div className="relative">
           <div className="h-48 md:h-64 rounded-3xl overflow-hidden relative">
             <Image
-              src={coverImage}
+              src={club.cover || coverImage}
               alt={club.name}
               fill
               className="object-cover"
@@ -44,7 +54,7 @@ const ClubPage = () => {
               <div className="flex items-center gap-4 text-white/80">
                 <div className="flex items-center gap-2">
                   <Users className="w-4 h-4" />
-                  <span>{club.memberCount} members</span>
+                  <span>{club._count.members} members</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Shield className="w-4 h-4" />
@@ -66,13 +76,12 @@ const ClubPage = () => {
               <Share className="w-4 h-4" />
               Share
             </Button>
-            {(userRole === 'OWNER' || userRole === 'MODERATOR') && (
-              <Link href={`/book-clubs/${club.id}/settings`}>
-                <Button variant={'beeYellow'}>
-                  <Settings className="w-4 h-4 text-black" /> Edit Club
-                </Button>
-              </Link>
-            )}
+
+            <Link href={`/book-clubs/${club.id}/settings`}>
+              <Button variant={'beeYellow'}>
+                <Settings className="w-4 h-4 text-black" /> Edit Club
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -110,15 +119,34 @@ const ClubPage = () => {
                 </div>
               )}
             </div>
-            <ClubProgress club={club} />
-            <ClubDiscussionPreview discussions={club.discussions} />
+            <ClubProgress
+              club={{
+                currentBook: club.currentBook,
+                currentChapter: club.currentChapter,
+                id: club.id,
+              }}
+              userRole={userRole ?? 'MEMBER'}
+            />
+            <ClubDiscussionPreview
+              discussions={club.discussions}
+              clubId={clubId}
+            />
           </div>
 
           <div className="space-y-6">
-            <ClubMembersPreview club={club} members={club.members} />
+            <ClubMembersPreview
+              club={{ id: club.id, userRole: userRole ?? undefined }}
+              members={club.members}
+            />
             <ClubReadingListPreview
               clubId={club.id}
-              readingList={club.readingList}
+              readingList={club.readingList
+                .filter(item => item.book !== null)
+                .map(item => ({
+                  ...item,
+                  addedAt: typeof item.addedAt === 'string' ? item.addedAt : item.addedAt.toISOString(),
+                  book: item.book as NonNullable<typeof item.book>,
+                }))}
             />
           </div>
         </div>

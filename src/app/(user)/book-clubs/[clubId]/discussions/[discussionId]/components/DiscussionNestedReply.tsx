@@ -25,7 +25,7 @@ const DiscussionNestedReply = ({
           </div>
         </div>
         <div className="text-xs text-white/60 ml-auto">
-          {formatDate(nestedReply.createdAt)}
+          {formatDate(nestedReply.createdAt.toISOString())}
         </div>
       </div>
       <div className="text-white/90 leading-relaxed text-sm">

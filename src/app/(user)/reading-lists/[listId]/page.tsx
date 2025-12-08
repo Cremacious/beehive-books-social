@@ -1,5 +1,5 @@
 import NewPage from '@/components/layout/NewPage';
-import BookListView from './components/BookListView';
+import BookListView from './components/BookListView'
 import { getReadingListAction } from '@/actions/reading-list.actions';
 import ListStats from './components/ListStats';
 import ReadingListHeader from './components/ReadingListHeader';

@@ -4,11 +4,12 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import FindClubs from './components/FindClubs';
 import MyClubs from './components/MyClubs';
-import { userClubsSample } from '@/lib/sampleData/club.sample';
+// import { userClubsSample } from '@/lib/sampleData/club.sample';
+import { getAllUserClubsAction } from '@/actions/club.actions';
 
-const userClubs = userClubsSample;
+const BookClubsPage = async () => {
+  const userClubs = await getAllUserClubsAction();
 
-const BookClubsPage = () => {
   return (
     <NewPage>
       <div className="w-full space-y-8">

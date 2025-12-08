@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useClubStore } from '@/stores/useClubStore';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -17,16 +17,8 @@ import {
   Mail,
   Link as LinkIcon,
 } from 'lucide-react';
-
-const formSchema = z.object({
-  clubName: z.string().min(1, 'Club name is required'),
-  description: z.string().min(1, 'Club description is required'),
-  currentBook: z.string().min(1, 'Current book is required'),
-  privacy: z.enum(['public', 'private', 'invite-only']),
-  rules: z.string().optional(),
-  invites: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-});
+import { clubCreateSchema } from '@/lib/schemas';
+import { useState } from 'react';
 
 const availableTags = [
   'Mystery',
@@ -42,11 +34,13 @@ const availableTags = [
 ];
 
 export default function CreateClubForm() {
+  const router = useRouter();
+  const { createClub } = useClubStore();
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof clubCreateSchema>>({
+    resolver: zodResolver(clubCreateSchema),
     defaultValues: {
       tags: [],
     },
@@ -73,27 +67,36 @@ export default function CreateClubForm() {
     );
   };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      const formData = {
-        ...values,
-        coverImage,
-        tags: selectedTags,
-      };
-      console.log(formData);
-      toast.success('Book club created successfully! 🐝', {
-        description: 'Your new club is ready for members to join.',
-      });
-    } catch (error) {
-      console.error('Form submission error', error);
-      toast.error('Failed to create club. Please try again.');
+  async function onSubmit(values: z.infer<typeof clubCreateSchema>) {
+    const formData = new FormData();
+
+    formData.append('clubName', values.clubName);
+    formData.append('description', values.description);
+    formData.append('currentBookTitle', values.currentBookTitle);
+    formData.append('currentBookAuthor', values.currentBookAuthor);
+    formData.append(
+      'currentBookChapters',
+      values.currentBookChapters.toString()
+    );
+    formData.append('privacy', values.privacy);
+    if (values.rules) formData.append('rules', values.rules);
+    if (values.invites) formData.append('invites', values.invites);
+
+    selectedTags.forEach((tag) => formData.append('tags', tag));
+
+    if (coverImage) {
+      const response = await fetch(coverImage);
+      const blob = await response.blob();
+      formData.append('cover', blob);
     }
+
+    await createClub(formData);
+    router.push('/book-clubs');
   }
 
   return (
     <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10 border border-[#2a2a2a] max-w-3xl mx-auto">
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {/* Club Name Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
@@ -117,7 +120,6 @@ export default function CreateClubForm() {
           )}
         </div>
 
-        {/* Club Description Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
@@ -146,7 +148,6 @@ export default function CreateClubForm() {
           )}
         </div>
 
-        {/* Current Book Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
@@ -161,21 +162,52 @@ export default function CreateClubForm() {
               </p>
             </div>
           </div>
-          <input
-            {...form.register('currentBook')}
-            type="text"
-            placeholder="Enter the book title and author..."
-            className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
-          />
-          {form.formState.errors.currentBook && (
-            <p className="text-red-400 text-sm flex items-center gap-2">
-              <span className="text-xs">⚠️</span>
-              {form.formState.errors.currentBook.message}
-            </p>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <input
+                {...form.register('currentBookTitle')}
+                type="text"
+                placeholder="Book title..."
+                className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
+              />
+              {form.formState.errors.currentBookTitle && (
+                <p className="text-red-400 text-sm flex items-center gap-2 mt-1">
+                  <span className="text-xs">⚠️</span>
+                  {form.formState.errors.currentBookTitle.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <input
+                {...form.register('currentBookAuthor')}
+                type="text"
+                placeholder="Author name..."
+                className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
+              />
+              {form.formState.errors.currentBookAuthor && (
+                <p className="text-red-400 text-sm flex items-center gap-2 mt-1">
+                  <span className="text-xs">⚠️</span>
+                  {form.formState.errors.currentBookAuthor.message}
+                </p>
+              )}
+            </div>
+          </div>
+          <div>
+            <input
+              {...form.register('currentBookChapters', { valueAsNumber: true })}
+              type="number"
+              placeholder="Number of chapters..."
+              className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
+            />
+            {form.formState.errors.currentBookChapters && (
+              <p className="text-red-400 text-sm flex items-center gap-2 mt-1">
+                <span className="text-xs">⚠️</span>
+                {form.formState.errors.currentBookChapters.message}
+              </p>
+            )}
+          </div>
         </div>
 
-        {/* Club Cover Image Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
@@ -226,7 +258,6 @@ export default function CreateClubForm() {
           </div>
         </div>
 
-        {/* Privacy Setting Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
@@ -300,7 +331,6 @@ export default function CreateClubForm() {
           )}
         </div>
 
-        {/* Club Rules Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
@@ -323,7 +353,6 @@ export default function CreateClubForm() {
           />
         </div>
 
-        {/* Initial Member Invites Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
@@ -362,7 +391,6 @@ export default function CreateClubForm() {
           </div>
         </div>
 
-        {/* Club Categories/Tags Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
@@ -396,7 +424,6 @@ export default function CreateClubForm() {
           </div>
         </div>
 
-        {/* Submit Button */}
         <div className="flex justify-end pt-6 border-t border-[#FFC300]/10">
           <button
             type="submit"

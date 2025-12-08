@@ -8,7 +8,7 @@ interface ClubMembersPreviewProps {
   members: ClubMemberType[];
   club: {
     id: string;
-    userRole?: string; 
+    userRole?: string;
   };
 }
 
@@ -21,7 +21,7 @@ const ClubMembersPreview = ({ members, club }: ClubMembersPreviewProps) => {
           Members <span className="yellowBadge w-8">{members.length}</span>
         </h3>
         <div className="gap-2 flex flex-row">
-          {(club.userRole === 'Owner' || club.userRole === 'Moderator') && (
+          {club.userRole === 'OWNER' && (
             <Button size={'sm'} variant={'beeYellow'}>
               Invite
             </Button>

@@ -109,9 +109,9 @@ const DiscussionThreadPage = () => {
         </div>
 
         <div className="space-y-4">
-          {discussion.comments.map((reply, index) => (
+          {/* {discussion.comments.map((reply, index) => (
             <DiscussionReply key={reply.id} reply={reply} index={index} />
-          ))}
+          ))} */}
         </div>
 
         <DiscussionReplySection />

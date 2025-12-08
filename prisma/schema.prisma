@@ -210,6 +210,7 @@ model Club {
   description   String
   currentBookId String?
   currentBook   Book?     @relation(fields: [currentBookId], references: [id])
+  currentChapter Int      @default(0)
   cover         String?
   memberCount   Int       @default(0)
   privacy       Privacy
@@ -272,15 +273,19 @@ model DiscussionComment {
 
 model ClubReadingListItem {
   id       String    @id @default(cuid())
-  bookId   String
-  book     Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  bookId   String?
+  book     Book?     @relation(fields: [bookId], references: [id], onDelete: SetNull)
   clubId   String
   club     Club      @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  // Allow adding books that aren't in the club's library
+  title    String
+  author   String
   addedAt  DateTime  @default(now())
   status   ReadingStatus
+  isRead   Boolean   @default(false)
   order    Int
 
-  @@unique([bookId, clubId])
+  @@unique([clubId, title, author])
   @@map("club_reading_list_item")
 }
 

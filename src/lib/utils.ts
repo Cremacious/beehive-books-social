@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { DiscussionFullType } from './types';
+import { DiscussionFullType, ClubMemberType } from './types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -44,6 +44,14 @@ export const countTotalReplies = (
   comments: DiscussionFullType['comments']
 ): number => {
   return comments.reduce((total, comment) => {
-    return total + 1 + countTotalReplies(comment.replies);
+    return total + 1 + countTotalReplies(comment.replies ?? []);
   }, 0);
+};
+
+export const getUserRoleInClub = (
+  members: ClubMemberType[],
+  userId: string
+): string | null => {
+  const member = members.find((member) => member.userId === userId);
+  return member ? member.role : null;
 };
