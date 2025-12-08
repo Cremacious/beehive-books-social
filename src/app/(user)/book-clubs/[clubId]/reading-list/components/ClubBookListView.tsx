@@ -17,8 +17,10 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
     addBookToList,
     toggleBookReadStatus,
     removeBookFromList,
+    setCurrentBook,
   } = useClubReadingListStore();
   const [newBook, setNewBook] = useState({ title: '', author: '' });
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     setCurrentList(readingList);
@@ -52,6 +54,10 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
 
   const handleRemoveBook = async (itemId: string) => {
     await removeBookFromList(readingList.id, itemId);
+  };
+
+  const handleSetCurrentBook = async (itemId: string) => {
+    await setCurrentBook(readingList.id, itemId);
   };
 
   return (
@@ -95,8 +101,18 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
           <BookOpen className="w-5 h-5 text-[#FFC300]" />
           Books in This List
         </h2>
-        <div className="text-[#FFC300]/60 text-sm">
-          {books.length} total books
+        <div className="flex items-center gap-3">
+          <div className="text-[#FFC300]/60 text-sm">
+            {books.length} total books
+          </div>
+          {readingList.userRole === 'OWNER' && (
+            <button
+              onClick={() => setIsEditing(!isEditing)}
+              className="px-4 py-2 bg-[#FFC300]/10 hover:bg-[#FFC300]/20 text-[#FFC300] rounded-lg transition-colors flex items-center gap-2"
+            >
+              {isEditing ? 'Done Editing' : 'Edit List'}
+            </button>
+          )}
         </div>
       </div>
 
@@ -110,9 +126,15 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
                 ? handleToggleReadStatus
                 : undefined
             }
+            onSetCurrent={
+              readingList.userRole === 'OWNER'
+                ? handleSetCurrentBook
+                : undefined
+            }
             onDelete={
               readingList.userRole === 'OWNER' ? handleRemoveBook : undefined
             }
+            isEditing={isEditing}
           />
         ))}
       </div>

@@ -24,14 +24,18 @@ export interface ClubReadingListItemProps {
   book: ClubReadingListBookItem;
   toggleReadStatus?: (id: string) => void;
   onDelete?: (id: string) => void;
+  onSetCurrent?: (id: string) => void;
+  isEditing?: boolean;
 }
 
 const ClubReadingListItem = ({
   book,
   toggleReadStatus,
   onDelete,
+  onSetCurrent,
+  isEditing = false,
 }: ClubReadingListItemProps) => {
-  const isEditing = useClubReadingListStore((state) => state.isEditing);
+
 
   return (
     <div key={book.id} className="darkContainer3 rounded-2xl p-4 md:p-6 ">
@@ -91,6 +95,15 @@ const ClubReadingListItem = ({
                       Mark as Read
                     </>
                   )}
+                </button>
+              )}
+              {isEditing && onSetCurrent && !book.isCurrentBook && (
+                <button
+                  onClick={() => onSetCurrent(book.id)}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 rounded-lg transition-all"
+                >
+                  <Crown className="w-4 h-4" />
+                  Make Current Book
                 </button>
               )}
               {isEditing && onDelete && (

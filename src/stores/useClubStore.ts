@@ -5,6 +5,7 @@ import {
   deleteClubAction,
   getAllUserClubsAction,
   getClubByIdAction,
+  createClubDiscussionAction,
 } from '@/actions/club.actions';
 import { toast } from 'sonner';
 // import { useRouter } from 'next/navigation';
@@ -16,6 +17,7 @@ interface ClubStoreType {
   deleteClub: (clubId: string) => Promise<void>;
   getAllUserClubs: () => Promise<void>;
   getClubById: (clubId: string) => Promise<void>;
+  createClubDiscussion: (clubId: string, formData: FormData) => Promise<void>;
 }
 
 export const useClubStore = create<ClubStoreType>((set) => ({
@@ -38,7 +40,21 @@ export const useClubStore = create<ClubStoreType>((set) => ({
     }
   },
   editClub: async (clubId: string, formData: FormData) => {
-    // Implement later
+    set({ isLoading: true });
+    try {
+      const result = await editClubAction(clubId, formData);
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+        console.log(result);
+      }
+    } catch (error) {
+      toast.error('Failed to update club');
+      console.log(error);
+    } finally {
+      set({ isLoading: false });
+    }
   },
   deleteClub: async (clubId: string) => {
     // Implement later
@@ -48,5 +64,22 @@ export const useClubStore = create<ClubStoreType>((set) => ({
   },
   getClubById: async (clubId: string) => {
     // Implement later
+  },
+  createClubDiscussion: async (clubId: string, formData: FormData) => {
+    set({ isLoading: true });
+    try {
+      const result = await createClubDiscussionAction(clubId, formData);
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+        console.log(result);
+      }
+    } catch (error) {
+      toast.error('Failed to create discussion');
+      console.log(error);
+    } finally {
+      set({ isLoading: false });
+    }
   },
 }));

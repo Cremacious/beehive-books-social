@@ -1,7 +1,7 @@
-import { Heart, MessageCircle } from 'lucide-react';
+import { Heart, MessageCircle, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import CreateDiscussionModal from '../[clubId]/discussions/components/CreateDiscussionModal';
+// import CreateDiscussionModal from '../[clubId]/discussions/components/CreateDiscussionModal';
 import { DiscussionFullType } from '@/lib/types';
 import { formatLastActivity, countTotalReplies } from '@/lib/utils';
 
@@ -24,7 +24,12 @@ const ClubDiscussionPreview = ({
           <h2 className="text-xl font-bold text-white">Discussions</h2>
         </div>
         <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-          <CreateDiscussionModal size="sm" />
+          <Link href={`/book-clubs/${clubId}/discussions/create`}>
+            <Button size={'sm'} variant={'beeYellow'}>
+              <Plus className="w-5 h-5" />
+              New Discussion
+            </Button>
+          </Link>
           <Link
             href={`/book-clubs/${clubId}/discussions`}
             className="w-full md:w-auto"
@@ -53,7 +58,12 @@ const ClubDiscussionPreview = ({
               Start the conversation! Create the first discussion to get your
               book club talking.
             </p>
-            <CreateDiscussionModal size="lg" />
+            <Link href={`/book-clubs/${clubId}/discussions/create`}>
+              <Button size={'lg'} variant={'beeYellow'}>
+                <Plus className="w-5 h-5" />
+                New Discussion
+              </Button>
+            </Link>
           </div>
         ) : (
           discussions.map((discussion) => {

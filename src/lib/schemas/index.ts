@@ -29,3 +29,8 @@ export const clubCreateSchema = z.object({
   invites: z.string().nullable().optional(),
   tags: z.array(z.string()).optional(),
 });
+
+export const discussionSchema = z.object({
+  title: z.string().min(1, 'Discussion title is required'),
+  content: z.string().min(1, 'Discussion content is required'),
+});

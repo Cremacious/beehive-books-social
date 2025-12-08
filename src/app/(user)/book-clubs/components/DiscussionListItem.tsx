@@ -1,9 +1,27 @@
 import Link from 'next/link';
-import { DiscussionType } from '@/lib/types';
+// import { DiscussionType } from '@/lib/types';
 import { Clock, Heart, MessageSquare, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const DiscussionListItem = ({ discussion }: { discussion: DiscussionType }) => {
+interface DiscussionItem {
+  id: string;
+  title: string;
+  author: string;
+  replies: number;
+  lastActivity: string;
+  likes: number;
+  createdAt: string;
+}
+
+interface DiscussionListItemProps {
+  discussion: DiscussionItem;
+  clubId: string;
+}
+
+const DiscussionListItem = ({
+  discussion,
+  clubId,
+}: DiscussionListItemProps) => {
   return (
     <div className="darkContainer3 rounded-xl p-4 md:p-6 mb-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -34,7 +52,7 @@ const DiscussionListItem = ({ discussion }: { discussion: DiscussionType }) => {
         </div>
         <div className="flex items-center justify-end mt-2 md:mt-0 w-full md:w-auto">
           <Link
-            href={`/book-clubs/111/discussions/${discussion.id}`}
+            href={`/book-clubs/${clubId}/discussions/${discussion.id}`}
             className="w-full md:w-auto"
           >
             <Button variant={'beeYellow'} className="w-full md:w-auto ">

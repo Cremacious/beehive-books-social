@@ -141,10 +141,14 @@ const ClubPage = async ({
             <ClubReadingListPreview
               clubId={club.id}
               readingList={club.readingList
-                .filter(item => item.book !== null)
-                .map(item => ({
+                .filter((item) => item.book !== null)
+                .slice(0, 5)
+                .map((item) => ({
                   ...item,
-                  addedAt: typeof item.addedAt === 'string' ? item.addedAt : item.addedAt.toISOString(),
+                  addedAt:
+                    typeof item.addedAt === 'string'
+                      ? item.addedAt
+                      : item.addedAt.toISOString(),
                   book: item.book as NonNullable<typeof item.book>,
                 }))}
             />

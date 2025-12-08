@@ -9,21 +9,25 @@ import {
   Eye,
 } from 'lucide-react';
 import Link from 'next/link';
-import DiscussionReply from './components/DiscussionReply';
 import DiscussionReplySection from './components/DiscussionReplySection';
 import { getRoleColor, formatDate } from '@/lib/utils';
-import { discussionSample } from '@/lib/sampleData/club.sample';
+import { getClubDiscussionByIdAction } from '@/actions/club.actions';
 
+const DiscussionThreadPage = async ({
+  params,
+}: {
+  params: Promise<{ clubId: string; discussionId: string }>;
+}) => {
+  const { clubId, discussionId } = await params;
 
-const discussion = discussionSample;
+  const discussion = await getClubDiscussionByIdAction(clubId, discussionId);
 
-const DiscussionThreadPage = () => {
   return (
     <NewPage>
       <div className="w-full max-w-6xl mx-auto space-y-6">
         <div className="flex items-center gap-4 mb-6">
           <Link
-            href="/book-clubs/1/discussions"
+            href={`/book-clubs/${clubId}/discussions`}
             className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -37,10 +41,6 @@ const DiscussionThreadPage = () => {
               {discussion.title}
             </h1>
             <div className="flex items-center gap-4 text-sm text-white/60">
-              <div className="flex items-center gap-2">
-                <Eye className="w-4 h-4" />
-                {/* {discussion.views} views */}
-              </div>
               <div className="flex items-center gap-2">
                 <Heart className="w-4 h-4" />
                 {discussion.likes} likes
@@ -88,7 +88,7 @@ const DiscussionThreadPage = () => {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-4 text-sm text-white/60">
                   <Clock className="w-4 h-4" />
-                  Posted {formatDate(discussion.createdAt)}
+                  Posted {discussion.createdAt.toLocaleDateString()}
                 </div>
                 <div className="text-white/90 leading-relaxed whitespace-pre-line">
                   {discussion.content}
