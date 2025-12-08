@@ -47,7 +47,9 @@ export default function CreateClubForm() {
     },
   });
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       setUploadingImage(true);
@@ -241,7 +243,11 @@ export default function CreateClubForm() {
           </div>
 
           <div className="flex items-center gap-4">
-            <label className={`flex items-center gap-3 px-4 py-3 bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl cursor-pointer hover:border-[#FFC300]/40 transition-all ${uploadingImage ? 'opacity-50 cursor-not-allowed' : ''}`}>
+            <label
+              className={`flex items-center gap-3 px-4 py-3 bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl cursor-pointer hover:border-[#FFC300]/40 transition-all ${
+                uploadingImage ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
               <Upload className="w-4 h-4 text-[#FFC300]" />
               <span className="text-white">
                 {uploadingImage ? 'Uploading...' : 'Choose Image'}

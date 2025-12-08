@@ -20,7 +20,7 @@ const ClubMembersPreview = ({ members, club }: ClubMembersPreviewProps) => {
   const [sortBy, setSortBy] = useState<'name' | 'recent'>('recent');
 
   // Find the owner
-  const owner = members.find(member => member.role === 'OWNER');
+  const owner = members.find((member) => member.role === 'OWNER');
 
   // Sort members by joinedAt (most recent first) or name
   const sortedMembers = [...members].sort((a, b) => {
@@ -31,12 +31,14 @@ const ClubMembersPreview = ({ members, club }: ClubMembersPreviewProps) => {
   });
 
   // Filter members based on search query
-  const filteredMembers = sortedMembers.filter(member =>
+  const filteredMembers = sortedMembers.filter((member) =>
     member.user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Get members to display (5 most recent for preview, all for expanded)
-  const displayMembers = isExpanded ? filteredMembers : sortedMembers.slice(0, 5);
+  const displayMembers = isExpanded
+    ? filteredMembers
+    : sortedMembers.slice(0, 5);
 
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-6">
@@ -49,7 +51,9 @@ const ClubMembersPreview = ({ members, club }: ClubMembersPreviewProps) => {
             </div>
             <div>
               <div className="text-white font-semibold text-sm">Club Owner</div>
-              <div className="text-[#FFC300] text-lg font-bold">{owner.user.name}</div>
+              <div className="text-[#FFC300] text-lg font-bold">
+                {owner.user.name}
+              </div>
             </div>
           </div>
         </div>
