@@ -37,6 +37,7 @@ export default function CreateClubForm() {
   const router = useRouter();
   const { createClub } = useClubStore();
   const [coverImage, setCoverImage] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof clubCreateSchema>>({
@@ -46,14 +47,32 @@ export default function CreateClubForm() {
     },
   });
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setCoverImage(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+      setUploadingImage(true);
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('folder', 'club-covers');
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+
+        const data = await response.json();
+        setCoverImage(data.url);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        alert('Failed to upload image. Please try again.');
+      } finally {
+        setUploadingImage(false);
+      }
     }
   };
 
@@ -85,9 +104,7 @@ export default function CreateClubForm() {
     selectedTags.forEach((tag) => formData.append('tags', tag));
 
     if (coverImage) {
-      const response = await fetch(coverImage);
-      const blob = await response.blob();
-      formData.append('cover', blob);
+      formData.append('coverUrl', coverImage);
     }
 
     await createClub(formData);
@@ -224,13 +241,16 @@ export default function CreateClubForm() {
           </div>
 
           <div className="flex items-center gap-4">
-            <label className="flex items-center gap-3 px-4 py-3 bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl cursor-pointer hover:border-[#FFC300]/40 transition-all">
+            <label className={`flex items-center gap-3 px-4 py-3 bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl cursor-pointer hover:border-[#FFC300]/40 transition-all ${uploadingImage ? 'opacity-50 cursor-not-allowed' : ''}`}>
               <Upload className="w-4 h-4 text-[#FFC300]" />
-              <span className="text-white">Choose Image</span>
+              <span className="text-white">
+                {uploadingImage ? 'Uploading...' : 'Choose Image'}
+              </span>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
+                disabled={uploadingImage}
                 className="hidden"
               />
             </label>

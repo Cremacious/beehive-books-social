@@ -46,7 +46,7 @@ const ClubPage = async ({
               fill
               className="object-cover"
             />
-            <div className="absolute inset-0 darkContainer2" />
+            <div className="absolute inset-0 " />
             <div className="absolute bottom-6 left-6 md:left-8 text-white">
               <h1 className="text-3xl md:text-4xl font-bold mb-2">
                 {club.name}

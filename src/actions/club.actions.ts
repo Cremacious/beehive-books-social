@@ -28,27 +28,9 @@ export async function createClubAction(formData: FormData) {
     const parsedData = clubCreateSchema.parse(data);
 
     let coverUrl: string | undefined;
-    const coverFile = formData.get('cover') as File;
-    if (coverFile && coverFile.size > 0) {
-      const buffer = Buffer.from(await coverFile.arrayBuffer());
-      interface CloudinaryUploadResult {
-        secure_url: string;
-        [key: string]: unknown;
-      }
-
-      const result = await new Promise<CloudinaryUploadResult>(
-        (resolve, reject) => {
-          const uploadStream = cloudinary.uploader.upload_stream(
-            { folder: 'club-covers' },
-            (error, result) => {
-              if (error) reject(error);
-              else resolve(result as CloudinaryUploadResult);
-            }
-          );
-          uploadStream.end(buffer);
-        }
-      );
-      coverUrl = result.secure_url;
+    const coverUrlFromForm = formData.get('coverUrl') as string;
+    if (coverUrlFromForm) {
+      coverUrl = coverUrlFromForm;
     }
 
     const privacyEnum =
@@ -173,27 +155,9 @@ export async function editClubAction(clubId: string, formData: FormData) {
     const parsedData = clubCreateSchema.parse(data);
 
     let coverUrl: undefined | string;
-    const coverFile = formData.get('cover') as File;
-    if (coverFile && coverFile.size > 0) {
-      const buffer = Buffer.from(await coverFile.arrayBuffer());
-      interface CloudinaryUploadResult {
-        secure_url: string;
-        [key: string]: unknown;
-      }
-
-      const result = await new Promise<CloudinaryUploadResult>(
-        (resolve, reject) => {
-          const uploadStream = cloudinary.uploader.upload_stream(
-            { folder: 'club-covers' },
-            (error, result) => {
-              if (error) reject(error);
-              else resolve(result as CloudinaryUploadResult);
-            }
-          );
-          uploadStream.end(buffer);
-        }
-      );
-      coverUrl = result.secure_url;
+    const coverUrlFromForm = formData.get('coverUrl') as string;
+    if (coverUrlFromForm) {
+      coverUrl = coverUrlFromForm;
     }
 
     const privacyEnum =
@@ -230,8 +194,7 @@ export async function editClubAction(clubId: string, formData: FormData) {
       currentBookId = book.id;
     }
 
-    // Update the club
-    const updatedClub = await prisma.club.update({
+    await prisma.club.update({
       where: { id: clubId },
       data: {
         name: parsedData.clubName,
@@ -403,6 +366,11 @@ export async function getClubForEditAction(clubId: string) {
       where: { id: clubId },
       include: {
         currentBook: true,
+        members: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
 
@@ -423,6 +391,7 @@ export async function getClubForEditAction(clubId: string) {
       invites: null, // Not stored in current schema
       tags: club.tags,
       cover: club.cover,
+      members: club.members,
     };
   } catch (error) {
     console.error('Error fetching club for edit:', error);
@@ -830,7 +799,102 @@ export async function getClubDiscussionByIdAction(
 
     return discussion;
   } catch (error) {
-    console.error('Error fetching discussion by ID:', error);
+    console.error('Error fetching club discussion by ID:', error);
     throw error;
+  }
+}
+
+export async function removeClubMemberAction(clubId: string, memberId: string) {
+  try {
+    const { user } = await getAuthenticatedUser();
+    if (!user) throw new Error('Unauthorized');
+
+    const owner = await prisma.clubMember.findFirst({
+      where: { clubId, userId: user.id, role: 'OWNER' },
+    });
+    if (!owner) throw new Error('Only club owners can remove members');
+
+    const memberToRemove = await prisma.clubMember.findUnique({
+      where: { id: memberId },
+    });
+    if (!memberToRemove || memberToRemove.clubId !== clubId) {
+      throw new Error('Member not found in this club');
+    }
+
+    if (memberToRemove.role === 'OWNER') {
+      throw new Error('Cannot remove the club owner');
+    }
+
+    await prisma.clubMember.delete({
+      where: { id: memberId },
+    });
+
+    revalidatePath(`/book-clubs/${clubId}/settings`);
+    return { success: true, message: 'Member removed successfully' };
+  } catch (error) {
+    console.error('Error removing club member:', error);
+    return { success: false, message: 'Failed to remove member' };
+  }
+}
+
+export async function inviteFriendToClubAction(
+  clubId: string,
+  friendId: string
+) {
+  try {
+    const { user } = await getAuthenticatedUser();
+    if (!user) return { success: false, message: 'Unauthorized' };
+
+    // Check if current user is owner
+    const ownerCheck = await prisma.clubMember.findFirst({
+      where: {
+        clubId,
+        userId: user.id,
+        role: 'OWNER',
+      },
+    });
+    if (!ownerCheck)
+      return { success: false, message: 'Only club owners can invite members' };
+
+    // Check if friend exists and is actually a friend
+    const friendRequest = await prisma.friendRequest.findFirst({
+      where: {
+        OR: [
+          { fromId: user.id, toId: friendId, status: 'ACCEPTED' },
+          { fromId: friendId, toId: user.id, status: 'ACCEPTED' },
+        ],
+      },
+    });
+    if (!friendRequest)
+      return { success: false, message: 'User is not your friend' };
+
+    // Check if friend is already a member
+    const existingMember = await prisma.clubMember.findFirst({
+      where: {
+        clubId,
+        userId: friendId,
+      },
+    });
+    if (existingMember)
+      return {
+        success: false,
+        message: 'Friend is already a member of this club',
+      };
+
+    // Add friend as member
+    await prisma.clubMember.create({
+      data: {
+        clubId,
+        userId: friendId,
+        role: 'MEMBER',
+      },
+    });
+
+    revalidatePath(`/book-clubs/${clubId}`);
+    revalidatePath('/book-clubs');
+    return { success: true, message: 'Friend invited successfully' };
+  } catch (error) {
+    console.error('Error inviting friend to club:', error);
+    return { success: false, message: 'Failed to invite friend' };
   }
 }

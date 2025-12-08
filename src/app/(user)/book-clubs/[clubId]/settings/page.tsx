@@ -11,6 +11,7 @@ const ClubSettingsPage = async ({
   const { clubId } = await params;
 
   const club = await getClubForEditAction(clubId);
+  
 
   return (
     <NewPage>
@@ -35,7 +36,7 @@ const ClubSettingsPage = async ({
             </div>
           </div>
 
-          <EditClubMembers />
+          <EditClubMembers club={club} />
         </div>
       </div>
     </NewPage>

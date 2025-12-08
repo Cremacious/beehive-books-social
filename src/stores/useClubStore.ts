@@ -6,9 +6,10 @@ import {
   getAllUserClubsAction,
   getClubByIdAction,
   createClubDiscussionAction,
+  removeClubMemberAction,
+  inviteFriendToClubAction,
 } from '@/actions/club.actions';
 import { toast } from 'sonner';
-// import { useRouter } from 'next/navigation';
 
 interface ClubStoreType {
   isLoading: boolean;
@@ -18,6 +19,8 @@ interface ClubStoreType {
   getAllUserClubs: () => Promise<void>;
   getClubById: (clubId: string) => Promise<void>;
   createClubDiscussion: (clubId: string, formData: FormData) => Promise<void>;
+  removeClubMember: (clubId: string, memberId: string) => Promise<void>;
+  inviteFriend: (clubId: string, friendId: string) => Promise<void>;
 }
 
 export const useClubStore = create<ClubStoreType>((set) => ({
@@ -77,6 +80,40 @@ export const useClubStore = create<ClubStoreType>((set) => ({
       }
     } catch (error) {
       toast.error('Failed to create discussion');
+      console.log(error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  removeClubMember: async (clubId: string, memberId: string) => {
+    set({ isLoading: true });
+    try {
+      const result = await removeClubMemberAction(clubId, memberId);
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+        console.log(result);
+      }
+    } catch (error) {
+      toast.error('Failed to remove member');
+      console.log(error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  inviteFriend: async (clubId: string, friendId: string) => {
+    set({ isLoading: true });
+    try {
+      const result = await inviteFriendToClubAction(clubId, friendId);
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+        console.log(result);
+      }
+    } catch (error) {
+      toast.error('Failed to invite friend');
       console.log(error);
     } finally {
       set({ isLoading: false });
