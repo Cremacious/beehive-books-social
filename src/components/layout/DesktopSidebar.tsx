@@ -8,8 +8,11 @@ import Image from 'next/image';
 import { Button } from '../ui/button';
 import { useEffect, useState } from 'react';
 import { getUserByIdAction } from '@/actions/user.actions';
+import { useSession } from '@/lib/auth-client';
 
-const DesktopSidebar = ({ userId }: { userId: string }) => {
+const DesktopSidebar = () => {
+  const currentUser = useSession()
+  const userId = currentUser.data?.user?.id;
   const pathname = usePathname();
   const [user, setUser] = useState<{
     id: string;
@@ -20,8 +23,10 @@ const DesktopSidebar = ({ userId }: { userId: string }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const data = await getUserByIdAction(userId);
-        setUser(data.user);
+        if (typeof userId === 'string') {
+          const data = await getUserByIdAction(userId);
+          setUser(data.user);
+        }
       } catch (error) {
         console.error('Error fetching user:', error);
       }
