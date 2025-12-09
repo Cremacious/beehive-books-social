@@ -195,6 +195,8 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
                   <Image
                     src={comment.user.image}
                     alt={comment.user.name}
+                    width={40}
+                    height={40}
                     className="w-10 h-10 rounded-full object-cover"
                   />
                 ) : (
@@ -285,6 +287,8 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
                             <Image
                               src={reply.user.image}
                               alt={reply.user.name}
+                              width={32}
+                              height={32}
                               className="w-8 h-8 rounded-full object-cover"
                             />
                           ) : (

@@ -1,6 +1,8 @@
 import BottomNavBar from '@/components/layout/BottomNavBar';
 import DesktopSidebar from '@/components/layout/DesktopSidebar';
 import MobileHeader from '@/components/layout/MobileHeader';
+import { getCurrentServerUser } from '@/lib/auth-server';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,6 +11,10 @@ export default async function UserLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getCurrentServerUser();
+  if (!user) {
+    redirect('/sign-in');
+  }
   return (
     <>
       <div
