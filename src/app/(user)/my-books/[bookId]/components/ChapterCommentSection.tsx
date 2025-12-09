@@ -7,18 +7,24 @@ import {
   Send,
   User,
 } from 'lucide-react';
-
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-
-// TODO: Replace with actual types 
+import { useState } from 'react';
+import { useBookStore } from '@/stores/useBookStore';
 
 interface Comment {
   id: string;
-  authorName: string;
-  avatar: string | null;
   content: string;
-  timestamp: Date;
+  createdAt: Date;
   likes: number;
+  userId: string;
+  chapterId: string;
+  parentId?: string | null;
+  user: {
+    id: string;
+    name: string;
+    image: string | null;
+  };
   replies?: Comment[];
 }
 
@@ -29,6 +35,8 @@ interface Chapter {
   authorNotes: string | null;
   content: string;
   comments: Comment[];
+  isFriend: boolean;
+  bookUserId: string;
 }
 
 interface ChapterCommentSectionProps {
@@ -36,12 +44,77 @@ interface ChapterCommentSectionProps {
 }
 
 const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
+  const [newComment, setNewComment] = useState('');
+  const [replyTexts, setReplyTexts] = useState<Record<string, string>>({});
+  const [showReplyForm, setShowReplyForm] = useState<Record<string, boolean>>(
+    {}
+  );
+  const [comments, setComments] = useState<Comment[]>(chapter.comments);
+  const [isPostingComment, setIsPostingComment] = useState(false);
+  const [isPostingReply, setIsPostingReply] = useState<Record<string, boolean>>(
+    {}
+  );
+
+  const { addComment, addReply } = useBookStore();
+
+  if (!chapter.isFriend) {
+    return null;
+  }
+
+  const handlePostComment = async () => {
+    if (!newComment.trim()) return;
+
+    setIsPostingComment(true);
+    try {
+      const comment = await addComment(chapter.id, newComment);
+      setComments((prev) => [...prev, comment as Comment]);
+      setNewComment('');
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsPostingComment(false);
+    }
+  };
+
+  const handlePostReply = async (commentId: string) => {
+    const replyText = replyTexts[commentId];
+    if (!replyText?.trim()) return;
+
+    setIsPostingReply((prev) => ({ ...prev, [commentId]: true }));
+    try {
+      const reply = await addReply(commentId, replyText);
+      setComments((prev) =>
+        prev.map((comment) =>
+          comment.id === commentId
+            ? {
+                ...comment,
+                replies: [...(comment.replies || []), reply as Comment],
+              }
+            : comment
+        )
+      );
+      setReplyTexts((prev) => ({ ...prev, [commentId]: '' }));
+      setShowReplyForm((prev) => ({ ...prev, [commentId]: false }));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsPostingReply((prev) => ({ ...prev, [commentId]: false }));
+    }
+  };
+
+  const toggleReplyForm = (commentId: string) => {
+    setShowReplyForm((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }));
+  };
+
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-4 md:p-10">
       <h2 className="text-2xl font-bold text-yellow-400 mb-8 flex items-center gap-3">
         <MessageCircle className="w-6 h-6" />
         Comments
-        <span className="yellowBadge w-7 h-7">{chapter.commentCount}</span>
+        <span className="yellowBadge w-7 h-7">{comments.length}</span>
       </h2>
 
       <div className="mb-8">
@@ -49,16 +122,20 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
           <div className="flex-1">
             <textarea
               placeholder="Share your thoughts about this chapter..."
-              className="w-full  rounded-xl p-4 searchStyle"
+              className="w-full rounded-xl p-4 searchStyle"
               rows={3}
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
             />
             <div className="flex justify-end mt-3">
               <Button
                 variant={'beeYellow'}
-                className=" flex items-center gap-2"
+                className="flex items-center gap-2"
+                onClick={handlePostComment}
+                disabled={isPostingComment || !newComment.trim()}
               >
                 <Send className="w-4 h-4" />
-                Post Comment
+                {isPostingComment ? 'Posting...' : 'Post Comment'}
               </Button>
             </div>
           </div>
@@ -66,22 +143,30 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
       </div>
 
       <div className="space-y-6">
-        {chapter.comments.map((comment) => (
+        {comments.map((comment) => (
           <div
             key={comment.id}
             className="border-b border-yellow-500/10 pb-6 last:border-b-0 last:pb-0"
           >
             <div className="flex gap-4">
               <div className="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center shrink-0">
-                <User className="w-5 h-5 text-yellow-400" />
+                {comment.user.image ? (
+                  <Image
+                    src={comment.user.image}
+                    alt={comment.user.name}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                ) : (
+                  <User className="w-5 h-5 text-yellow-400" />
+                )}
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="font-semibold text-white">
-                    {comment.authorName}
+                    {comment.user.name}
                   </span>
                   <span className="text-white/50 text-sm">
-                    {new Date(comment.timestamp).toLocaleString()}
+                    {new Date(comment.createdAt).toLocaleString()}
                   </span>
                   <button className="text-white/50 hover:text-white/70 transition-colors">
                     <MoreVertical className="w-4 h-4" />
@@ -93,28 +178,78 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
                 <div className="flex items-center gap-4">
                   <button className="flex items-center gap-1 text-white/60 hover:text-yellow-400 transition-colors">
                     <Heart className="w-4 h-4" />
-                    <span className="text-sm">{comment.likes}</span>
+                    <span className="text-sm">0</span>
                   </button>
-                  <button className="flex items-center gap-1 text-white/60 hover:text-yellow-400 transition-colors">
+                  <button
+                    className="flex items-center gap-1 text-white/60 hover:text-yellow-400 transition-colors"
+                    onClick={() => toggleReplyForm(comment.id)}
+                  >
                     <Reply className="w-4 h-4" />
                     <span className="text-sm">Reply</span>
                   </button>
                 </div>
+
+                {showReplyForm[comment.id] && (
+                  <div className="mt-4">
+                    <textarea
+                      placeholder="Write a reply..."
+                      className="w-full rounded-xl p-3 searchStyle text-sm"
+                      rows={2}
+                      value={replyTexts[comment.id] || ''}
+                      onChange={(e) =>
+                        setReplyTexts((prev) => ({
+                          ...prev,
+                          [comment.id]: e.target.value,
+                        }))
+                      }
+                    />
+                    <div className="flex justify-end gap-2 mt-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => toggleReplyForm(comment.id)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant={'beeYellow'}
+                        size="sm"
+                        className="flex items-center gap-2"
+                        onClick={() => handlePostReply(comment.id)}
+                        disabled={
+                          isPostingReply[comment.id] ||
+                          !replyTexts[comment.id]?.trim()
+                        }
+                      >
+                        <Send className="w-3 h-3" />
+                        {isPostingReply[comment.id] ? 'Posting...' : 'Reply'}
+                      </Button>
+                    </div>
+                  </div>
+                )}
 
                 {comment.replies && comment.replies.length > 0 && (
                   <div className="mt-4 space-y-4">
                     {comment.replies.map((reply) => (
                       <div key={reply.id} className="flex gap-4">
                         <div className="w-8 h-8 bg-yellow-500/15 rounded-full flex items-center justify-center shrink-0">
-                          <User className="w-4 h-4 text-yellow-400" />
+                          {reply.user.image ? (
+                            <Image
+                              src={reply.user.image}
+                              alt={reply.user.name}
+                              className="w-8 h-8 rounded-full object-cover"
+                            />
+                          ) : (
+                            <User className="w-4 h-4 text-yellow-400" />
+                          )}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-1">
                             <span className="font-semibold text-white text-sm">
-                              {reply.authorName}
+                              {reply.user.name}
                             </span>
                             <span className="text-white/50 text-xs">
-                              {new Date(reply.timestamp).toLocaleString()}
+                              {new Date(reply.createdAt).toLocaleString()}
                             </span>
                           </div>
                           <p className="text-white/70 text-sm leading-relaxed">
@@ -123,7 +258,7 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
                           <div className="flex items-center gap-4 mt-2">
                             <button className="flex items-center gap-1 text-white/50 hover:text-yellow-400 transition-colors text-xs">
                               <Heart className="w-3 h-3" />
-                              <span>{reply.likes}</span>
+                              <span>0</span>
                             </button>
                           </div>
                         </div>

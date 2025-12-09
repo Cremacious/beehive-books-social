@@ -6,10 +6,13 @@ import {
   editChapterAction,
   deleteBookAction,
   deleteChapterAction,
+  addCommentToChapterAction,
+  addReplyToCommentAction,
 } from '@/actions/book.actions';
 import { z } from 'zod';
 import { bookSchema, chapterSchema } from '@/lib/schemas';
 import { toast } from 'sonner';
+import { Comment } from '@prisma/client';
 
 import { redirect } from 'next/navigation';
 
@@ -33,6 +36,8 @@ interface BookStoreType {
   ) => Promise<void>;
   deleteBook: (bookId: string) => Promise<void>;
   deleteChapter: (bookId: string, chapterId: string) => Promise<void>;
+  addComment: (chapterId: string, content: string) => Promise<Comment>;
+  addReply: (commentId: string, content: string) => Promise<Comment>;
 }
 
 export const useBookStore = create<BookStoreType>((set) => ({
@@ -173,6 +178,30 @@ export const useBookStore = create<BookStoreType>((set) => ({
         toast.error(response.message);
       }
     } catch (error) {
+      throw error;
+    }
+  },
+  addComment: async (chapterId: string, content: string) => {
+    try {
+      const comment = await addCommentToChapterAction(chapterId, content);
+      toast.success('Comment added successfully');
+      return comment;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to add comment';
+      toast.error(errorMessage);
+      throw error;
+    }
+  },
+  addReply: async (commentId: string, content: string) => {
+    try {
+      const reply = await addReplyToCommentAction(commentId, content);
+      toast.success('Reply added successfully');
+      return reply;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to add reply';
+      toast.error(errorMessage);
       throw error;
     }
   },

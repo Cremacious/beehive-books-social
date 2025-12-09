@@ -2,9 +2,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import defaultImage from '@/assets/stock/cover.jpeg';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 
-const BookCard = ({
+const MyBookCard = ({
   id,
   title,
   author,
@@ -19,7 +19,7 @@ const BookCard = ({
   coverImage: string | null;
   href?: string;
 }) => {
-  const bookHref = href || `/book/${id}`;
+  const bookHref = href || `/my-books/${id}`;
 
   return (
     <Link href={bookHref}>
@@ -58,4 +58,4 @@ const BookCard = ({
     </Link>
   );
 };
-export default BookCard;
+export default MyBookCard;

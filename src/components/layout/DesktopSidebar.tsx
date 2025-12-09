@@ -1,30 +1,30 @@
 'use client';
 
-import { Book, Home, Plus } from 'lucide-react';
-import { useRouter, usePathname } from 'next/navigation';
+import { Home, Plus } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import logoImg from '@/assets/logo.png';
 import Image from 'next/image';
 import { Button } from '../ui/button';
 
-const userData = {
-  name: 'Chris Mackall',
-  totalBooks: 6,
-};
-
-const navLinks = [
-  { name: 'Dashboard', href: '/dashboard' },
-  { name: 'My Books', href: '/my-books' },
-  { name: 'Friends', href: '/friends' },
-  { name: 'Book Clubs', href: '/book-clubs' },
-  { name: 'Reading Lists', href: '/reading-lists' },
-  { name: 'Writing Prompts', href: '/prompts' },
-  { name: 'Settings', href: '/settings' },
-];
-
-const DesktopSidebar = () => {
-  const router = useRouter();
+const DesktopSidebar = ({ userId }: { userId: string }) => {
   const pathname = usePathname();
+
+  const userData = {
+    name: 'Chris Mackall',
+    totalBooks: 6,
+  };
+
+  const navLinks = [
+    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'My Books', href: '/my-books' },
+    { name: 'Friends', href: '/friends' },
+    { name: 'Book Clubs', href: '/book-clubs' },
+    { name: 'Reading Lists', href: '/reading-lists' },
+    { name: 'Writing Prompts', href: '/prompts' },
+    { name: 'Settings', href: '/settings' },
+    { name: 'Profile', href: `/profile/${userId}` },
+  ];
 
   return (
     <div className="hidden md:flex w-80 bg-[#252525] flex-col p-6 shadow-xl space-y-8 h-screen sticky top-0">

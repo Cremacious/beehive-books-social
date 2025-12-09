@@ -31,6 +31,7 @@ model User {
   invitedPrompts Prompt[] @relation("PromptInvitations")
   promptEntries PromptEntry[]
   promptComments PromptComment[]
+  comments      Comment[]
 
   @@unique([email])
   @@map("user")
@@ -190,13 +191,13 @@ model Chapter {
 
 model Comment {
   id            String    @id @default(cuid())
-  authorName    String
-  avatar        String?
   content       String
-  timestamp     DateTime  @default(now())
+  createdAt     DateTime  @default(now())
   likes         Int       @default(0)
   chapterId     String
   chapter       Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   parentId      String?
   parent        Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
   replies       Comment[] @relation("CommentReplies")

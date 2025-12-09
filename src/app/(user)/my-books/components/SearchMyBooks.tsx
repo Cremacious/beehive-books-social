@@ -1,10 +1,20 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import { Search, SortAsc } from 'lucide-react';
 
-const SearchMyBooks = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+interface SearchMyBooksProps {
+  searchTerm: string;
+  sortBy: string;
+  onSearchChange: (value: string) => void;
+  onSortChange: (value: string) => void;
+}
 
+const SearchMyBooks = ({
+  searchTerm,
+  sortBy,
+  onSearchChange,
+  onSortChange,
+}: SearchMyBooksProps) => {
   return (
     <div className="space-y-4 mb-6">
       <div className="flex flex-col md:flex-row md:items-center gap-2">
@@ -14,11 +24,15 @@ const SearchMyBooks = () => {
             type="text"
             placeholder="Search your books..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => onSearchChange(e.target.value)}
             className="w-full pl-12 pr-4 py-3 searchStyle"
           />
         </div>
-        <select className="px-4 py-3 bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl text-white/80 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all md:w-40 md:text-md text-sm">
+        <select
+          value={sortBy}
+          onChange={(e) => onSortChange(e.target.value)}
+          className="px-4 py-3 bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl text-white/80 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all md:w-40 md:text-md text-sm"
+        >
           <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>
           <option value="title">Title A-Z</option>
