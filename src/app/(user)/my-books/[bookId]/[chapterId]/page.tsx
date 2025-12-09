@@ -7,8 +7,6 @@ import ChapterCommentSection from '../components/ChapterCommentSection';
 // import { chapterDetailData } from '@/lib/sampleData/books.sample';
 import { getChapterByIdAction } from '@/actions/book.actions';
 
-// const chapter = chapterDetailData;
-
 // TODO: word count calculation
 
 const ChapterPage = async ({
@@ -32,9 +30,9 @@ const ChapterPage = async ({
                 <div className="flex items-center gap-2">
                   <Hash className="w-4 h-4 text-yellow-500" />
 
-                  {/* <span className="font-medium">
-                    {chapter.wordCount.toLocaleString()} words
-                  </span> */}
+                  <span className="font-medium">
+                    {chapter.wordCount} words
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MessageCircle className="w-4 h-4 text-yellow-500" />
@@ -79,7 +77,7 @@ const ChapterPage = async ({
           </div>
         </div>
 
-        <ChapterCommentSection chapter={chapter}  />
+        <ChapterCommentSection chapter={chapter} />
       </div>
     </NewPage>
   );

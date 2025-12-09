@@ -32,9 +32,9 @@ const PublicChapterPage = async ({
                 <div className="flex items-center gap-2">
                   <Hash className="w-4 h-4 text-yellow-500" />
 
-                  {/* <span className="font-medium">
+                  <span className="font-medium">
                     {chapter.wordCount.toLocaleString()} words
-                  </span> */}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MessageCircle className="w-4 h-4 text-yellow-500" />
@@ -44,7 +44,6 @@ const PublicChapterPage = async ({
                 </div>
               </div>
             </div>
-        
           </div>
 
           <div className="backgroundYellow rounded-xl p-6 mb-8">

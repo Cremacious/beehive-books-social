@@ -34,6 +34,7 @@ interface Chapter {
   commentCount: number;
   authorNotes: string | null;
   content: string;
+  wordCount: number;
   comments: Comment[];
   isFriend: boolean;
   bookUserId: string;
@@ -54,8 +55,11 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
   const [isPostingReply, setIsPostingReply] = useState<Record<string, boolean>>(
     {}
   );
+  const [likedComments, setLikedComments] = useState<Record<string, boolean>>(
+    {}
+  );
 
-  const { addComment, addReply } = useBookStore();
+  const { addComment, addReply, likeComment, unlikeComment } = useBookStore();
 
   if (!chapter.isFriend) {
     return null;
@@ -99,6 +103,43 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
       console.log(error);
     } finally {
       setIsPostingReply((prev) => ({ ...prev, [commentId]: false }));
+    }
+  };
+
+  const handleLike = async (commentId: string) => {
+    const isLiked = likedComments[commentId] || false;
+    try {
+      if (isLiked) {
+        await unlikeComment(commentId);
+      } else {
+        await likeComment(commentId);
+      }
+      setLikedComments((prev) => ({ ...prev, [commentId]: !isLiked }));
+
+      // Update the likes count in the comments state
+      const updateLikes = (comments: Comment[]): Comment[] => {
+        return comments.map((comment) => {
+          if (comment.id === commentId) {
+            return {
+              ...comment,
+              likes: isLiked
+                ? Math.max(0, comment.likes - 1)
+                : comment.likes + 1,
+            };
+          }
+          if (comment.replies) {
+            return {
+              ...comment,
+              replies: updateLikes(comment.replies),
+            };
+          }
+          return comment;
+        });
+      };
+
+      setComments((prev) => updateLikes(prev));
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -176,9 +217,16 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
                   {comment.content}
                 </p>
                 <div className="flex items-center gap-4">
-                  <button className="flex items-center gap-1 text-white/60 hover:text-yellow-400 transition-colors">
+                  <button
+                    className={`flex items-center gap-1 transition-colors ${
+                      likedComments[comment.id]
+                        ? 'text-red-400 hover:text-red-300'
+                        : 'text-white/60 hover:text-yellow-400'
+                    }`}
+                    onClick={() => handleLike(comment.id)}
+                  >
                     <Heart className="w-4 h-4" />
-                    <span className="text-sm">0</span>
+                    <span className="text-sm">{comment.likes}</span>
                   </button>
                   <button
                     className="flex items-center gap-1 text-white/60 hover:text-yellow-400 transition-colors"
@@ -256,9 +304,16 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
                             {reply.content}
                           </p>
                           <div className="flex items-center gap-4 mt-2">
-                            <button className="flex items-center gap-1 text-white/50 hover:text-yellow-400 transition-colors text-xs">
+                            <button
+                              className={`flex items-center gap-1 transition-colors text-xs ${
+                                likedComments[reply.id]
+                                  ? 'text-red-400 hover:text-red-300'
+                                  : 'text-white/50 hover:text-yellow-400'
+                              }`}
+                              onClick={() => handleLike(reply.id)}
+                            >
                               <Heart className="w-3 h-3" />
-                              <span>0</span>
+                              <span>{reply.likes}</span>
                             </button>
                           </div>
                         </div>

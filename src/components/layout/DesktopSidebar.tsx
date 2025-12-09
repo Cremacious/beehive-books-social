@@ -6,14 +6,30 @@ import Link from 'next/link';
 import logoImg from '@/assets/logo.png';
 import Image from 'next/image';
 import { Button } from '../ui/button';
+import { useEffect, useState } from 'react';
+import { getUserByIdAction } from '@/actions/user.actions';
 
 const DesktopSidebar = ({ userId }: { userId: string }) => {
   const pathname = usePathname();
+  const [user, setUser] = useState<{
+    id: string;
+    name: string;
+    image?: string | null;
+  } | null>(null);
 
-  const userData = {
-    name: 'Chris Mackall',
-    totalBooks: 6,
-  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await getUserByIdAction(userId);
+        setUser(data.user);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+    if (userId) {
+      fetchUser();
+    }
+  }, [userId]);
 
   const navLinks = [
     { name: 'Dashboard', href: '/dashboard' },
@@ -61,10 +77,24 @@ const DesktopSidebar = ({ userId }: { userId: string }) => {
       </nav>
       <div className="mt-auto pt-6 border-t border-gray-700">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center text-white">
-            A
+          <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+            {user?.image ? (
+              <Image
+                src={user.image}
+                alt="Profile"
+                width={40}
+                height={40}
+                className="w-full h-full object-cover rounded-full"
+              />
+            ) : (
+              <div className="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center text-white">
+                {user?.name?.charAt(0).toUpperCase() || 'A'}
+              </div>
+            )}
           </div>
-          <span className="text-white font-medium">{userData.name}</span>
+          <span className="text-white font-medium">
+            {user?.name || 'Loading...'}
+          </span>
         </div>
       </div>
     </div>

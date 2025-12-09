@@ -25,7 +25,7 @@ interface FriendStoreType {
   getPendingRequests: () => Promise<PendingFriendRequest[]>;
 }
 
-export const useFriendStore = create<FriendStoreType>((set) => ({
+export const useFriendStore = create<FriendStoreType>(() => ({
   sendFriendRequest: async (formData: FormData) => {
     try {
       await sendFriendRequestAction(formData);

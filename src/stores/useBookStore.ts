@@ -8,6 +8,8 @@ import {
   deleteChapterAction,
   addCommentToChapterAction,
   addReplyToCommentAction,
+  likeChapterCommentAction,
+  unlikeChapterCommentAction,
 } from '@/actions/book.actions';
 import { z } from 'zod';
 import { bookSchema, chapterSchema } from '@/lib/schemas';
@@ -38,6 +40,8 @@ interface BookStoreType {
   deleteChapter: (bookId: string, chapterId: string) => Promise<void>;
   addComment: (chapterId: string, content: string) => Promise<Comment>;
   addReply: (commentId: string, content: string) => Promise<Comment>;
+  likeComment: (commentId: string) => Promise<void>;
+  unlikeComment: (commentId: string) => Promise<void>;
 }
 
 export const useBookStore = create<BookStoreType>((set) => ({
@@ -201,6 +205,28 @@ export const useBookStore = create<BookStoreType>((set) => ({
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Failed to add reply';
+      toast.error(errorMessage);
+      throw error;
+    }
+  },
+  likeComment: async (commentId: string) => {
+    try {
+      await likeChapterCommentAction(commentId);
+      toast.success('Comment liked');
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to like comment';
+      toast.error(errorMessage);
+      throw error;
+    }
+  },
+  unlikeComment: async (commentId: string) => {
+    try {
+      await unlikeChapterCommentAction(commentId);
+      toast.success('Comment unliked');
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to unlike comment';
       toast.error(errorMessage);
       throw error;
     }

@@ -181,6 +181,7 @@ model Chapter {
   commentCount  Int       @default(0)
   authorNotes   String?
   content       String
+  wordCount Int @default(0)
   createdAt     DateTime  @default(now())
   bookId        String
   book          Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)

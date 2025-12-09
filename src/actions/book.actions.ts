@@ -305,7 +305,6 @@ export async function getChapterByIdAction(chapterId: string) {
       throw new Error('Chapter not found or access denied');
     }
 
-    // Check friendship for friends-only books (for access) and determine if user can comment
     let isFriend = false;
     if (chapter.book.userId !== user.id) {
       const friendship = await prisma.friendRequest.findFirst({
@@ -319,13 +318,20 @@ export async function getChapterByIdAction(chapterId: string) {
       isFriend = !!friendship;
     }
 
-    // For friends-only books, deny access if not friends
     if (chapter.book.privacy === 'FRIENDS' && !isFriend) {
       throw new Error('Access denied: This chapter is only visible to friends');
     }
 
     return {
-      ...chapter,
+      id: chapter.id,
+      title: chapter.title,
+      commentCount: chapter.commentCount,
+      authorNotes: chapter.authorNotes,
+      content: chapter.content,
+      wordCount: chapter.wordCount,
+      bookId: chapter.bookId,
+      book: chapter.book,
+      comments: chapter.comments,
       isFriend: chapter.book.userId === user.id || isFriend,
       bookUserId: chapter.book.userId,
     };
@@ -367,6 +373,7 @@ export async function addChapterToBookAction(
         title: parsedData.chapterTitle,
         authorNotes: parsedData.notes || null,
         content: parsedData.content,
+        wordCount: wordCount,
         bookId: book.id,
       },
     });
@@ -405,11 +412,7 @@ export async function getChapterForEditAction(
       },
     });
 
-    if (
-      !chapter ||
-      chapter.book.userId !== user.id ||
-      chapter.bookId !== bookId
-    ) {
+    if (!chapter || chapter.book.userId !== user.id) {
       throw new Error('Chapter not found or access denied');
     }
 
@@ -417,6 +420,7 @@ export async function getChapterForEditAction(
       title: chapter.title,
       content: chapter.content,
       notes: chapter.authorNotes,
+      bookId: chapter.bookId,
     };
   } catch (error) {
     console.error('Error fetching chapter for edit:', error);
@@ -470,6 +474,7 @@ export async function editChapterAction(
         title: parsedData.chapterTitle,
         authorNotes: parsedData.notes || null,
         content: parsedData.content,
+        wordCount: newWordCount,
       },
     });
 
@@ -548,7 +553,6 @@ export async function addCommentToChapterAction(
       throw new Error(error || 'User not authenticated');
     }
 
-    // Check if user can comment (is friend or owner)
     const chapter = await prisma.chapter.findFirst({
       where: { id: chapterId },
       include: { book: true },
@@ -629,7 +633,6 @@ export async function addReplyToCommentAction(
       throw new Error(error || 'User not authenticated');
     }
 
-    // Check if user can reply (is friend or owner)
     const comment = await prisma.comment.findFirst({
       where: { id: commentId },
       include: {
@@ -690,7 +693,6 @@ export async function addReplyToCommentAction(
       },
     });
 
-    // Update comment count
     await prisma.chapter.update({
       where: { id: comment.chapterId },
       data: { commentCount: { increment: 1 } },
@@ -699,6 +701,135 @@ export async function addReplyToCommentAction(
     return reply;
   } catch (error) {
     console.error('Error adding reply:', error);
+    throw error;
+  }
+}
+
+export async function likeChapterCommentAction(commentId: string) {
+  try {
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user) {
+      throw new Error(error || 'User not authenticated');
+    }
+
+    const comment = await prisma.comment.findFirst({
+      where: { id: commentId },
+      include: {
+        chapter: {
+          include: { book: true },
+        },
+      },
+    });
+
+    if (!comment) {
+      throw new Error('Comment not found');
+    }
+
+    let canLike = comment.chapter.book.userId === user.id;
+    if (
+      !canLike &&
+      (comment.chapter.book.privacy === 'FRIENDS' ||
+        comment.chapter.book.privacy === 'PUBLIC')
+    ) {
+      const friendship = await prisma.friendRequest.findFirst({
+        where: {
+          OR: [
+            {
+              fromId: user.id,
+              toId: comment.chapter.book.userId,
+              status: 'ACCEPTED',
+            },
+            {
+              fromId: comment.chapter.book.userId,
+              toId: user.id,
+              status: 'ACCEPTED',
+            },
+          ],
+        },
+      });
+      canLike = !!friendship;
+    }
+
+    if (!canLike) {
+      throw new Error('You must be friends with the author to like comments');
+    }
+
+    await prisma.comment.update({
+      where: { id: commentId },
+      data: { likes: { increment: 1 } },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error liking comment:', error);
+    throw error;
+  }
+}
+
+export async function unlikeChapterCommentAction(commentId: string) {
+  try {
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user) {
+      throw new Error(error || 'User not authenticated');
+    }
+
+    const comment = await prisma.comment.findFirst({
+      where: { id: commentId },
+      include: {
+        chapter: {
+          include: { book: true },
+        },
+      },
+    });
+
+    if (!comment) {
+      throw new Error('Comment not found');
+    }
+
+    let canUnlike = comment.chapter.book.userId === user.id;
+    if (
+      !canUnlike &&
+      (comment.chapter.book.privacy === 'FRIENDS' ||
+        comment.chapter.book.privacy === 'PUBLIC')
+    ) {
+      const friendship = await prisma.friendRequest.findFirst({
+        where: {
+          OR: [
+            {
+              fromId: user.id,
+              toId: comment.chapter.book.userId,
+              status: 'ACCEPTED',
+            },
+            {
+              fromId: comment.chapter.book.userId,
+              toId: user.id,
+              status: 'ACCEPTED',
+            },
+          ],
+        },
+      });
+      canUnlike = !!friendship;
+    }
+
+    if (!canUnlike) {
+      throw new Error('You must be friends with the author to unlike comments');
+    }
+
+    const currentComment = await prisma.comment.findUnique({
+      where: { id: commentId },
+      select: { likes: true },
+    });
+
+    if (currentComment && currentComment.likes > 0) {
+      await prisma.comment.update({
+        where: { id: commentId },
+        data: { likes: { decrement: 1 } },
+      });
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error unliking comment:', error);
     throw error;
   }
 }

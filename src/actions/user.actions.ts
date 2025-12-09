@@ -75,3 +75,177 @@ export async function getUserByIdAction(userId: string) {
     throw error;
   }
 }
+
+export async function updateUserProfileImageAction(formData: FormData) {
+  try {
+    const { user } = await getAuthenticatedUser();
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
+
+    const file = formData.get('file') as File;
+    if (!file) {
+      throw new Error('No file provided');
+    }
+
+    const oldImageUrl = user.image;
+
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    const cloudinary = (await import('@/lib/cloudinary')).default;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = await new Promise<any>((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'profile-images',
+          resource_type: 'image',
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+      uploadStream.end(buffer);
+    });
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { image: result.secure_url },
+    });
+
+    if (oldImageUrl && oldImageUrl.includes('cloudinary.com')) {
+      try {
+        const urlParts = oldImageUrl.split('/');
+        const uploadIndex = urlParts.indexOf('upload');
+        if (uploadIndex !== -1 && uploadIndex + 2 < urlParts.length) {
+          const publicIdParts = urlParts.slice(uploadIndex + 2);
+          const publicIdWithExtension = publicIdParts.join('/');
+          const publicId = publicIdWithExtension.split('.')[0];
+
+          await new Promise<void>((resolve, reject) => {
+            cloudinary.uploader.destroy(publicId, (error, result) => {
+              if (error) {
+                console.warn(
+                  'Failed to delete old profile image from Cloudinary:',
+                  error
+                );
+                reject(error);
+              } else {
+                console.log(
+                  'Old profile image deleted from Cloudinary:',
+                  result
+                );
+                resolve();
+              }
+            });
+          });
+        }
+      } catch (deleteError) {
+        console.warn('Error deleting old profile image:', deleteError);
+      }
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating profile image:', error);
+    throw error;
+  }
+}
+
+export async function changeUserPasswordAction() {}
+
+export async function deleteUserAccountAction() {
+  try {
+    const { user } = await getAuthenticatedUser();
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
+
+    if (user.image && user.image.includes('cloudinary.com')) {
+      try {
+        const cloudinary = (await import('@/lib/cloudinary')).default;
+        const urlParts = user.image.split('/');
+        const uploadIndex = urlParts.indexOf('upload');
+        if (uploadIndex !== -1 && uploadIndex + 2 < urlParts.length) {
+          const publicIdParts = urlParts.slice(uploadIndex + 2);
+          const publicIdWithExtension = publicIdParts.join('/');
+          const publicId = publicIdWithExtension.split('.')[0];
+
+          await new Promise<void>((resolve, reject) => {
+            cloudinary.uploader.destroy(publicId, (error, result) => {
+              if (error) {
+                console.warn(
+                  'Failed to delete profile image from Cloudinary:',
+                  error
+                );
+                reject(error);
+              } else {
+                console.log('Profile image deleted from Cloudinary:', result);
+                resolve();
+              }
+            });
+          });
+        }
+      } catch (deleteError) {
+        console.warn('Error deleting profile image:', deleteError);
+      }
+    }
+
+   
+    const userBooks = await prisma.book.findMany({
+      where: { userId: user.id },
+      select: { id: true, cover: true },
+    });
+
+    for (const book of userBooks) {
+      if (book.cover && book.cover.includes('cloudinary.com')) {
+        try {
+          const cloudinary = (await import('@/lib/cloudinary')).default;
+          const urlParts = book.cover.split('/');
+          const uploadIndex = urlParts.indexOf('upload');
+          if (uploadIndex !== -1 && uploadIndex + 2 < urlParts.length) {
+            const publicIdParts = urlParts.slice(uploadIndex + 2);
+            const publicIdWithExtension = publicIdParts.join('/');
+            const publicId = publicIdWithExtension.split('.')[0];
+
+            await new Promise<void>((resolve) => {
+              cloudinary.uploader.destroy(publicId, (error, result) => {
+                if (error) {
+                  console.warn(
+                    `Failed to delete book cover from Cloudinary for book ${book.id}:`,
+                    error
+                  );
+                } else {
+                  console.log(
+                    `Book cover deleted from Cloudinary for book ${book.id}:`,
+                    result
+                  );
+                }
+                resolve(); 
+              });
+            });
+          }
+        } catch (deleteError) {
+          console.warn(
+            `Error deleting book cover for book ${book.id}:`,
+            deleteError
+          );
+        }
+      }
+    }
+
+  
+    await prisma.user.delete({
+      where: { id: user.id },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting user account:', error);
+    throw error;
+  }
+}
