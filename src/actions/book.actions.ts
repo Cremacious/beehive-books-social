@@ -321,9 +321,7 @@ export async function getChapterByIdAction(chapterId: string) {
 
     // For friends-only books, deny access if not friends
     if (chapter.book.privacy === 'FRIENDS' && !isFriend) {
-      throw new Error(
-        'Access denied: This chapter is only visible to friends'
-      );
+      throw new Error('Access denied: This chapter is only visible to friends');
     }
 
     return {
@@ -561,7 +559,10 @@ export async function addCommentToChapterAction(
     }
 
     let canComment = chapter.book.userId === user.id;
-    if (!canComment && (chapter.book.privacy === 'FRIENDS' || chapter.book.privacy === 'PUBLIC')) {
+    if (
+      !canComment &&
+      (chapter.book.privacy === 'FRIENDS' || chapter.book.privacy === 'PUBLIC')
+    ) {
       const friendship = await prisma.friendRequest.findFirst({
         where: {
           OR: [
@@ -643,7 +644,11 @@ export async function addReplyToCommentAction(
     }
 
     let canReply = comment.chapter.book.userId === user.id;
-    if (!canReply && (comment.chapter.book.privacy === 'FRIENDS' || comment.chapter.book.privacy === 'PUBLIC')) {
+    if (
+      !canReply &&
+      (comment.chapter.book.privacy === 'FRIENDS' ||
+        comment.chapter.book.privacy === 'PUBLIC')
+    ) {
       const friendship = await prisma.friendRequest.findFirst({
         where: {
           OR: [
