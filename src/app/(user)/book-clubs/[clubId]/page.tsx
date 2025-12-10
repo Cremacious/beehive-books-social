@@ -2,7 +2,7 @@ import NewPage from '@/components/layout/NewPage';
 import Image from 'next/image';
 import {
   Users,
-  BookOpen,
+
   Shield,
   Share,
   Crown,
@@ -10,7 +10,7 @@ import {
   Settings,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import coverImage from '@/assets/stock/club-cover.jpg';
+// import coverImage from '@/assets/stock/club-cover.jpg';
 import ClubProgress from '../components/ClubProgress';
 import ClubDiscussionPreview from '../components/ClubDiscussionPreview';
 import ClubMembersPreview from '../components/ClubMembersPreview';
@@ -38,14 +38,16 @@ const ClubPage = async ({
   return (
     <NewPage>
       <div className="w-full space-y-8">
-        <div className="relative">
+        <div className="relative darkContainer2 rounded-2xl shadow-xl overflow-hidden">
           <div className="h-48 md:h-64 rounded-3xl overflow-hidden relative">
-            <Image
-              src={club.cover || coverImage}
-              alt={club.name}
-              fill
-              className="object-cover"
-            />
+            {club.cover && (
+              <Image
+                src={club.cover}
+                alt={club.name}
+                fill
+                className="object-cover"
+              />
+            )}
             <div className="absolute inset-0 " />
             <div className="absolute bottom-6 left-6 md:left-8 text-white">
               <h1 className="text-3xl md:text-4xl font-bold mb-2">
@@ -89,9 +91,7 @@ const ClubPage = async ({
           <div className="lg:col-span-2 space-y-6">
             <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-                  <BookOpen className="w-4 h-4 text-[#FFC300]" />
-                </div>
+             
                 <h2 className="text-xl font-bold text-white">
                   About This Club
                 </h2>

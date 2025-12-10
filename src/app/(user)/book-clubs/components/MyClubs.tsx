@@ -16,7 +16,7 @@ interface UserBookClubs {
 
 const MyClubs = ({ userClubs }: { userClubs: UserBookClubs[] }) => {
   return (
-    <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 ">
+    <div className="p-6 md:p-8 ">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
           <BookOpen className="w-4 h-4 text-[#FFC300]" />
@@ -39,10 +39,12 @@ const MyClubs = ({ userClubs }: { userClubs: UserBookClubs[] }) => {
             Join your first book club or create one to start discussing books
             with fellow readers!
           </p>
-          <button className="px-8 py-4 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center gap-3">
-            <Plus className="w-5 h-5" />
-            <span>Create Your First Club</span>
-          </button>
+          <Link href={'/book-clubs/create/'}>
+            <Button size={'lg'} variant={'beeYellow'}>
+              <Plus className="w-5 h-5" />
+              <span>Create Your First Club</span>
+            </Button>
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -52,17 +54,9 @@ const MyClubs = ({ userClubs }: { userClubs: UserBookClubs[] }) => {
               className="rounded-xl p-4 darkContainer3 cursor-pointer"
             >
               <div className="flex items-start gap-3 mb-3">
-                <div className="w-12 h-16 rounded-lg overflow-hidden shrink-0">
-                  <Image
-                    src={club.cover}
-                    alt={club.name}
-                    width={48}
-                    height={64}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+            
 
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 flex flex-col justify-center mx-4">
                   <h3 className="font-semibold text-white truncate">
                     {club.name}
                   </h3>
@@ -83,7 +77,7 @@ const MyClubs = ({ userClubs }: { userClubs: UserBookClubs[] }) => {
                 </div>
               </div>
 
-              <p className="text-white/70 text-sm mb-3 line-clamp-2">
+              <p className="text-white/70 text-sm mb-3 line-clamp-2 mx-2">
                 {club.description}
               </p>
               <div className="flex items-center justify-between">

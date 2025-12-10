@@ -5,20 +5,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Image from 'next/image';
-import {
-  Upload,
-  X,
-  Users,
-  BookOpen,
-  Shield,
-  Globe,
-  Lock,
-  Tag,
-  Mail,
-  Link as LinkIcon,
-} from 'lucide-react';
+import { Upload, X, Users, Tag, Search, UserPlus, Check } from 'lucide-react';
 import { clubCreateSchema } from '@/lib/schemas';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getAllUserFriendsAction } from '@/actions/friend.actions';
+import { Button } from '@/components/ui/button';
 
 const availableTags = [
   'Mystery',
@@ -33,12 +24,33 @@ const availableTags = [
   'Non-Fiction',
 ];
 
+const privacyOptions = [
+  {
+    value: 'public',
+    label: 'Public',
+    description: 'Visible to all users',
+  },
+
+  {
+    value: 'invite-only',
+    label: 'Invite-Only',
+    description: 'Club only visible to invited members',
+  },
+];
+
 export default function CreateClubForm() {
   const router = useRouter();
   const { createClub } = useClubStore();
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [friendsSearchQuery, setFriendsSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'name' | 'recent'>('name');
+  const [friends, setFriends] = useState<
+    Array<{ id: string; name: string; email: string }>
+  >([]);
+  const [loadingFriends, setLoadingFriends] = useState(true);
+  const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof clubCreateSchema>>({
     resolver: zodResolver(clubCreateSchema),
@@ -46,6 +58,20 @@ export default function CreateClubForm() {
       tags: [],
     },
   });
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const userFriends = await getAllUserFriendsAction();
+        setFriends(userFriends);
+      } catch (error) {
+        console.error('Failed to fetch friends:', error);
+      } finally {
+        setLoadingFriends(false);
+      }
+    };
+    fetchFriends();
+  }, []);
 
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -88,6 +114,27 @@ export default function CreateClubForm() {
     );
   };
 
+  const toggleFriendInvite = (friendId: string) => {
+    setSelectedFriends((prev) =>
+      prev.includes(friendId)
+        ? prev.filter((id) => id !== friendId)
+        : [...prev, friendId]
+    );
+  };
+
+  const sortedAndFilteredFriends = friends
+    .filter(
+      (friend) =>
+        friend.name.toLowerCase().includes(friendsSearchQuery.toLowerCase()) ||
+        friend.email.toLowerCase().includes(friendsSearchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortBy === 'name') {
+        return a.name.localeCompare(b.name);
+      }
+      return 0;
+    });
+
   async function onSubmit(values: z.infer<typeof clubCreateSchema>) {
     const formData = new FormData();
 
@@ -101,7 +148,9 @@ export default function CreateClubForm() {
     );
     formData.append('privacy', values.privacy);
     if (values.rules) formData.append('rules', values.rules);
-    if (values.invites) formData.append('invites', values.invites);
+
+    // Add selected friends as invites
+    selectedFriends.forEach((friendId) => formData.append('invites', friendId));
 
     selectedTags.forEach((tag) => formData.append('tags', tag));
 
@@ -118,9 +167,6 @@ export default function CreateClubForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <Users className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <label className="text-lg font-semibold text-white">
               Club Name
             </label>
@@ -141,9 +187,6 @@ export default function CreateClubForm() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Club Description
@@ -169,9 +212,6 @@ export default function CreateClubForm() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Current Book
@@ -216,7 +256,7 @@ export default function CreateClubForm() {
               {...form.register('currentBookChapters', { valueAsNumber: true })}
               type="number"
               placeholder="Number of chapters..."
-              className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
+              className="w-1/2 mx-auto bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
             />
             {form.formState.errors.currentBookChapters && (
               <p className="text-red-400 text-sm flex items-center gap-2 mt-1">
@@ -229,9 +269,6 @@ export default function CreateClubForm() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <Upload className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Club Cover Image
@@ -286,69 +323,42 @@ export default function CreateClubForm() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <Shield className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
-                Privacy Setting
+                Privacy Settings
               </label>
               <p className="text-[#FFC300]/60 text-sm">
                 Control who can find and join your club
               </p>
             </div>
           </div>
-
-          <div className="space-y-3">
-            <label className="flex items-center gap-3 p-4 bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl cursor-pointer hover:border-[#FFC300]/40 transition-all">
-              <input
-                {...form.register('privacy')}
-                type="radio"
-                value="public"
-                className="w-4 h-4 text-[#FFC300] bg-[#1a1a1a] border-[#FFC300]/20 focus:ring-[#FFC300]/50"
-              />
-              <Globe className="w-5 h-5 text-[#FFC300]" />
-              <div>
-                <div className="text-white font-medium">Public</div>
-                <div className="text-[#FFC300]/60 text-sm">
-                  Anyone can find and join
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {privacyOptions.map((option) => (
+              <label
+                key={option.value}
+                className={`p-4 border rounded-xl cursor-pointer transition-all ${
+                  form.watch('privacy') === option.value
+                    ? 'border-[#FFC300] bg-[#FFC300]/10'
+                    : 'bg-[#1a1a1a] border-[#FFC300]/20 hover:border-[#FFC300]/40'
+                }`}
+              >
+                <input
+                  {...form.register('privacy')}
+                  type="radio"
+                  value={option.value}
+                  className="sr-only"
+                />
+                <div className="text-center">
+                  <div className="font-semibold text-white mb-1">
+                    {option.label}
+                  </div>
+                  <div className="text-sm text-[#FFC300]/60">
+                    {option.description}
+                  </div>
                 </div>
-              </div>
-            </label>
-
-            <label className="flex items-center gap-3 p-4 bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl cursor-pointer hover:border-[#FFC300]/40 transition-all">
-              <input
-                {...form.register('privacy')}
-                type="radio"
-                value="private"
-                className="w-4 h-4 text-[#FFC300] bg-[#1a1a1a] border-[#FFC300]/20 focus:ring-[#FFC300]/50"
-              />
-              <Lock className="w-5 h-5 text-[#FFC300]" />
-              <div>
-                <div className="text-white font-medium">Private</div>
-                <div className="text-[#FFC300]/60 text-sm">
-                  Invite-only, visible to members only
-                </div>
-              </div>
-            </label>
-
-            <label className="flex items-center gap-3 p-4 bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl cursor-pointer hover:border-[#FFC300]/40 transition-all">
-              <input
-                {...form.register('privacy')}
-                type="radio"
-                value="invite-only"
-                className="w-4 h-4 text-[#FFC300] bg-[#1a1a1a] border-[#FFC300]/20 focus:ring-[#FFC300]/50"
-              />
-              <Shield className="w-5 h-5 text-[#FFC300]" />
-              <div>
-                <div className="text-white font-medium">Invite-Only</div>
-                <div className="text-[#FFC300]/60 text-sm">
-                  Hidden from searches, requires direct invitation
-                </div>
-              </div>
-            </label>
+              </label>
+            ))}
           </div>
-
           {form.formState.errors.privacy && (
             <p className="text-red-400 text-sm flex items-center gap-2">
               <span className="text-xs">⚠️</span>
@@ -359,9 +369,6 @@ export default function CreateClubForm() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <Shield className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Club Rules & Guidelines
@@ -381,39 +388,93 @@ export default function CreateClubForm() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <Mail className="w-4 h-4 text-[#FFC300]" />
-            </div>
+            <UserPlus className="w-5 h-5 text-[#FFC300]" />
             <div>
               <label className="text-lg font-semibold text-white">
-                Initial Member Invites
+                Invite Friends
               </label>
               <p className="text-[#FFC300]/60 text-sm">
-                Invite friends to join immediately (optional)
+                Invite friends to join your club immediately (optional)
               </p>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <textarea
-              {...form.register('invites')}
-              placeholder="Enter email addresses or usernames, separated by commas..."
-              rows={3}
-              className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all resize-none"
-            />
-
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                className="flex items-center gap-2 px-4 py-2 bg-[#1a1a1a] border border-[#FFC300]/20 rounded-lg hover:border-[#FFC300]/40 transition-all text-[#FFC300]"
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/50" />
+                <input
+                  type="text"
+                  value={friendsSearchQuery}
+                  onChange={(e) => setFriendsSearchQuery(e.target.value)}
+                  placeholder="Search friends..."
+                  className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-lg py-2 pl-10 pr-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
+                />
+              </div>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'name' | 'recent')}
+                className="bg-[#1a1a1a] border border-[#FFC300]/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50"
               >
-                <LinkIcon className="w-4 h-4" />
-                Generate Shareable Link
-              </button>
-              <span className="text-[#FFC300]/60 text-sm">
-                Or invite via link
-              </span>
+                <option value="name">Sort by Name</option>
+                <option value="recent">Recently Added</option>
+              </select>
             </div>
+
+            <div className="max-h-[300px] overflow-y-auto space-y-2">
+              {loadingFriends ? (
+                <div className="text-white/60 text-center py-4">
+                  Loading friends...
+                </div>
+              ) : sortedAndFilteredFriends.length === 0 ? (
+                <div className="text-white/60 text-center py-4">
+                  {friendsSearchQuery
+                    ? 'No friends found matching your search'
+                    : 'No friends available to invite'}
+                </div>
+              ) : (
+                sortedAndFilteredFriends.map((friend) => (
+                  <div
+                    key={friend.id}
+                    className={`bg-[#1a1a1a] rounded-lg p-3 border transition-colors cursor-pointer ${
+                      selectedFriends.includes(friend.id)
+                        ? 'border-[#FFC300] bg-[#FFC300]/5'
+                        : 'border-[#FFC300]/10 hover:border-[#FFC300]/30'
+                    }`}
+                    onClick={() => toggleFriendInvite(friend.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-[#FFC300]/20 rounded-full flex items-center justify-center">
+                          <span className="text-sm font-bold text-[#FFC300]">
+                            {friend.name.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <div>
+                          <div className="text-white font-medium">
+                            {friend.name}
+                          </div>
+                          <div className="text-white/60 text-xs">
+                            {friend.email}
+                          </div>
+                        </div>
+                      </div>
+                      {selectedFriends.includes(friend.id) && (
+                        <Check className="w-5 h-5 text-[#FFC300]" />
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {selectedFriends.length > 0 && (
+              <div className="text-[#FFC300]/60 text-sm">
+                {selectedFriends.length} friend
+                {selectedFriends.length !== 1 ? 's' : ''} selected for
+                invitation
+              </div>
+            )}
           </div>
         </div>
 
@@ -451,10 +512,10 @@ export default function CreateClubForm() {
         </div>
 
         <div className="flex justify-end pt-6 border-t border-[#FFC300]/10">
-          <button
+          <Button
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="px-8 py-4 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            variant={'beeYellow'}
           >
             <Users className="w-5 h-5" />
             <span>
@@ -462,7 +523,7 @@ export default function CreateClubForm() {
                 ? 'Creating Club...'
                 : 'Create Book Club'}
             </span>
-          </button>
+          </Button>
         </div>
       </form>
     </div>

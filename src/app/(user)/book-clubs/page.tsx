@@ -2,9 +2,8 @@ import NewPage from '@/components/layout/NewPage';
 import { Users, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import FindClubs from './components/FindClubs';
 import MyClubs from './components/MyClubs';
-// import { userClubsSample } from '@/lib/sampleData/club.sample';
+
 import { getAllUserClubsAction } from '@/actions/club.actions';
 
 const BookClubsPage = async () => {
@@ -28,19 +27,24 @@ const BookClubsPage = async () => {
                 </p>
               </div>
             </div>
-            <Link href={'/book-clubs/create/'}>
-              <Button
-                variant={'beeYellow'}
-                size={'lg'}
-                className="flex items-center justify-center space-x-2 w-full"
-              >
-                <Plus className="w-5 h-5" />
-                <span>Create New Club</span>
-              </Button>
-            </Link>
+
+            {userClubs.length !== 0 && (
+              <>
+                <Link href={'/book-clubs/create/'}>
+                  <Button
+                    variant={'beeYellow'}
+                    size={'lg'}
+                    className="flex items-center justify-center space-x-2 w-full"
+                  >
+                    <Plus className="w-5 h-5" />
+                    <span>Create New Club</span>
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
-        <FindClubs />
+
         <MyClubs userClubs={userClubs} />
       </div>
     </NewPage>

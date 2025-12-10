@@ -3,12 +3,12 @@ import {
   createClubAction,
   editClubAction,
   deleteClubAction,
-  getAllUserClubsAction,
-  getClubByIdAction,
   createClubDiscussionAction,
   removeClubMemberAction,
   inviteFriendToClubAction,
+  createDiscussionReplyAction, createNestedDiscussionReplyAction, unlikeDiscussionReplyAction, likeDiscussionReplyAction
 } from '@/actions/club.actions';
+import { DiscussionCommentType } from '@/lib/types';
 import { toast } from 'sonner';
 
 interface ClubStoreType {
@@ -16,11 +16,15 @@ interface ClubStoreType {
   createClub: (formData: FormData) => Promise<void>;
   editClub: (clubId: string, formData: FormData) => Promise<void>;
   deleteClub: (clubId: string) => Promise<void>;
-  getAllUserClubs: () => Promise<void>;
-  getClubById: (clubId: string) => Promise<void>;
+
   createClubDiscussion: (clubId: string, formData: FormData) => Promise<void>;
   removeClubMember: (clubId: string, memberId: string) => Promise<void>;
   inviteFriend: (clubId: string, friendId: string) => Promise<void>;
+
+  addDiscussionReply: (discussionId: string, content: string) => Promise<DiscussionCommentType>;
+  addNestedDiscussionReply: (parentCommentId: string, content: string) => Promise<DiscussionCommentType>;
+  likeDiscussionReply: (commentId: string) => Promise<void>;
+  unlikeDiscussionReply: (commentId: string) => Promise<void>;
 }
 
 export const useClubStore = create<ClubStoreType>((set) => ({
@@ -60,12 +64,6 @@ export const useClubStore = create<ClubStoreType>((set) => ({
     }
   },
   deleteClub: async (clubId: string) => {
-    // Implement later
-  },
-  getAllUserClubs: async () => {
-    // Implement later
-  },
-  getClubById: async (clubId: string) => {
     // Implement later
   },
   createClubDiscussion: async (clubId: string, formData: FormData) => {
@@ -117,6 +115,44 @@ export const useClubStore = create<ClubStoreType>((set) => ({
       console.log(error);
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  addDiscussionReply: async (discussionId: string, content: string) => {
+    try {
+      const comment = await createDiscussionReplyAction(discussionId, content);
+      return comment;
+    } catch (error) {
+      toast.error('Failed to post reply');
+      throw error;
+    }
+  },
+
+  addNestedDiscussionReply: async (parentCommentId: string, content: string) => {
+    try {
+      const reply = await createNestedDiscussionReplyAction(parentCommentId, content);
+      return reply;
+    } catch (error) {
+      toast.error('Failed to post reply');
+      throw error;
+    }
+  },
+
+  likeDiscussionReply: async (commentId: string) => {
+    try {
+      await likeDiscussionReplyAction(commentId);
+    } catch (error) {
+      toast.error('Failed to like reply');
+      throw error;
+    }
+  },
+
+  unlikeDiscussionReply: async (commentId: string) => {
+    try {
+      await unlikeDiscussionReplyAction(commentId);
+    } catch (error) {
+      toast.error('Failed to unlike reply');
+      throw error;
     }
   },
 }));

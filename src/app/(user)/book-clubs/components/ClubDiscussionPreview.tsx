@@ -1,7 +1,7 @@
 import { Heart, MessageCircle, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-// import CreateDiscussionModal from '../[clubId]/discussions/components/CreateDiscussionModal';
+
 import { DiscussionFullType } from '@/lib/types';
 import { formatLastActivity, countTotalReplies } from '@/lib/utils';
 

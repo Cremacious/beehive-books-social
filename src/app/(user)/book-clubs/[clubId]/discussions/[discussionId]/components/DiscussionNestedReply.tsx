@@ -1,12 +1,36 @@
+'use client';
+
 import { Heart, User } from 'lucide-react';
+import { useState } from 'react';
 import { formatDate, getRoleColor } from '@/lib/utils';
 import { DiscussionCommentType } from '@/lib/types';
+import { useClubStore } from '@/stores/useClubStore';
 
 const DiscussionNestedReply = ({
   nestedReply,
 }: {
   nestedReply: DiscussionCommentType;
 }) => {
+  const [likedComments, setLikedComments] = useState<Record<string, boolean>>({});
+
+  const { likeDiscussionReply, unlikeDiscussionReply } = useClubStore();
+
+  const handleLike = async (commentId: string) => {
+    const isLiked = likedComments[commentId] || false;
+    try {
+      if (isLiked) {
+        await unlikeDiscussionReply(commentId);
+      } else {
+        await likeDiscussionReply(commentId);
+      }
+      setLikedComments((prev) => ({ ...prev, [commentId]: !isLiked }));
+
+      // Update the nested reply likes count
+      nestedReply.likes = isLiked ? Math.max(0, nestedReply.likes - 1) : nestedReply.likes + 1;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div
       key={nestedReply.id}
@@ -32,7 +56,14 @@ const DiscussionNestedReply = ({
         {nestedReply.content}
       </div>
       <div className="flex items-center gap-4 mt-3 pt-3 border-t border-[#2a2a2a]">
-        <button className="flex items-center gap-2 text-white/60 hover:text-[#FFC300] transition-colors text-xs">
+        <button
+          className={`flex items-center gap-2 transition-colors text-xs ${
+            likedComments[nestedReply.id]
+              ? 'text-red-400 hover:text-red-300'
+              : 'text-white/60 hover:text-[#FFC300]'
+          }`}
+          onClick={() => handleLike(nestedReply.id)}
+        >
           <Heart className="w-3 h-3" />
           Like ({nestedReply.likes})
         </button>

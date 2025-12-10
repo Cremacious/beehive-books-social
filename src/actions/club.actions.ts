@@ -845,7 +845,6 @@ export async function inviteFriendToClubAction(
     const { user } = await getAuthenticatedUser();
     if (!user) return { success: false, message: 'Unauthorized' };
 
-    // Check if current user is owner
     const ownerCheck = await prisma.clubMember.findFirst({
       where: {
         clubId,
@@ -856,7 +855,6 @@ export async function inviteFriendToClubAction(
     if (!ownerCheck)
       return { success: false, message: 'Only club owners can invite members' };
 
-    // Check if friend exists and is actually a friend
     const friendRequest = await prisma.friendRequest.findFirst({
       where: {
         OR: [
@@ -868,7 +866,6 @@ export async function inviteFriendToClubAction(
     if (!friendRequest)
       return { success: false, message: 'User is not your friend' };
 
-    // Check if friend is already a member
     const existingMember = await prisma.clubMember.findFirst({
       where: {
         clubId,
@@ -881,7 +878,6 @@ export async function inviteFriendToClubAction(
         message: 'Friend is already a member of this club',
       };
 
-    // Add friend as member
     await prisma.clubMember.create({
       data: {
         clubId,
@@ -896,5 +892,302 @@ export async function inviteFriendToClubAction(
   } catch (error) {
     console.error('Error inviting friend to club:', error);
     return { success: false, message: 'Failed to invite friend' };
+  }
+}
+
+export async function createDiscussionReplyAction(
+  discussionId: string,
+  content: string
+) {
+  try {
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user) {
+      throw new Error(error || 'User not authenticated');
+    }
+
+    // Check if user is a member of the club that owns this discussion
+    const discussion = await prisma.discussion.findFirst({
+      where: { id: discussionId },
+      include: { club: true },
+    });
+
+    if (!discussion) {
+      throw new Error('Discussion not found');
+    }
+
+    const clubMember = await prisma.clubMember.findFirst({
+      where: {
+        userId: user.id,
+        clubId: discussion.clubId,
+      },
+    });
+
+    if (!clubMember) {
+      throw new Error('You must be a member of this club to comment');
+    }
+
+    const comment = await prisma.discussionComment.create({
+      data: {
+        content,
+        authorId: clubMember.id,
+        discussionId,
+      },
+      include: {
+        author: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
+        replies: {
+          include: {
+            author: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
+    });
+
+    revalidatePath(`/clubs/${discussion.clubId}/discussions/${discussionId}`);
+
+    return comment;
+  } catch (error) {
+    console.error('Error creating discussion reply:', error);
+    throw error;
+  }
+}
+
+export async function createNestedDiscussionReplyAction(
+  parentCommentId: string,
+  content: string
+) {
+  try {
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user) {
+      throw new Error(error || 'User not authenticated');
+    }
+
+
+    const parentComment = await prisma.discussionComment.findFirst({
+      where: { id: parentCommentId },
+      include: {
+        discussion: {
+          include: { club: true },
+        },
+      },
+    });
+
+    if (!parentComment) {
+      throw new Error('Parent comment not found');
+    }
+
+
+    const clubMember = await prisma.clubMember.findFirst({
+      where: {
+        userId: user.id,
+        clubId: parentComment.discussion.clubId,
+      },
+    });
+
+    if (!clubMember) {
+      throw new Error('You must be a member of this club to reply');
+    }
+
+    const reply = await prisma.discussionComment.create({
+      data: {
+        content,
+        authorId: clubMember.id,
+        discussionId: parentComment.discussionId,
+        parentId: parentCommentId,
+      },
+      include: {
+        author: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
+        replies: {
+          include: {
+            author: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
+    });
+
+    revalidatePath(
+      `/clubs/${parentComment.discussion.clubId}/discussions/${parentComment.discussionId}`
+    );
+
+    return reply;
+  } catch (error) {
+    console.error('Error creating nested discussion reply:', error);
+    throw error;
+  }
+}
+
+export async function likeDiscussionReplyAction(commentId: string) {
+  try {
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user) {
+      throw new Error(error || 'User not authenticated');
+    }
+
+    const comment = await prisma.discussionComment.findFirst({
+      where: { id: commentId },
+      include: {
+        author: {
+          include: { user: true },
+        },
+        discussion: {
+          include: { club: true },
+        },
+      },
+    });
+
+    if (!comment) {
+      throw new Error('Comment not found');
+    }
+
+    let canLike = comment.author.userId === user.id;
+    if (!canLike) {
+      const friendship = await prisma.friendRequest.findFirst({
+        where: {
+          OR: [
+            {
+              fromId: user.id,
+              toId: comment.author.userId,
+              status: 'ACCEPTED',
+            },
+            {
+              fromId: comment.author.userId,
+              toId: user.id,
+              status: 'ACCEPTED',
+            },
+          ],
+        },
+      });
+      canLike = !!friendship;
+    }
+
+    if (!canLike) {
+      throw new Error('You must be friends with the author to like comments');
+    }
+
+    await prisma.discussionComment.update({
+      where: { id: commentId },
+      data: { likes: { increment: 1 } },
+    });
+
+    revalidatePath(
+      `/clubs/${comment.discussion.clubId}/discussions/${comment.discussionId}`
+    );
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error liking discussion comment:', error);
+    throw error;
+  }
+}
+
+export async function unlikeDiscussionReplyAction(commentId: string) {
+  try {
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user) {
+      throw new Error(error || 'User not authenticated');
+    }
+
+    const comment = await prisma.discussionComment.findFirst({
+      where: { id: commentId },
+      include: {
+        author: {
+          include: { user: true },
+        },
+        discussion: {
+          include: { club: true },
+        },
+      },
+    });
+
+    if (!comment) {
+      throw new Error('Comment not found');
+    }
+
+    let canUnlike = comment.author.userId === user.id;
+    if (!canUnlike) {
+      const friendship = await prisma.friendRequest.findFirst({
+        where: {
+          OR: [
+            {
+              fromId: user.id,
+              toId: comment.author.userId,
+              status: 'ACCEPTED',
+            },
+            {
+              fromId: comment.author.userId,
+              toId: user.id,
+              status: 'ACCEPTED',
+            },
+          ],
+        },
+      });
+      canUnlike = !!friendship;
+    }
+
+    if (!canUnlike) {
+      throw new Error('You must be friends with the author to unlike comments');
+    }
+
+    const currentComment = await prisma.discussionComment.findUnique({
+      where: { id: commentId },
+      select: { likes: true },
+    });
+
+    if (currentComment && currentComment.likes > 0) {
+      await prisma.discussionComment.update({
+        where: { id: commentId },
+        data: { likes: { decrement: 1 } },
+      });
+    }
+
+    revalidatePath(
+      `/clubs/${comment.discussion.clubId}/discussions/${comment.discussionId}`
+    );
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error unliking discussion comment:', error);
+    throw error;
   }
 }

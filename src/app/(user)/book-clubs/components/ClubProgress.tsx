@@ -1,13 +1,7 @@
 'use client';
 
-import { BookOpen, Target } from 'lucide-react';
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import {
-  ClubMemberType,
-  DiscussionFullType,
-  ClubReadingListItemType,
-} from '@/lib/types';
+
 import { useState } from 'react';
 import { updateClubProgressAction } from '@/actions/club.actions';
 import { toast } from 'sonner';
@@ -47,6 +41,7 @@ const ClubProgress = ({
         toast.error(result.message);
       }
     } catch (error) {
+      console.log(error);
       toast.error('Failed to update progress');
     } finally {
       setIsUpdating(false);
@@ -58,9 +53,6 @@ const ClubProgress = ({
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 ">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-          <BookOpen className="w-4 h-4 text-[#FFC300]" />
-        </div>
         <h2 className="text-xl font-bold text-white">Currently Reading</h2>
       </div>
 
@@ -120,7 +112,6 @@ const ClubProgress = ({
                   onClick={handleUpdateProgress}
                   disabled={isUpdating}
                 >
-                  <Target className="w-4 h-4" />
                   {isUpdating ? 'Updating...' : 'Update Progress'}
                 </Button>
               </div>

@@ -7,7 +7,7 @@ import { MessageSquare, FileText, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useClubStore } from '@/stores/useClubStore';
 import { discussionSchema } from '@/lib/schemas';
-
+import { useRouter } from 'next/navigation';
 interface CreateClubDiscussionFormProps {
   clubId: string;
 }
@@ -15,6 +15,7 @@ interface CreateClubDiscussionFormProps {
 export default function CreateClubDiscussionForm({
   clubId,
 }: CreateClubDiscussionFormProps) {
+  const router = useRouter();
   const createClubDiscussion = useClubStore(
     (state) => state.createClubDiscussion
   );
@@ -29,6 +30,7 @@ export default function CreateClubDiscussionForm({
     formData.append('title', values.title);
     formData.append('content', values.content);
     createClubDiscussion(clubId, formData);
+    router.push(`/book-clubs/${clubId}/discussions`);
   }
 
   return (
