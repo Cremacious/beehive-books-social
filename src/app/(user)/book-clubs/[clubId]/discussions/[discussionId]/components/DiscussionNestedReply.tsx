@@ -11,7 +11,9 @@ const DiscussionNestedReply = ({
 }: {
   nestedReply: DiscussionCommentType;
 }) => {
-  const [likedComments, setLikedComments] = useState<Record<string, boolean>>({});
+  const [likedComments, setLikedComments] = useState<Record<string, boolean>>(
+    {}
+  );
 
   const { likeDiscussionReply, unlikeDiscussionReply } = useClubStore();
 
@@ -26,7 +28,9 @@ const DiscussionNestedReply = ({
       setLikedComments((prev) => ({ ...prev, [commentId]: !isLiked }));
 
       // Update the nested reply likes count
-      nestedReply.likes = isLiked ? Math.max(0, nestedReply.likes - 1) : nestedReply.likes + 1;
+      nestedReply.likes = isLiked
+        ? Math.max(0, nestedReply.likes - 1)
+        : nestedReply.likes + 1;
     } catch (error) {
       console.log(error);
     }

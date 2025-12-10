@@ -18,9 +18,15 @@ const DiscussionReply = ({
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [isPostingReply, setIsPostingReply] = useState(false);
-  const [likedComments, setLikedComments] = useState<Record<string, boolean>>({});
+  const [likedComments, setLikedComments] = useState<Record<string, boolean>>(
+    {}
+  );
 
-  const { addNestedDiscussionReply, likeDiscussionReply, unlikeDiscussionReply } = useClubStore();
+  const {
+    addNestedDiscussionReply,
+    likeDiscussionReply,
+    unlikeDiscussionReply,
+  } = useClubStore();
 
   const handleLike = async (commentId: string) => {
     const isLiked = likedComments[commentId] || false;
@@ -133,11 +139,7 @@ const DiscussionReply = ({
                   onChange={(e) => setReplyText(e.target.value)}
                 />
                 <div className="flex justify-end gap-2 mt-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={toggleReplyForm}
-                  >
+                  <Button variant="outline" size="sm" onClick={toggleReplyForm}>
                     Cancel
                   </Button>
                   <Button
@@ -151,7 +153,6 @@ const DiscussionReply = ({
                 </div>
               </div>
             )}
-
 
             {reply.replies && reply.replies.length > 0 && (
               <div className="mt-6 space-y-4">
