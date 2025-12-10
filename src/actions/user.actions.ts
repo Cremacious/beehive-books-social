@@ -14,6 +14,7 @@ export async function getUserByIdAction(userId: string) {
         name: true,
         email: true,
         image: true,
+        bio: true,
         createdAt: true,
       },
     });
@@ -40,7 +41,9 @@ export async function getUserByIdAction(userId: string) {
         userId: userId,
         OR: [
           { privacy: 'PUBLIC' },
-          ...(isFriend ? [{ privacy: 'FRIENDS' as const }] : []),
+          ...(isFriend || currentUser?.id === userId
+            ? [{ privacy: 'FRIENDS' as const }]
+            : []),
           ...(currentUser?.id === userId
             ? [{ privacy: 'PRIVATE' as const }]
             : []),
@@ -195,7 +198,6 @@ export async function deleteUserAccountAction() {
       }
     }
 
-   
     const userBooks = await prisma.book.findMany({
       where: { userId: user.id },
       select: { id: true, cover: true },
@@ -225,7 +227,7 @@ export async function deleteUserAccountAction() {
                     result
                   );
                 }
-                resolve(); 
+                resolve();
               });
             });
           }
@@ -238,7 +240,6 @@ export async function deleteUserAccountAction() {
       }
     }
 
-  
     await prisma.user.delete({
       where: { id: user.id },
     });
@@ -246,6 +247,25 @@ export async function deleteUserAccountAction() {
     return { success: true };
   } catch (error) {
     console.error('Error deleting user account:', error);
+    throw error;
+  }
+}
+
+export async function updateBioAction(bio: string) {
+  try {
+    const { user } = await getAuthenticatedUser();
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { bio: bio.trim() || null },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating bio:', error);
     throw error;
   }
 }

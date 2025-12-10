@@ -27,7 +27,6 @@ const SearchFriends = () => {
         Find Friends
       </h2>
       <form onSubmit={handleSubmit} className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/50" />
         <input
           type="email"
           value={email}

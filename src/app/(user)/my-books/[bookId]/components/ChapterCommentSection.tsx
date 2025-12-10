@@ -2,7 +2,7 @@
 import {
   Heart,
   MessageCircle,
-  MoreVertical,
+  // MoreVertical,
   Reply,
   Send,
   User,
@@ -116,7 +116,6 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
       }
       setLikedComments((prev) => ({ ...prev, [commentId]: !isLiked }));
 
-      // Update the likes count in the comments state
       const updateLikes = (comments: Comment[]): Comment[] => {
         return comments.map((comment) => {
           if (comment.id === commentId) {
@@ -211,9 +210,9 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
                   <span className="text-white/50 text-sm">
                     {new Date(comment.createdAt).toLocaleString()}
                   </span>
-                  <button className="text-white/50 hover:text-white/70 transition-colors">
+                  {/* <button className="text-white/50 hover:text-white/70 transition-colors">
                     <MoreVertical className="w-4 h-4" />
-                  </button>
+                  </button> */}
                 </div>
                 <p className="text-white/80 mb-3 leading-relaxed">
                   {comment.content}
@@ -255,7 +254,7 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
                     />
                     <div className="flex justify-end gap-2 mt-2">
                       <Button
-                        variant="outline"
+                        variant={'beeDark'}
                         size="sm"
                         onClick={() => toggleReplyForm(comment.id)}
                       >

@@ -1,13 +1,11 @@
-'use client';
-
-import { BookOpen, Heart, MessageCircle, Users, UsersIcon } from 'lucide-react';
+import { Users } from 'lucide-react';
 import FriendCard from '../../../../components/shared/FriendCard';
 
 interface FriendsListProps {
   friends: {
     id: string;
     name: string;
-    bio?: string;
+    bio?: string | null;
   }[];
 }
 

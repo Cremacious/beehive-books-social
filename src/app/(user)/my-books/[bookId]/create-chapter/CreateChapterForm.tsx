@@ -2,7 +2,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Save, FileText, BookOpen, NotebookPen } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { chapterSchema } from '@/lib/schemas/index';
 import { useBookStore } from '@/stores/useBookStore';
@@ -22,9 +22,6 @@ export default function CreateChapterForm({ bookId }: { bookId: string }) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <FileText className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <label className="text-lg font-semibold text-white">
               Chapter Title
             </label>
@@ -45,11 +42,6 @@ export default function CreateChapterForm({ bookId }: { bookId: string }) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <span className="text-lg">
-                <NotebookPen className="w-4 h-4 text-[#FFC300]" />
-              </span>
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Author&apos;s Notes
@@ -69,9 +61,6 @@ export default function CreateChapterForm({ bookId }: { bookId: string }) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Chapter Content
@@ -102,10 +91,10 @@ export default function CreateChapterForm({ bookId }: { bookId: string }) {
             disabled={form.formState.isSubmitting}
             className=" items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed "
           >
-            <Save className="w-5 h-5" />
+            <Plus className="w-5 h-5" />
             <span>
               {form.formState.isSubmitting
-                ? 'Creating Chapter...'
+                ? 'Creating..'
                 : 'Create Chapter'}
             </span>
           </Button>

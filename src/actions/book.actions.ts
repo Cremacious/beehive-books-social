@@ -229,11 +229,11 @@ export async function getPublicBookByIdAction(bookId: string) {
       throw new Error('Book not found');
     }
 
-    if (book.privacy === 'PRIVATE') {
+    if (book.privacy === 'PRIVATE' && book.userId !== user.id) {
       throw new Error('Book not found');
     }
 
-    if (book.privacy === 'FRIENDS') {
+    if (book.privacy === 'FRIENDS' && book.userId !== user.id) {
       const friendship = await prisma.friendRequest.findFirst({
         where: {
           OR: [
@@ -318,7 +318,11 @@ export async function getChapterByIdAction(chapterId: string) {
       isFriend = !!friendship;
     }
 
-    if (chapter.book.privacy === 'FRIENDS' && !isFriend) {
+    if (
+      chapter.book.privacy === 'FRIENDS' &&
+      chapter.book.userId !== user.id &&
+      !isFriend
+    ) {
       throw new Error('Access denied: This chapter is only visible to friends');
     }
 

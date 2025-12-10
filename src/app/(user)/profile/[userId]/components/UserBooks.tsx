@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import BookCard from '@/components/BookCard';
-import { Search, Filter, BookOpen } from 'lucide-react';
+import { Search, Filter,  } from 'lucide-react';
 
 interface Book {
   id: string;
@@ -86,12 +86,10 @@ export default function UserBooks({ books, isOwnProfile }: UserBooksProps) {
 
   return (
     <div className="space-y-6">
-      {/* Books Section Header */}
+
       <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-12 h-12 p-1 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-            <BookOpen className="w-10 h-10 text-[#FFC300]" />
-          </div>
+       
           <div>
             <h2 className="text-2xl font-bold text-white">
               {isOwnProfile ? 'Your Books' : `${books.length} Published Books`}
@@ -104,7 +102,7 @@ export default function UserBooks({ books, isOwnProfile }: UserBooksProps) {
           </div>
         </div>
 
-        {/* Search and Filter */}
+ 
         <div className="space-y-4">
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             <div className="relative flex-1">
@@ -132,7 +130,7 @@ export default function UserBooks({ books, isOwnProfile }: UserBooksProps) {
             </div>
           </div>
 
-          {/* Results Summary */}
+     
           <div className="text-white/60 text-sm">
             Showing {booksToShow.length} of {filteredAndSortedBooks.length}{' '}
             books
@@ -141,7 +139,6 @@ export default function UserBooks({ books, isOwnProfile }: UserBooksProps) {
         </div>
       </div>
 
-      {/* Books Grid */}
       <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
         {booksToShow.length > 0 ? (
           <>
@@ -158,7 +155,7 @@ export default function UserBooks({ books, isOwnProfile }: UserBooksProps) {
               ))}
             </div>
 
-            {/* Pagination */}
+     
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-2 mt-8">
                 <button
@@ -203,9 +200,7 @@ export default function UserBooks({ books, isOwnProfile }: UserBooksProps) {
           </>
         ) : (
           <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
-            <div className="w-24 h-24 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6">
-              <BookOpen className="w-12 h-12 text-[#FFC300]" />
-            </div>
+           
             <h3 className="text-2xl font-bold text-[#FFC300] mb-3">
               {searchTerm ? 'No Books Found' : 'No Books Yet'}
             </h3>

@@ -30,9 +30,7 @@ const ChapterPage = async ({
                 <div className="flex items-center gap-2">
                   <Hash className="w-4 h-4 text-yellow-500" />
 
-                  <span className="font-medium">
-                    {chapter.wordCount} words
-                  </span>
+                  <span className="font-medium">{chapter.wordCount} words</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MessageCircle className="w-4 h-4 text-yellow-500" />
@@ -42,7 +40,10 @@ const ChapterPage = async ({
                 </div>
               </div>
             </div>
-            <Link className="hidden md:flex" href={`/my-books/111/11/edit`}>
+            <Link
+              className="hidden md:flex"
+              href={`/my-books/${chapter.bookId}/${chapter.id}/edit`}
+            >
               <Button variant={'beeYellow'}>
                 <Edit /> Edit Chapter
               </Button>

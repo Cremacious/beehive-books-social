@@ -90,6 +90,7 @@ interface EditBookFormProps {
 export default function EditBookForm({ book }: EditBookFormProps) {
   const editBook = useBookStore((state) => state.editBook);
   const deleteBook = useBookStore((state) => state.deleteBook);
+  const isLoading = useBookStore((state) => state.isLoading);
 
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(book.cover);
@@ -136,9 +137,6 @@ export default function EditBookForm({ book }: EditBookFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <label className="text-lg font-semibold text-white">
               Book Title
             </label>
@@ -159,9 +157,6 @@ export default function EditBookForm({ book }: EditBookFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <User className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <label className="text-lg font-semibold text-white">
               Author Name
             </label>
@@ -181,12 +176,8 @@ export default function EditBookForm({ book }: EditBookFormProps) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Category */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-                <FileText className="w-4 h-4 text-[#FFC300]" />
-              </div>
               <label className="text-lg font-semibold text-white">
                 Category
               </label>
@@ -218,9 +209,6 @@ export default function EditBookForm({ book }: EditBookFormProps) {
 
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-                <Tag className="w-4 h-4 text-[#FFC300]" />
-              </div>
               <label className="text-lg font-semibold text-white">Genre</label>
             </div>
             <select
@@ -251,9 +239,6 @@ export default function EditBookForm({ book }: EditBookFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <span className="text-lg">📝</span>
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Book Description
@@ -279,9 +264,6 @@ export default function EditBookForm({ book }: EditBookFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <Eye className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Privacy Settings
@@ -328,9 +310,6 @@ export default function EditBookForm({ book }: EditBookFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <ImageIcon className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Book Cover
@@ -367,9 +346,6 @@ export default function EditBookForm({ book }: EditBookFormProps) {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="w-16 h-16 bg-[#FFC300]/10 rounded-full flex items-center justify-center mx-auto">
-                    <Upload className="w-8 h-8 text-[#FFC300]" />
-                  </div>
                   <div>
                     <div className="text-white font-medium mb-2">
                       Upload Book Cover
@@ -388,13 +364,11 @@ export default function EditBookForm({ book }: EditBookFormProps) {
           <Button
             variant={'beeYellow'}
             type="submit"
-            disabled={form.formState.isSubmitting}
+            disabled={isLoading}
             className=" items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed "
           >
             <Save className="w-5 h-5" />
-            <span>
-              {form.formState.isSubmitting ? 'Editing Book...' : 'Edit Book'}
-            </span>
+            <span>{isLoading ? 'Saving...' : 'Save Changes'}</span>
           </Button>
         </div>
       </form>

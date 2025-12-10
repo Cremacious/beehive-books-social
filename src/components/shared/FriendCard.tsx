@@ -8,7 +8,7 @@ import Link from 'next/link';
 interface FriendCardProps {
   id: string;
   name: string;
-  bio?: string;
+  bio?: string | null;
 }
 
 const FriendCard = ({ name, bio, id }: FriendCardProps) => {
@@ -27,10 +27,9 @@ const FriendCard = ({ name, bio, id }: FriendCardProps) => {
       <h4 className="font-semibold text-white text-lg mb-3">{name}</h4>
 
       <div className="flex-1 mb-4">
-        {/* <p className="text-white/70 text-sm line-clamp-3 leading-relaxed">
-          {bio.split('. ').slice(0, 3).join('. ') +
-            (bio.split('. ').length > 3 ? '.' : '')}
-        </p> */}
+        <p className="text-white/70 text-sm line-clamp-3 leading-relaxed">
+          {bio || 'No bio yet.'}
+        </p>
       </div>
       <Link href={`/profile/${id}`} className="w-full">
         <Button className="w-full" variant={'beeYellow'}>

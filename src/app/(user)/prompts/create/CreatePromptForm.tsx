@@ -8,7 +8,7 @@ interface CreatePromptFormProps {
   friends: {
     id: string;
     name: string;
-    bio?: string;
+    bio?: string | null;
   }[];
 }
 
@@ -41,7 +41,7 @@ const CreatePromptForm = ({ friends }: CreatePromptFormProps) => {
     } else {
       const selectedDate = new Date(endDate);
       const currentDate = new Date();
-      currentDate.setHours(0, 0, 0, 0); 
+      currentDate.setHours(0, 0, 0, 0);
 
       if (selectedDate < currentDate) {
         newErrors.endDate = 'End date must be in the future';
@@ -90,12 +90,11 @@ const CreatePromptForm = ({ friends }: CreatePromptFormProps) => {
     router.push('/prompts');
   };
 
-
   useEffect(() => {
     if (title || description || endDate) {
       validateForm();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, description, endDate]);
 
   const isFormValid =

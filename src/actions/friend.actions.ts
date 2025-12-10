@@ -21,10 +21,10 @@ export async function getAllUserFriendsAction() {
     },
     include: {
       from: {
-        select: { id: true, name: true, email: true },
+        select: { id: true, name: true, email: true, bio: true },
       },
       to: {
-        select: { id: true, name: true, email: true },
+        select: { id: true, name: true, email: true, bio: true },
       },
     },
   });

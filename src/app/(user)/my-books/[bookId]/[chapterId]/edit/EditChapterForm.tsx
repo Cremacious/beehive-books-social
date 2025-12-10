@@ -25,6 +25,7 @@ export default function EditChapterForm({
 }: EditChapterFormProps) {
   const editChapter = useBookStore((state) => state.editChapter);
   const deleteChapter = useBookStore((state) => state.deleteChapter);
+  const isLoading = useBookStore((state) => state.isLoading);
   const form = useForm<z.infer<typeof chapterSchema>>({
     resolver: zodResolver(chapterSchema),
     defaultValues: {
@@ -52,9 +53,7 @@ export default function EditChapterForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <FileText className="w-4 h-4 text-[#FFC300]" />
-            </div>
+        
             <label className="text-lg font-semibold text-white">
               Chapter Title
             </label>
@@ -75,12 +74,7 @@ export default function EditChapterForm({
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <span className="text-lg">
-                {' '}
-                <NotebookPen className="w-4 h-4 text-[#FFC300]" />
-              </span>
-            </div>
+          
             <div>
               <label className="text-lg font-semibold text-white">
                 Author&apos;s Notes
@@ -100,9 +94,7 @@ export default function EditChapterForm({
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-[#FFC300]" />
-            </div>
+          
             <div>
               <label className="text-lg font-semibold text-white">
                 Chapter Content
@@ -130,15 +122,11 @@ export default function EditChapterForm({
           <Button
             variant={'beeYellow'}
             type="submit"
-            disabled={form.formState.isSubmitting}
+            disabled={isLoading}
             className=" items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed "
           >
             <Save className="w-5 h-5" />
-            <span>
-              {form.formState.isSubmitting
-                ? 'Editing Chapter...'
-                : 'Edit Chapter'}
-            </span>
+            <span>{isLoading ? 'Saving...' : 'Save Changes'}</span>
           </Button>
         </div>
       </form>

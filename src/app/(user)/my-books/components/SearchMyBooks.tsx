@@ -1,6 +1,8 @@
 'use client';
 import React from 'react';
-import { Search, SortAsc } from 'lucide-react';
+import { Plus, Search, SortAsc } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface SearchMyBooksProps {
   searchTerm: string;
@@ -18,6 +20,16 @@ const SearchMyBooks = ({
   return (
     <div className="space-y-4 mb-6">
       <div className="flex flex-col md:flex-row md:items-center gap-2">
+        <Link href="/my-books/create">
+          <Button
+            variant={'beeYellow'}
+            size={'lg'}
+            className="flex items-center justify-center space-x-2 w-full"
+          >
+            <Plus size={20} />
+            New Book
+          </Button>
+        </Link>
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#FFC300]/60 w-5 h-5" />
           <input

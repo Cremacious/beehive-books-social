@@ -11,11 +11,10 @@ import {
 import ChapterListItem from '../components/ChapterListItem';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-// import { bookDetailData } from '@/lib/sampleData/books.sample';
 import { getBookByIdAction } from '@/actions/book.actions';
 import defaultImage from '@/assets/stock/cover.jpeg';
-// const book = bookDetailData;
-// const chapters = book.chapters;
+
+import bookIcon from '@/assets/icons/book.png';
 
 const BookPage = async ({
   params,
@@ -120,40 +119,49 @@ const BookPage = async ({
               Chapters
             </h2>
             <div>
-              <Link
-                className="md:flex hidden"
-                href={`/my-books/${book.id}/create-chapter`}
-              >
-                <Button
-                  size={'lg'}
-                  variant={'beeYellow'}
-                  className="flex items-center gap-2"
-                >
-                  <Plus className="w-5 h-5 text-black" />
-                  Add Chapter
-                </Button>
-              </Link>
-              <Link
-                className="md:hidden block"
-                href={`/my-books/${book.id}/create-chapter`}
-              >
-                <Button
-                  size={'sm'}
-                  variant={'beeYellow'}
-                  className="flex items-center gap-2"
-                >
-                  <Plus className="w-5 h-5 text-black" />
-                  Add Chapter
-                </Button>
-              </Link>
+              {book.chapters.length !== 0 && (
+                <>
+                  <Link
+                    className="md:flex hidden"
+                    href={`/my-books/${book.id}/create-chapter`}
+                  >
+                    <Button
+                      size={'lg'}
+                      variant={'beeYellow'}
+                      className="flex items-center gap-2"
+                    >
+                      <Plus className="w-5 h-5 text-black" />
+                      Add Chapter
+                    </Button>
+                  </Link>
+                  <Link
+                    className="md:hidden block"
+                    href={`/my-books/${book.id}/create-chapter`}
+                  >
+                    <Button
+                      size={'sm'}
+                      variant={'beeYellow'}
+                      className="flex items-center gap-2"
+                    >
+                      <Plus className="w-5 h-5 text-black" />
+                      Add Chapter
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 
           <div className="space-y-4 ">
             {book.chapters.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
-                <div className="w-24 h-24 bg-yellow-500/10 rounded-full flex items-center justify-center mb-6">
-                  <span className="text-4xl">🐝</span>
+                <div className="">
+                  <Image
+                    src={bookIcon}
+                    alt="Empty Shelf"
+                    height={100}
+                    width={100}
+                  />
                 </div>
                 <h3 className="text-2xl font-bold text-yellow-400 mb-3">
                   No Chapters Yet
@@ -163,10 +171,12 @@ const BookPage = async ({
                   adding your first chapter. Each chapter is a step closer to
                   completing your masterpiece.
                 </p>
-                <button className="px-8 py-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl font-semibold transition-all duration-200 flex items-center gap-3 shadow-lg hover:shadow-yellow-500/25 transform hover:scale-105">
-                  <Plus className="w-5 h-5" />
-                  Add Your First Chapter
-                </button>
+                <Link className="" href={`/my-books/${book.id}/create-chapter`}>
+                  <Button size={'lg'} variant={'beeYellow'} className="">
+                    <Plus className="w-5 h-5 text-black" />
+                    Add Chapter
+                  </Button>
+                </Link>
               </div>
             ) : (
               book.chapters.map((chapter, index) => (

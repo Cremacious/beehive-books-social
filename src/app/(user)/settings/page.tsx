@@ -1,6 +1,7 @@
 import { User } from 'lucide-react';
 import NewPage from '@/components/layout/NewPage';
 import UpdateProfileImage from './components/UpdateProfileImage';
+import UpdateBio from './components/UpdateBio';
 import PasswordChange from './components/PasswordChange';
 import DeleteAccount from './components/DeleteAccount';
 import { getAuthenticatedUser } from '@/lib/auth-server';
@@ -12,7 +13,7 @@ const UserSettingsPage = async () => {
   }
   return (
     <NewPage>
-      <div className="w-full max-w-2xl mx-auto space-y-10">
+      <div className="w-full max-w-5xl mx-auto space-y-10">
         <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10">
           <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2 flex items-center gap-3">
             <User className="w-7 h-7" />
@@ -23,6 +24,8 @@ const UserSettingsPage = async () => {
           </p>
 
           <UpdateProfileImage userId={user.id} />
+
+          <UpdateBio userId={user.id} />
 
           <PasswordChange />
 

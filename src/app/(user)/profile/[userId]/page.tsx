@@ -30,7 +30,7 @@ const ProfilePage = async ({
       </NewPage>
     );
   } catch (error) {
-    // Handle user not found or other errors
+    console.log('Error fetching profile data:', error);
     return (
       <NewPage>
         <div className="w-full space-y-8">
@@ -42,8 +42,8 @@ const ProfilePage = async ({
               User Not Found
             </h1>
             <p className="text-white/70 text-lg mb-8 max-w-md mx-auto leading-relaxed">
-              The user you&apos;re looking for doesn&apos;t exist or may have been
-              removed.
+              The user you&apos;re looking for doesn&apos;t exist or may have
+              been removed.
             </p>
             <a
               href="/dashboard"

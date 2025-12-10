@@ -10,7 +10,7 @@ interface EditPromptFormProps {
   friends: {
     id: string;
     name: string;
-    bio?: string;
+    bio?: string | null;
   }[];
 }
 

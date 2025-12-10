@@ -82,7 +82,7 @@ const FriendRequests = ({
             ))}
           </div>
         ) : (
-          <div className="bg-[#1a1a1a] rounded-xl p-6 text-center">
+          <div className=" p-6 text-center">
             <div className="w-16 h-16 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <UserPlus className="w-8 h-8 text-yellow-400" />
             </div>

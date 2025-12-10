@@ -3,9 +3,12 @@
 import MyBookCard from './MyBookCard';
 import SearchMyBooks from './SearchMyBooks';
 import BookPagination from './BookPagination';
-import { Library, Search } from 'lucide-react';
+import { Library, Plus, Search } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import emptyShelf from '@/assets/icons/empty-shelf.png'
 
 interface MyBooksDisplayProps {
   id: string;
@@ -71,14 +74,7 @@ const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
   return (
     <div className="space-y-8">
       <div className="rounded-2xl shadow-xl p-6 md:p-8 min-h-[1000px] darkContainer2">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-12 h-12 p-1 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-            <Library className="w-10 h-10 text-[#FFC300]" />
-          </div>
-          <h2 className="text-2xl font-bold text-white">Your Library</h2>
-        </div>
-
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto mb-8">
           <SearchMyBooks
             searchTerm={searchTerm}
             sortBy={sortBy}
@@ -87,10 +83,17 @@ const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
           />
         </div>
 
+        <div className="border mx-auto w-full border-yellow-600 mb-8" />
+
         {books.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
-            <div className="w-24 h-24 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6">
-              <span className="text-4xl">🐝</span>
+            <div className="">
+              <Image
+                src={emptyShelf}
+                alt="Empty Shelf"
+                height={100}
+                width={100}
+              />
             </div>
             <h3 className="text-2xl font-bold text-[#FFC300] mb-3">
               No Books Yet
@@ -99,12 +102,10 @@ const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
               Your writing journey starts here! Create your first book and begin
               crafting stories that captivate readers around the world.
             </p>
-            <Link
-              href="/my-books/create"
-              className="px-8 py-4 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center gap-3"
-            >
-              <span className="text-xl">✍️</span>
-              <span>Start Your First Book</span>
+            <Link href="/my-books/create">
+              <Button size={'lg'} variant={'beeYellow'}>
+                Create First Book!
+              </Button>
             </Link>
           </div>
         ) : filteredAndSortedBooks.length === 0 ? (
@@ -121,7 +122,7 @@ const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
             </p>
           </div>
         ) : (
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto mt-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {booksToShow.map((book) => (
                 <MyBookCard
@@ -135,7 +136,7 @@ const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
               ))}
             </div>
           </div>
-        )}BookCard
+        )}
 
         {filteredAndSortedBooks.length > BOOKS_PER_PAGE && (
           <div className="mt-8">
