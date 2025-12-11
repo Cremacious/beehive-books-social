@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Plus, Search, SortAsc } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -48,7 +48,6 @@ const SearchMyBooks = ({
           <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>
           <option value="title">Title A-Z</option>
-          <option value="genre">Genre</option>
         </select>
       </div>
     </div>

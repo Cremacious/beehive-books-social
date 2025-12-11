@@ -4,10 +4,8 @@ import { MessageCircle, Hash, Edit, NotebookPen } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import ChapterCommentSection from '../components/ChapterCommentSection';
-// import { chapterDetailData } from '@/lib/sampleData/books.sample';
 import { getChapterByIdAction } from '@/actions/book.actions';
-
-// TODO: word count calculation
+import BackButton from '@/components/shared/BackButton';
 
 const ChapterPage = async ({
   params,
@@ -19,6 +17,7 @@ const ChapterPage = async ({
 
   return (
     <NewPage>
+      <BackButton text="Back to Book" href={`/my-books/${chapter.bookId}`} />
       <div className="w-full max-w-4xl mx-auto space-y-8">
         <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
           <div className="flex justify-between items-start mb-6">
@@ -50,17 +49,20 @@ const ChapterPage = async ({
             </Link>
           </div>
 
-          <div className="backgroundYellow rounded-xl p-6 mb-8">
-            <h3 className="text-lg font-semibold text-yellow-400 mb-3 flex items-center gap-2">
-              <span className="text-xl">
-                <NotebookPen />
-              </span>
-              Author&apos;s Notes
-            </h3>
-            <p className="text-white/80 leading-relaxed">
-              {chapter.authorNotes}
-            </p>
-          </div>
+          {chapter.authorNotes && (
+            <div className="backgroundYellow rounded-xl p-6 mb-8">
+              <h3 className="text-lg font-semibold text-yellow-400 mb-3 flex items-center gap-2">
+                <span className="text-xl">
+                  <NotebookPen />
+                </span>
+                Author&apos;s Notes
+              </h3>
+              <p className="text-white/80 leading-relaxed">
+                {chapter.authorNotes}
+              </p>
+            </div>
+          )}
+
           <div className="flex md:hidden  justify-center">
             <Link className="" href={`/my-books/111/11/edit`}>
               <Button className="w-full" variant={'beeYellow'}>

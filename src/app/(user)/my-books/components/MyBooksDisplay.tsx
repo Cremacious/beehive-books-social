@@ -3,12 +3,8 @@
 import MyBookCard from './MyBookCard';
 import SearchMyBooks from './SearchMyBooks';
 import BookPagination from './BookPagination';
-import { Library, Plus, Search } from 'lucide-react';
 import { useState, useMemo } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import Image from 'next/image';
-import emptyShelf from '@/assets/icons/empty-shelf.png'
+
 
 interface MyBooksDisplayProps {
   id: string;
@@ -16,9 +12,10 @@ interface MyBooksDisplayProps {
   author: string;
   genre: string;
   cover: string | null;
+  category: string;
 }
 
-const BOOKS_PER_PAGE = 9;
+const BOOKS_PER_PAGE = 6;
 
 const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,7 +70,7 @@ const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
 
   return (
     <div className="space-y-8">
-      <div className=" p-6 md:p-8 min-h-[1000px] ">
+      <div className=" p-2 md:p-8 min-h-[1000px] ">
         <div className="max-w-3xl mx-auto mb-8">
           <SearchMyBooks
             searchTerm={searchTerm}
@@ -83,60 +80,66 @@ const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
           />
         </div>
 
-        <div className="border mx-auto w-full border-yellow-600 mb-8" />
+        {/* <div className="border-2 mx-auto w-full border-yellow-600 mb-8" /> */}
 
-        {books.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
-            <div className="">
-              <Image
-                src={emptyShelf}
-                alt="Empty Shelf"
-                height={100}
-                width={100}
-              />
+        <div className="border-2 border-yellow-500/30 rounded-2xl min-h-[1000px] px-4 md:px-8">
+          {filteredAndSortedBooks.length === 0 ? (
+            <div className="max-w-6xl mx-auto mt-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: BOOKS_PER_PAGE }, (_, index) => (
+                  <div
+                    key={`placeholder-${index}`}
+                    className="flex flex-col w-full rounded-2xl shadow-lg darkContainer3 overflow-hidden border-2 border-dashed border-yellow-500/30"
+                  >
+                    <div className="relative w-full h-75 flex items-center justify-center bg-[#1f1f1f]/50">
+                      {/* <Plus className="w-12 h-12 text-yellow-500/50" /> */}
+                    </div>
+                    <div className="flex-col gap-3 p-4 bg-[#1f1f1f] h-[150px] flex items-center justify-center">
+                      <p className="text-yellow-500/50 text-sm font-medium">
+                        {' '}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <h3 className="text-2xl font-bold text-[#FFC300] mb-3">
-              No Books Yet
-            </h3>
-            <p className="text-white/70 mb-8 max-w-md leading-relaxed">
-              Your writing journey starts here! Create your first book and begin
-              crafting stories that captivate readers around the world.
-            </p>
-            <Link href="/my-books/create">
-              <Button size={'lg'} variant={'beeYellow'}>
-                Create First Book!
-              </Button>
-            </Link>
-          </div>
-        ) : filteredAndSortedBooks.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
-            <div className="w-24 h-24 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6">
-              <Search className="w-12 h-12 text-[#FFC300]" />
+          ) : (
+            <div className="max-w-6xl mx-auto mt-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {booksToShow.map((book) => (
+                  <MyBookCard
+                    key={book.id}
+                    id={book.id}
+                    title={book.title}
+                    author={book.author}
+                    genre={book.genre}
+                    coverImage={book.cover}
+                    category={book.category}
+                  />
+                ))}
+
+                {Array.from(
+                  { length: BOOKS_PER_PAGE - booksToShow.length },
+                  (_, index) => (
+                    <div
+                      key={`placeholder-${index}`}
+                      className="flex flex-col w-full rounded-2xl shadow-lg darkContainer3 overflow-hidden border-2 border-dashed border-yellow-500/30"
+                    >
+                      <div className="relative w-full h-75 flex items-center justify-center bg-[#1f1f1f]/50">
+                        {/* <Plus className="w-12 h-12 text-yellow-500/50" /> */}
+                      </div>
+                      <div className="flex-col gap-3 p-4 bg-[#1f1f1f] h-[150px] flex items-center justify-center">
+                        <p className="text-yellow-500/50 text-sm font-medium">
+                          {' '}
+                        </p>
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
             </div>
-            <h3 className="text-2xl font-bold text-[#FFC300] mb-3">
-              No Books Found
-            </h3>
-            <p className="text-white/70 mb-8 max-w-md leading-relaxed">
-              No books match your search for &quot;{searchTerm}&quot;. Try
-              adjusting your search terms.
-            </p>
-          </div>
-        ) : (
-          <div className="max-w-6xl mx-auto mt-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {booksToShow.map((book) => (
-                <MyBookCard
-                  key={book.id}
-                  id={book.id}
-                  title={book.title}
-                  author={book.author}
-                  genre={book.genre}
-                  coverImage={book.cover}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {filteredAndSortedBooks.length > BOOKS_PER_PAGE && (
           <div className="mt-8">

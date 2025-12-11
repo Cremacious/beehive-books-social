@@ -11,6 +11,7 @@ const MyBookCard = ({
   genre,
   coverImage,
   href,
+  category
 }: {
   id: string;
   title: string;
@@ -18,6 +19,7 @@ const MyBookCard = ({
   genre: string;
   coverImage: string | null;
   href?: string;
+  category: string;
 }) => {
   const bookHref = href || `/my-books/${id}`;
 
@@ -45,9 +47,15 @@ const MyBookCard = ({
             <p className="text-xs text-[#FFC300] font-medium truncate mb-2">
               {author}
             </p>
+            <div className='flex flex-row gap-2'>
+
             <span className="text-[10px] bg-[#FFC300]/20 text-[#FFC300] px-2 py-1 rounded-md font-semibold">
               {genre}
             </span>
+            <span className="text-[10px] bg-[#FFC300]/20 text-[#FFC300] px-2 py-1 rounded-md font-semibold">
+              {category}
+            </span>
+            </div>
           </div>
 
           <Button variant={'beeYellow'} size={'sm'} className="mb-4">

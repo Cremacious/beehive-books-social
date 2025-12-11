@@ -14,7 +14,8 @@ import Link from 'next/link';
 import { getBookByIdAction } from '@/actions/book.actions';
 import defaultImage from '@/assets/stock/cover.jpeg';
 
-import bookIcon from '@/assets/icons/book.png';
+import openBook from '@/assets/icons/open-book.png';
+import BackButton from '@/components/shared/BackButton';
 
 const BookPage = async ({
   params,
@@ -27,6 +28,7 @@ const BookPage = async ({
 
   return (
     <NewPage>
+      <BackButton text="Back to My Books" href="/my-books" />
       <div className="w-full space-y-8 ">
         <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10 ">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -155,9 +157,9 @@ const BookPage = async ({
           <div className="space-y-4 ">
             {book.chapters.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
-                <div className="">
+                <div className="iconCircle">
                   <Image
-                    src={bookIcon}
+                    src={openBook}
                     alt="Empty Shelf"
                     height={100}
                     width={100}

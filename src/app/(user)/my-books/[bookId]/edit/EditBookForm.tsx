@@ -4,16 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Image from 'next/image';
-import {
-  BookOpen,
-  User,
-  FileText,
-  Tag,
-  Eye,
-  Upload,
-  Save,
-  Image as ImageIcon,
-} from 'lucide-react';
+import { Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBookStore } from '@/stores/useBookStore';
 
@@ -131,7 +122,7 @@ export default function EditBookForm({ book }: EditBookFormProps) {
     <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10 border border-[#2a2a2a]">
       <div className="flex justify-end pt-4">
         <Button onClick={handleDelete} variant={'destructive'} type="button">
-          Delete Chapter
+          Delete Book
         </Button>
       </div>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
