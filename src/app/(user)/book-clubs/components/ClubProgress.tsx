@@ -57,15 +57,7 @@ const ClubProgress = ({
       </div>
 
       <div className="flex items-start gap-6">
-        <div className="w-24 h-32 rounded-lg overflow-hidden shrink-0">
-          {/* <Image
-            src={club.cover}
-            alt={club.currentBook.title}
-            width={96}
-            height={128}
-            className="w-full h-full object-cover"
-          /> */}
-        </div>
+    
         <div className="flex-1">
           <h3 className="text-2xl font-bold text-white mb-2">
             {club.currentBook.title}

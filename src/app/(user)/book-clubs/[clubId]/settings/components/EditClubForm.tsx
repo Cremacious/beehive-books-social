@@ -5,21 +5,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Image from 'next/image';
-import {
-  Upload,
-  X,
-  Users,
-  BookOpen,
-  Shield,
-  Tag,
-  Search,
-  UserPlus,
-  Check,
-} from 'lucide-react';
 import { clubCreateSchema } from '@/lib/schemas';
 import { useState, useEffect } from 'react';
 import { getAllUserFriendsAction } from '@/actions/friend.actions';
 import { Button } from '@/components/ui/button';
+import { Check, Search, Upload, Users } from 'lucide-react';
 
 const availableTags = [
   'Mystery',
@@ -206,9 +196,6 @@ export default function EditClubForm({ club }: EditClubFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <Users className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <label className="text-lg font-semibold text-white">
               Club Name
             </label>
@@ -229,9 +216,6 @@ export default function EditClubForm({ club }: EditClubFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Club Description
@@ -257,9 +241,6 @@ export default function EditClubForm({ club }: EditClubFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Current Book
@@ -317,9 +298,6 @@ export default function EditClubForm({ club }: EditClubFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <Upload className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Club Cover Image
@@ -364,9 +342,7 @@ export default function EditClubForm({ club }: EditClubFormProps) {
                   type="button"
                   onClick={removeImage}
                   className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-all"
-                >
-                  <X className="w-3 h-3 text-white" />
-                </button>
+                ></button>
               </div>
             )}
           </div>
@@ -374,7 +350,6 @@ export default function EditClubForm({ club }: EditClubFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <Shield className="w-5 h-5 text-yellow-400" />
             <div>
               <label className="text-lg font-semibold text-white">
                 Privacy Settings
@@ -421,9 +396,6 @@ export default function EditClubForm({ club }: EditClubFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <Shield className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Club Rules & Guidelines
@@ -443,7 +415,6 @@ export default function EditClubForm({ club }: EditClubFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <UserPlus className="w-5 h-5 text-[#FFC300]" />
             <div>
               <label className="text-lg font-semibold text-white">
                 Invite Friends
@@ -535,9 +506,6 @@ export default function EditClubForm({ club }: EditClubFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <Tag className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Club Categories & Tags
@@ -568,9 +536,17 @@ export default function EditClubForm({ club }: EditClubFormProps) {
 
         <div className="flex justify-end pt-6 border-t border-[#FFC300]/10">
           <Button
+            variant={'beeDark'}
+            className="p-5 mr-4"
+            type="button"
+            onClick={() => router.push(`/book-clubs/${club.id}`)}
+          >
+            Cancel
+          </Button>
+          <Button
             type="submit"
             disabled={form.formState.isSubmitting}
-           variant="beeYellow"
+            variant="beeYellow"
           >
             <Users className="w-5 h-5" />
             <span>

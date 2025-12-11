@@ -1,6 +1,6 @@
 'use client';
 
-import { Crown, Shield, User, Users, Search, X } from 'lucide-react';
+import { Crown, Shield, User, Search, X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ClubMemberType } from '@/lib/types';
@@ -14,15 +14,13 @@ interface ClubMembersPreviewProps {
   };
 }
 
-const ClubMembersPreview = ({ members, club }: ClubMembersPreviewProps) => {
+const ClubMembersPreview = ({ members, }: ClubMembersPreviewProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'recent'>('recent');
 
-  // Find the owner
-  const owner = members.find((member) => member.role === 'OWNER');
+  // const owner = members.find((member) => member.role === 'OWNER');
 
-  // Sort members by joinedAt (most recent first) or name
   const sortedMembers = [...members].sort((a, b) => {
     if (sortBy === 'recent') {
       return new Date(b.joinedAt).getTime() - new Date(a.joinedAt).getTime();
@@ -30,20 +28,17 @@ const ClubMembersPreview = ({ members, club }: ClubMembersPreviewProps) => {
     return a.user.name.localeCompare(b.user.name);
   });
 
-  // Filter members based on search query
   const filteredMembers = sortedMembers.filter((member) =>
     member.user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Get members to display (5 most recent for preview, all for expanded)
   const displayMembers = isExpanded
     ? filteredMembers
     : sortedMembers.slice(0, 5);
 
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-6">
-      {/* Owner Section */}
-      {owner && (
+      {/* {owner && (
         <div className="mb-4 p-3 bg-[#FFC300]/10 rounded-lg border border-[#FFC300]/20">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[#FFC300]/20 rounded-full flex items-center justify-center">
@@ -57,19 +52,19 @@ const ClubMembersPreview = ({ members, club }: ClubMembersPreviewProps) => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold text-white flex items-center gap-2">
-          <Users className="w-5 h-5 text-[#FFC300]" />
+       
           Members <span className="yellowBadge w-8">{members.length}</span>
         </h3>
         <div className="gap-2 flex flex-row">
-          {club.userRole === 'OWNER' && (
+          {/* {club.userRole === 'OWNER' && (
             <Button size={'sm'} variant={'beeYellow'}>
               Invite
             </Button>
-          )}
+          )} */}
           {!isExpanded ? (
             <Button
               size={'sm'}
@@ -94,7 +89,6 @@ const ClubMembersPreview = ({ members, club }: ClubMembersPreviewProps) => {
         </div>
       </div>
 
-      {/* Search and Sort Controls (only when expanded) */}
       {isExpanded && (
         <div className="space-y-3 mb-4">
           <div className="relative">

@@ -1,7 +1,8 @@
 import Link from 'next/link';
 // import { DiscussionType } from '@/lib/types';
-import { Clock, Heart, MessageSquare, User } from 'lucide-react';
+import { Clock, MessageSquare, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { formatDate } from '@/lib/utils';
 
 interface DiscussionItem {
   id: string;
@@ -23,7 +24,7 @@ const DiscussionListItem = ({
   clubId,
 }: DiscussionListItemProps) => {
   return (
-    <div className="darkContainer3 rounded-xl p-4 md:p-6 mb-4">
+    <div className="darkContainer2 rounded-xl p-4 md:p-6 mb-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex-1">
           <h3 className="text-lg md:text-xl font-bold text-white mb-2 wrap-break-word">
@@ -40,13 +41,10 @@ const DiscussionListItem = ({
               <MessageSquare className="w-4 h-4" />
               {discussion.replies} replies
             </div>
-            <div className="flex items-center gap-2">
-              <Heart className="w-4 h-4" />
-              {discussion.likes} likes
-            </div>
+
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4" />
-              {discussion.lastActivity}
+              { formatDate(discussion.lastActivity)}
             </div>
           </div>
         </div>

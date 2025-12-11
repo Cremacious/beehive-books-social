@@ -3,10 +3,11 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Save, FileText, BookOpen, NotebookPen } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { chapterSchema } from '@/lib/schemas/index';
 import { useBookStore } from '@/stores/useBookStore';
+import { useRouter } from 'next/navigation';
 
 interface EditChapterFormProps {
   bookId: string;
@@ -23,6 +24,7 @@ export default function EditChapterForm({
   chapterId,
   chapter,
 }: EditChapterFormProps) {
+  const router = useRouter();
   const editChapter = useBookStore((state) => state.editChapter);
   const deleteChapter = useBookStore((state) => state.deleteChapter);
   const isLoading = useBookStore((state) => state.isLoading);
@@ -53,7 +55,6 @@ export default function EditChapterForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-        
             <label className="text-lg font-semibold text-white">
               Chapter Title
             </label>
@@ -74,7 +75,6 @@ export default function EditChapterForm({
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-          
             <div>
               <label className="text-lg font-semibold text-white">
                 Author&apos;s Notes
@@ -94,7 +94,6 @@ export default function EditChapterForm({
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-          
             <div>
               <label className="text-lg font-semibold text-white">
                 Chapter Content
@@ -119,6 +118,14 @@ export default function EditChapterForm({
         </div>
 
         <div className="flex justify-end pt-6 border-t border-[#FFC300]/10">
+          <Button
+            variant={'beeDark'}
+            className="p-5 mr-4"
+            type="button"
+            onClick={() => router.push(`/my-books/${bookId}/${chapterId}`)}
+          >
+            Cancel
+          </Button>
           <Button
             variant={'beeYellow'}
             type="submit"

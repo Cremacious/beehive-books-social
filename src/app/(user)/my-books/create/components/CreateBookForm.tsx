@@ -4,21 +4,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Image from 'next/image';
-import {
-  BookOpen,
-  User,
-  FileText,
-  Tag,
-  Eye,
-  Upload,
-  Save,
-  Image as ImageIcon,
-  BookText,
-  Plus,
-} from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBookStore } from '@/stores/useBookStore';
 import { bookSchema } from '@/lib/schemas';
+import { useRouter } from 'next/navigation';
 
 const categories = [
   'Fiction',
@@ -65,6 +55,7 @@ const privacyOptions = [
 ];
 
 export default function CreateBookForm() {
+  const router = useRouter();
   const createBook = useBookStore((state) => state.createBook);
   const isLoading = useBookStore((state) => state.isLoading);
 
@@ -98,7 +89,6 @@ export default function CreateBookForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-           
             <label className="text-lg font-semibold text-white">
               Book Title
             </label>
@@ -119,7 +109,6 @@ export default function CreateBookForm() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-         
             <label className="text-lg font-semibold text-white">
               Author Name
             </label>
@@ -141,7 +130,6 @@ export default function CreateBookForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-          
               <label className="text-lg font-semibold text-white">
                 Category
               </label>
@@ -173,7 +161,6 @@ export default function CreateBookForm() {
 
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-          
               <label className="text-lg font-semibold text-white">Genre</label>
             </div>
             <select
@@ -204,7 +191,6 @@ export default function CreateBookForm() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-        
             <div>
               <label className="text-lg font-semibold text-white">
                 Book Description
@@ -230,7 +216,6 @@ export default function CreateBookForm() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            
             <div>
               <label className="text-lg font-semibold text-white">
                 Privacy Settings
@@ -277,7 +262,6 @@ export default function CreateBookForm() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-       
             <div>
               <label className="text-lg font-semibold text-white">
                 Book Cover
@@ -314,7 +298,6 @@ export default function CreateBookForm() {
                 </div>
               ) : (
                 <div className="space-y-4">
-               
                   <div>
                     <div className="text-white font-medium mb-2">
                       Upload Book Cover
@@ -330,6 +313,14 @@ export default function CreateBookForm() {
         </div>
 
         <div className="flex justify-end pt-6 border-t border-[#FFC300]/10">
+          <Button
+            variant={'beeDark'}
+            className="p-5 mr-4"
+            type="button"
+            onClick={() => router.push(`/my-books/`)}
+          >
+            Cancel
+          </Button>
           <Button
             variant={'beeYellow'}
             type="submit"

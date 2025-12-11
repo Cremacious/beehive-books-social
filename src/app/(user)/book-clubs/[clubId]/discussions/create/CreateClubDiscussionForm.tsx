@@ -3,11 +3,11 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { MessageSquare, FileText, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useClubStore } from '@/stores/useClubStore';
 import { discussionSchema } from '@/lib/schemas';
 import { useRouter } from 'next/navigation';
+import { Send } from 'lucide-react';
 interface CreateClubDiscussionFormProps {
   clubId: string;
 }
@@ -34,13 +34,10 @@ export default function CreateClubDiscussionForm({
   }
 
   return (
-    <div className="rounded-2xl shadow-xl p-4 md:p-10 darkContainer2">
+    <div className="rounded-2xl shadow-xl p-4 md:p-10 darkContainer2 w-full">
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <MessageSquare className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <label className="text-lg font-semibold text-white">
               Discussion Title
             </label>
@@ -61,9 +58,6 @@ export default function CreateClubDiscussionForm({
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <FileText className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <label className="text-lg font-semibold text-white">
               Discussion Content
             </label>
@@ -82,7 +76,15 @@ export default function CreateClubDiscussionForm({
           )}
         </div>
 
-        <div className="flex justify-end pt-6 border-t border-[#FFC300]/10">
+        <div className="flex justify-end gap-4 pt-6 border-t border-[#FFC300]/10">
+          <Button
+            variant={'beeDark'}
+            className='p-5'
+            type="button"
+            onClick={() => router.push(`/book-clubs/${clubId}/discussions`)}
+          >
+            Cancel
+          </Button>
           <Button
             variant={'beeYellow'}
             type="submit"

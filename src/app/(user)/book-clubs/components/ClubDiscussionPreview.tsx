@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 
 import { DiscussionFullType } from '@/lib/types';
 import { formatLastActivity, countTotalReplies } from '@/lib/utils';
+import Image from 'next/image';
+import socialImage from '@/assets/icons/social.png';
 
 interface ClubDiscussionPreviewProps {
   discussions: DiscussionFullType[];
@@ -18,18 +20,23 @@ const ClubDiscussionPreview = ({
     <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-            <MessageCircle className="w-4 h-4 text-[#FFC300]" />
-          </div>
           <h2 className="text-xl font-bold text-white">Discussions</h2>
         </div>
         <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-          <Link href={`/book-clubs/${clubId}/discussions/create`}>
-            <Button size={'sm'} variant={'beeYellow'}>
-              <Plus className="w-5 h-5" />
-              New Discussion
-            </Button>
-          </Link>
+          {discussions.length > 0 && (
+            <>
+              <Link href={`/book-clubs/${clubId}/discussions/create`}>
+                <Button
+                  className="w-full md:w-auto"
+                  size={'sm'}
+                  variant={'beeYellow'}
+                >
+                  <Plus className="w-5 h-5" />
+                  New Discussion
+                </Button>
+              </Link>
+            </>
+          )}
           <Link
             href={`/book-clubs/${clubId}/discussions`}
             className="w-full md:w-auto"
@@ -48,8 +55,13 @@ const ClubDiscussionPreview = ({
       <div className="space-y-4">
         {discussions.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
-            <div className="w-24 h-24 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6">
-              <span className="text-4xl">💬</span>
+            <div className="iconCircle">
+              <Image
+                src={socialImage}
+                alt="No discussions"
+                height={100}
+                width={100}
+              />
             </div>
             <h3 className="text-2xl font-bold text-[#FFC300] mb-3">
               No Discussions Yet

@@ -3,6 +3,9 @@
 import { MessageSquare, Plus, Search } from 'lucide-react';
 import DiscussionListItem from '../../components/DiscussionListItem';
 import { useState } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import BookPagination from '../../../my-books/components/BookPagination';
 
 interface DiscussionItem {
   id: string;
@@ -19,8 +22,11 @@ interface DiscussionListProps {
   clubId: string;
 }
 
+const DISCUSSIONS_PER_PAGE = 5;
+
 const DiscussionList = ({ discussions, clubId }: DiscussionListProps) => {
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const sortedDiscussions = [...discussions].sort((a, b) => {
     const dateA = new Date(a.createdAt);
@@ -30,10 +36,21 @@ const DiscussionList = ({ discussions, clubId }: DiscussionListProps) => {
       : dateA.getTime() - dateB.getTime();
   });
 
+  const totalPages = Math.ceil(sortedDiscussions.length / DISCUSSIONS_PER_PAGE);
+  const startIdx = (currentPage - 1) * DISCUSSIONS_PER_PAGE;
+  const endIdx = startIdx + DISCUSSIONS_PER_PAGE;
+  const discussionsToShow = sortedDiscussions.slice(startIdx, endIdx);
+
   return (
-    <div>
-      <div className="p-6 max-w-3xl mx-auto">
-        <div className="flex gap-4 flex-col md:flex-row ">
+    <div className="">
+      <div className="p-6 max-w-3xl mx-auto darkContainer2 rounded-2xl my-6 md:my-8">
+        <div className="flex gap-4 flex-col md:flex-row items-center">
+          <Link href={`/book-clubs/${clubId}/discussions/create`}>
+            <Button variant={'beeYellow'}>
+              <Plus className="w-5 h-5" />
+              New Discussion
+            </Button>
+          </Link>
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/50" />
             <input
@@ -57,15 +74,43 @@ const DiscussionList = ({ discussions, clubId }: DiscussionListProps) => {
           </div>
         </div>
       </div>
+      <div className="border-2 border-yellow-500/30 rounded-2xl min-h-[600px] py-8 md:py-8 px-4 md:px-8">
+        <div className="space-y-8 max-w-4xl mx-auto">
+          {discussionsToShow.map((discussion) => (
+            <DiscussionListItem
+              discussion={discussion}
+              clubId={clubId}
+              key={discussion.id}
+            />
+          ))}
 
-      <div className="space-y-8 max-w-4xl mx-auto">
-        {sortedDiscussions.map((discussion) => (
-          <DiscussionListItem
-            discussion={discussion}
-            clubId={clubId}
-            key={discussion.id}
-          />
-        ))}
+          {Array.from(
+            { length: DISCUSSIONS_PER_PAGE - discussionsToShow.length },
+            (_, index) => (
+              <div
+                key={`placeholder-${index}`}
+                className="darkContainer2 rounded-xl p-4 md:p-6 mb-4 border-2 border-dashed border-yellow-500/30 flex flex-col md:flex-row md:items-center md:justify-between gap-4 min-h-[120px] md:min-h-20"
+              >
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center">
+                
+                  </div>
+                </div>
+                
+              </div>
+            )
+          )}
+        </div>
+
+        {sortedDiscussions.length > DISCUSSIONS_PER_PAGE && (
+          <div className="mt-8">
+            <BookPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        )}
       </div>
 
       {sortedDiscussions.length === 0 && (

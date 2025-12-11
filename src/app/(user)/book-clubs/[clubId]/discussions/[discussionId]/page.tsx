@@ -1,11 +1,10 @@
 import NewPage from '@/components/layout/NewPage';
-import { ArrowLeft, MessageSquare } from 'lucide-react';
-import Link from 'next/link';
+import { MessageSquare } from 'lucide-react';
 import DiscussionReplySection from './components/DiscussionReplySection';
 import DiscussionReply from './components/DiscussionReply';
-import { getRoleColor, formatDate } from '@/lib/utils';
 import { getClubDiscussionByIdAction } from '@/actions/club.actions';
 import Image from 'next/image';
+import BackButton from '@/components/shared/BackButton';
 
 const DiscussionThreadPage = async ({
   params,
@@ -19,14 +18,11 @@ const DiscussionThreadPage = async ({
   return (
     <NewPage>
       <div className="w-full max-w-6xl mx-auto space-y-6">
-        <div className="flex items-center gap-4 mb-6">
-          <Link
+        <div className="flex items-center gap-4 mb-2">
+          <BackButton
+            text={'Back to Discussions'}
             href={`/book-clubs/${clubId}/discussions`}
-            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Discussions
-          </Link>
+          />
         </div>
 
         <div className="overflow-hidden">

@@ -6,8 +6,10 @@ import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { chapterSchema } from '@/lib/schemas/index';
 import { useBookStore } from '@/stores/useBookStore';
+import { useRouter } from 'next/navigation';
 
 export default function CreateChapterForm({ bookId }: { bookId: string }) {
+  const router = useRouter();
   const createChapter = useBookStore((state) => state.createChapter);
   const form = useForm<z.infer<typeof chapterSchema>>({
     resolver: zodResolver(chapterSchema),
@@ -86,6 +88,14 @@ export default function CreateChapterForm({ bookId }: { bookId: string }) {
 
         <div className="flex justify-end pt-6 border-t border-[#FFC300]/10">
           <Button
+            variant={'beeDark'}
+            className="p-5 mr-4"
+            type="button"
+            onClick={() => router.push(`/my-books/${bookId}`)}
+          >
+            Cancel
+          </Button>
+          <Button
             variant={'beeYellow'}
             type="submit"
             disabled={form.formState.isSubmitting}
@@ -93,9 +103,7 @@ export default function CreateChapterForm({ bookId }: { bookId: string }) {
           >
             <Plus className="w-5 h-5" />
             <span>
-              {form.formState.isSubmitting
-                ? 'Creating..'
-                : 'Create Chapter'}
+              {form.formState.isSubmitting ? 'Creating..' : 'Create Chapter'}
             </span>
           </Button>
         </div>

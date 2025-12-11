@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { BookOpen, Star } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import Link from 'next/link';
 
 export interface ReadingListItem {

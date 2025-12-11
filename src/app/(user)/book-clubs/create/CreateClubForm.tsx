@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Image from 'next/image';
-import { Upload, X, Users, Tag, Search, UserPlus, Check } from 'lucide-react';
+import { Upload, X, Users, Search, Check } from 'lucide-react';
 import { clubCreateSchema } from '@/lib/schemas';
 import { useState, useEffect } from 'react';
 import { getAllUserFriendsAction } from '@/actions/friend.actions';
@@ -149,7 +149,7 @@ export default function CreateClubForm() {
     formData.append('privacy', values.privacy);
     if (values.rules) formData.append('rules', values.rules);
 
-    // Add selected friends as invites
+ 
     selectedFriends.forEach((friendId) => formData.append('invites', friendId));
 
     selectedTags.forEach((tag) => formData.append('tags', tag));
@@ -163,7 +163,7 @@ export default function CreateClubForm() {
   }
 
   return (
-    <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10 border border-[#2a2a2a] max-w-3xl mx-auto">
+    <div className="customDark2 rounded-2xl shadow-xl p-8 md:p-10  max-w-5xl mx-auto">
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
@@ -388,7 +388,6 @@ export default function CreateClubForm() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <UserPlus className="w-5 h-5 text-[#FFC300]" />
             <div>
               <label className="text-lg font-semibold text-white">
                 Invite Friends
@@ -480,9 +479,6 @@ export default function CreateClubForm() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <Tag className="w-4 h-4 text-[#FFC300]" />
-            </div>
             <div>
               <label className="text-lg font-semibold text-white">
                 Club Categories & Tags
@@ -512,6 +508,14 @@ export default function CreateClubForm() {
         </div>
 
         <div className="flex justify-end pt-6 border-t border-[#FFC300]/10">
+          <Button
+            variant={'beeDark'}
+            className="p-5 mr-4"
+            type="button"
+            onClick={() => router.push(`/book-clubs/`)}
+          >
+            Cancel
+          </Button>
           <Button
             type="submit"
             disabled={form.formState.isSubmitting}

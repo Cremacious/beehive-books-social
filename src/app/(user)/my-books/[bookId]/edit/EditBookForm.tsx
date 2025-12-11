@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBookStore } from '@/stores/useBookStore';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   title: z.string().min(1, 'Book title is required'),
@@ -16,10 +17,6 @@ const formSchema = z.object({
   description: z.string().min(1, 'Description is required'),
   privacy: z.string().min(1, 'Privacy setting is required'),
 });
-
-//TODO: Delete cloudinary image when book is deleted
-
-//TODO: Restructure imports for constants and schema
 
 const categories = [
   'Fiction',
@@ -79,6 +76,7 @@ interface EditBookFormProps {
 }
 
 export default function EditBookForm({ book }: EditBookFormProps) {
+  const router = useRouter();
   const editBook = useBookStore((state) => state.editBook);
   const deleteBook = useBookStore((state) => state.deleteBook);
   const isLoading = useBookStore((state) => state.isLoading);
@@ -352,6 +350,14 @@ export default function EditBookForm({ book }: EditBookFormProps) {
         </div>
 
         <div className="flex justify-end pt-6 border-t border-[#FFC300]/10">
+          <Button
+            variant={'beeDark'}
+            className="p-5 mr-4"
+            type="button"
+            onClick={() => router.push(`/my-books/${book.id}`)}
+          >
+            Cancel
+          </Button>
           <Button
             variant={'beeYellow'}
             type="submit"

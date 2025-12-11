@@ -18,7 +18,7 @@ const SearchMyBooks = ({
   onSortChange,
 }: SearchMyBooksProps) => {
   return (
-    <div className="space-y-4 mb-6">
+    <div className="space-y-4 mb-6 darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center gap-2">
         <Link href="/my-books/create">
           <Button

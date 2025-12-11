@@ -4,7 +4,6 @@ import {
   Users,
 
   Shield,
-  Share,
   Crown,
   User,
   Settings,
@@ -74,10 +73,10 @@ const ClubPage = async ({
           </div>
 
           <div className="absolute top-6 right-6 flex gap-3">
-            <Button variant={'beeDark'}>
+            {/* <Button variant={'beeDark'}>
               <Share className="w-4 h-4" />
               Share
-            </Button>
+            </Button> */}
 
             <Link href={`/book-clubs/${club.id}/settings`}>
               <Button variant={'beeYellow'}>
