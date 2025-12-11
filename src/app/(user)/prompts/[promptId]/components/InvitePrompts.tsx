@@ -1,11 +1,8 @@
 'use client';
 
-import { UserPlus } from 'lucide-react';
 import { useState } from 'react';
 
 import { usePromptStore } from '@/stores/usePromptStore';
-
-// If the current user is the creator of the prompt, they should see the invite list. Otherwise, they see nothing. The invite list shows friends with an "Invite" button next to each friend. Clicking the "Invite" button sends an invitation to that friend to join the prompt. Clicking the friend again un-invites them. inviteFriendToPrompt from the store is used to send the invitation.
 
 interface InvitePromptsProps {
   friends: { email: string; name: string; id: string }[];
@@ -52,7 +49,6 @@ const InvitePrompts = ({
       {currentUserId === prompt.userId ? (
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-yellow-400 mb-2 flex items-center gap-2">
-            <UserPlus className="w-5 h-5 text-[#FFC300]" />
             Invite Friends
           </h3>
           <input
@@ -75,7 +71,7 @@ const InvitePrompts = ({
                     : 'bg-[#232323] hover:bg-[#FFC300]/10'
                 }`}
               >
-                <UserPlus className="w-4 h-4" />
+              
                 {invitedFriends.includes(friend.id)
                   ? 'Uninvite'
                   : 'Invite'}{' '}

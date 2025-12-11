@@ -1,4 +1,4 @@
-import { User, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import NewPage from '@/components/layout/NewPage';
 import PromptEntryListItem from './PromptEntryListItem';
 import { Button } from '@/components/ui/button';
@@ -29,7 +29,7 @@ const PromptPage = async ({
                 {prompt.title}
               </h1>
               <div className="flex items-center gap-3 mb-4">
-                <User className="w-5 h-5 text-[#FFC300]" />
+             
                 <span className="text-white font-medium">
                   {prompt.user.name}
                 </span>
@@ -48,7 +48,7 @@ const PromptPage = async ({
 
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-yellow-400 mb-2 flex items-center gap-2">
-              <User className="w-5 h-5 text-[#FFC300]" />
+            
               Participants
               <span className="yellowBadge w-7 h-7">
                 {prompt.invitedUsers.length}
@@ -60,9 +60,7 @@ const PromptPage = async ({
                   key={p.id}
                   className="flex items-center gap-2 bg-[#232323] border border-[#FFC300]/10 rounded-lg px-4 py-2"
                 >
-                  <div className="w-7 h-7 bg-[#FFC300]/10 rounded-full flex items-center justify-center">
-                    <User className="w-4 h-4 text-[#FFC300]" />
-                  </div>
+                 
                   <span className="text-white font-medium">{p.name}</span>
                 </div>
               ))}

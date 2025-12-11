@@ -52,7 +52,7 @@ interface PromptsListProps {
 
 const PromptsList = ({ prompts }: PromptsListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const itemsPerPage = 6;
 
   const totalPages = Math.ceil(prompts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -64,16 +64,30 @@ const PromptsList = ({ prompts }: PromptsListProps) => {
   };
 
   return (
-    <>
+    <div className="border-2 border-yellow-500/30 rounded-2xl min-h-[500px] py-4 md:py-8 px-4 md:px-8">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {currentPrompts.length > 0 ? (
-          currentPrompts.map((prompt) => (
-            <PromptCard key={prompt.id} prompt={prompt} />
-          ))
-        ) : (
-          <div className="text-center text-white/70 py-8">
-            You haven&apos;t created any prompts yet.
-          </div>
+        {currentPrompts.map((prompt) => (
+          <PromptCard key={prompt.id} prompt={prompt} />
+        ))}
+        {Array.from(
+          { length: itemsPerPage - currentPrompts.length },
+          (_, index) => (
+            <div
+              key={`placeholder-${index}`}
+              className="relative group rounded-xl p-6 shadow-lg darkContainer2 border-2 border-dashed border-yellow-500/30"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-4 h-4 bg-[#1f1f1f]/50 rounded"></div>
+                <div className="w-12 h-4 bg-[#1f1f1f]/50 rounded"></div>
+              </div>
+              <div className="h-6 bg-[#1f1f1f]/50 rounded mb-1"></div>
+              <div className="h-4 bg-[#1f1f1f]/50 rounded mb-2"></div>
+              <div className="h-4 bg-[#1f1f1f]/50 rounded mb-4"></div>
+              <div className="flex justify-end">
+                <div className="h-8 w-16 bg-[#1f1f1f]/50 rounded"></div>
+              </div>
+            </div>
+          )
         )}
       </div>
       {totalPages > 1 && (
@@ -83,7 +97,7 @@ const PromptsList = ({ prompts }: PromptsListProps) => {
           onPageChange={handlePageChange}
         />
       )}
-    </>
+    </div>
   );
 };
 export default PromptsList;

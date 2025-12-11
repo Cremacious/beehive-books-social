@@ -26,9 +26,6 @@ const CreatePromptReplyForm = ({ promptId }: CreatePromptReplyFormProps) => {
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
       <div>
-        <label className="block text-white font-semibold mb-2">
-          Your Writing
-        </label>
         <textarea
           value={replyText}
           onChange={(e) => setReplyText(e.target.value)}
@@ -40,10 +37,17 @@ const CreatePromptReplyForm = ({ promptId }: CreatePromptReplyFormProps) => {
       </div>
       <div className="flex justify-end pt-4 border-t border-[#FFC300]/10">
         <Button
+          variant={'beeDark'}
+          type="button"
+          onClick={() => router.push(`/prompts/${promptId}`)}
+          className="mr-4 p-5"
+        >
+          Cancel
+        </Button>
+        <Button
           variant="beeYellow"
           type="submit"
           disabled={isLoading || !replyText.trim()}
-          className="font-bold px-6 py-3"
         >
           {isLoading ? 'Submitting...' : 'Submit Entry'}
         </Button>

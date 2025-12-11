@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Calendar, AlertCircle, UserPlus, X } from 'lucide-react';
 import { usePromptStore } from '@/stores/usePromptStore';
 import { Prompt } from '@/stores/usePromptStore';
+import { Button } from '@/components/ui/button';
 
 interface EditPromptFormProps {
   prompt: Prompt;
@@ -237,21 +238,22 @@ const EditPromptForm = ({ prompt, friends }: EditPromptFormProps) => {
               </div>
             )}
           </div>
-          <div className="flex gap-3 mt-8">
-            <button
-              type="submit"
-              disabled={isLoading || !isFormValid}
-              className="flex-1 px-4 py-3 bg-[#FFC300] hover:bg-[#FFD700] disabled:bg-[#FFC300]/50 disabled:cursor-not-allowed text-black rounded-lg font-bold transition-colors"
-            >
-              {isLoading ? 'Updating...' : 'Update Prompt'}
-            </button>
-            <button
+          <div className="flex gap-3 mt-8 justify-end">
+            <Button
+              variant={'beeDark'}
               type="button"
               onClick={() => router.push(`/prompts/${prompt.id}`)}
-              className="flex-1 px-4 py-3 bg-[#232323] hover:bg-[#333333] text-white rounded-lg font-medium transition-colors"
+              className="p-5"
             >
               Cancel
-            </button>
+            </Button>
+            <Button
+              variant="beeYellow"
+              type="submit"
+              disabled={isLoading || !isFormValid}
+            >
+              {isLoading ? 'Updating...' : 'Update Prompt'}
+            </Button>
           </div>
         </form>
       </div>

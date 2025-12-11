@@ -1,8 +1,9 @@
 'use client';
-import { Calendar, UserPlus, X, AlertCircle } from 'lucide-react';
+import { UserPlus, X, AlertCircle, Calendar } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { usePromptStore } from '@/stores/usePromptStore';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 interface CreatePromptFormProps {
   friends: {
@@ -153,18 +154,38 @@ const CreatePromptForm = ({ friends }: CreatePromptFormProps) => {
       </div>
       <div>
         <label className="block text-white font-semibold mb-2">End Date</label>
-        <div className="relative">
-          <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#FFC300]/60 w-5 h-5" />
+        <div className="relative flex items-center gap-2">
+          <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#FFC300]/60 w-5 h-5 z-10" />
+
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             min={today}
-            className={`w-full pl-12 pr-4 py-3 bg-[#232323] border rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 ${
+            className={`w-2/3 md:w-1/2 pl-12 pr-4 py-3 bg-[#232323] border rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 ${
               errors.endDate ? 'border-red-500' : 'border-[#FFC300]/20'
             }`}
             required
           />
+          <Button
+            className="p-6 text-md"
+            variant={'beeYellow'}
+            size={'sm'}
+            onClick={() => {
+              const input = document.querySelector(
+                'input[type="date"]'
+              ) as HTMLInputElement;
+              if (input) {
+                if (typeof input.showPicker === 'function') {
+                  input.showPicker();
+                } else {
+                  input.click();
+                }
+              }
+            }}
+          >
+            Select Date
+          </Button>
         </div>
         {errors.endDate && (
           <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
@@ -227,28 +248,22 @@ const CreatePromptForm = ({ friends }: CreatePromptFormProps) => {
           </div>
         )}
       </div>
-      <div className="flex gap-3 mt-8">
-        <button
-          type="submit"
-          disabled={isLoading || !isFormValid}
-          className="flex-1 px-4 py-3 bg-[#FFC300] hover:bg-[#FFD700] disabled:bg-[#FFC300]/50 disabled:cursor-not-allowed text-black rounded-lg font-bold transition-colors"
-        >
-          {isLoading ? 'Creating...' : 'Create Prompt'}
-        </button>
-        <button
+      <div className="flex gap-3 mt-8 justify-end">
+        <Button
+          className="p-5"
+          variant={'beeDark'}
           type="button"
-          onClick={() => {
-            setTitle('');
-            setDescription('');
-            setEndDate('');
-            setInvitedFriends([]);
-            setSearchFriend('');
-            setErrors({});
-          }}
-          className="flex-1 px-4 py-3 bg-[#232323] hover:bg-[#333333] text-white rounded-lg font-medium transition-colors"
+          onClick={() => router.push('/prompts')}
         >
           Clear
-        </button>
+        </Button>
+        <Button
+          variant={'beeYellow'}
+          type="submit"
+          disabled={isLoading || !isFormValid}
+        >
+          {isLoading ? 'Creating...' : 'Create Prompt'}
+        </Button>
       </div>
     </form>
   );

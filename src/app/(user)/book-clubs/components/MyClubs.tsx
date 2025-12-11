@@ -136,21 +136,13 @@ const MyClubs = ({ userClubs }: { userClubs: UserBookClubs[] }) => {
                 </div>
               ))}
 
-              {/* Render placeholders to fill the grid */}
               {Array.from(
                 { length: CLUBS_PER_PAGE - clubsToShow.length },
                 (_, index) => (
                   <div
                     key={`placeholder-${index}`}
                     className="rounded-xl p-4 darkContainer2 border-2 border-dashed border-yellow-500/30 flex flex-col items-center justify-center min-h-[200px]"
-                  >
-                    <div className="w-12 h-12 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-3">
-                      <Plus className="w-6 h-6 text-[#FFC300]/50" />
-                    </div>
-                    <p className="text-[#FFC300]/50 text-sm font-medium text-center">
-                      Create New Club
-                    </p>
-                  </div>
+                  ></div>
                 )
               )}
             </div>
