@@ -147,7 +147,7 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
               ...comment,
               likes: isLiked
                 ? Math.max(0, comment.likes - 1)
-              : comment.likes + 1,
+                : comment.likes + 1,
             };
           }
           if (comment.replies) {
@@ -164,7 +164,8 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
     } catch (error) {
       console.log(error);
     }
-  };  const toggleReplyForm = (commentId: string) => {
+  };
+  const toggleReplyForm = (commentId: string) => {
     setShowReplyForm((prev) => ({
       ...prev,
       [commentId]: !prev[commentId],
