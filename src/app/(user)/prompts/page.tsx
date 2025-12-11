@@ -1,14 +1,11 @@
 import NewPage from '@/components/layout/NewPage';
-import { Plus, Users, User } from 'lucide-react';
+import { Users, User } from 'lucide-react';
 import Link from 'next/link';
 import PromptsList from './components/PromptsList';
 import { Button } from '@/components/ui/button';
 import { getPromptsAction } from '@/actions/prompt.actions';
 
-
-
 const PromptsPage = async () => {
-
   const { myPrompts, invitedPrompts } = await getPromptsAction();
   return (
     <NewPage>
@@ -25,7 +22,7 @@ const PromptsPage = async () => {
           </div>
         </div>
 
-        <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 mb-8">
+        <div className=" p-6 md:p-8 mb-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-white flex items-center gap-2 ">
               <User className="w-5 h-5 text-[#FFC300]" />
@@ -45,7 +42,7 @@ const PromptsPage = async () => {
           <PromptsList prompts={myPrompts} />
         </div>
 
-        <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
+        <div className=" p-6 md:p-8">
           <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
             <Users className="w-5 h-5 text-[#FFC300]" />
             Invited &amp; Friends&apos; Prompts

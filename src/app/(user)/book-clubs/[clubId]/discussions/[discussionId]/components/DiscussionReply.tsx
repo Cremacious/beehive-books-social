@@ -1,11 +1,15 @@
 'use client';
 
 import { Clock, Heart, Reply, User } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DiscussionNestedReply from './DiscussionNestedReply';
 import { formatDate, getRoleColor } from '@/lib/utils';
 import { DiscussionCommentType } from '@/lib/types';
-import { useClubStore } from '@/stores/useClubStore';
+import {
+  createNestedDiscussionReplyAction,
+  likeDiscussionReplyAction,
+  unlikeDiscussionReplyAction,
+} from '@/actions/club.actions';
 import { Button } from '@/components/ui/button';
 
 const DiscussionReply = ({
@@ -22,26 +26,24 @@ const DiscussionReply = ({
     {}
   );
 
-  const {
-    addNestedDiscussionReply,
-    likeDiscussionReply,
-    unlikeDiscussionReply,
-  } = useClubStore();
+  useEffect(() => {
+    const liked = localStorage.getItem(`liked-comment-${reply.id}`);
+    if (liked === 'true') {
+      setLikedComments((prev) => ({ ...prev, [reply.id]: true }));
+    }
+  }, [reply.id]);
 
   const handleLike = async (commentId: string) => {
     const isLiked = likedComments[commentId] || false;
     try {
       if (isLiked) {
-        await unlikeDiscussionReply(commentId);
+        await unlikeDiscussionReplyAction(commentId);
+        localStorage.removeItem(`liked-comment-${commentId}`);
       } else {
-        await likeDiscussionReply(commentId);
+        await likeDiscussionReplyAction(commentId);
+        localStorage.setItem(`liked-comment-${commentId}`, 'true');
       }
       setLikedComments((prev) => ({ ...prev, [commentId]: !isLiked }));
-
-      // Update the reply likes count
-      if (commentId === reply.id) {
-        reply.likes = isLiked ? Math.max(0, reply.likes - 1) : reply.likes + 1;
-      }
     } catch (error) {
       console.log(error);
     }
@@ -52,9 +54,7 @@ const DiscussionReply = ({
 
     setIsPostingReply(true);
     try {
-      const newReply = await addNestedDiscussionReply(reply.id, replyText);
-      // Add the new reply to the replies array
-      reply.replies = [...(reply.replies || []), newReply];
+      await createNestedDiscussionReplyAction(reply.id, replyText);
       setReplyText('');
       setShowReplyForm(false);
     } catch (error) {
@@ -86,24 +86,22 @@ const DiscussionReply = ({
                   <div className="font-semibold text-white">
                     {reply.author.user.name}
                   </div>
-                  <div className={`text-xs ${getRoleColor(reply.author.role)}`}>
-                    {reply.author.role}
-                  </div>
+              
                 </div>
               </div>
               <div className="text-xs text-white/60 space-y-1">
                 <div>
                   Joined: {new Date(reply.author.joinedAt).toLocaleDateString()}
                 </div>
-                <div>Posts: {reply.author.postCount}</div>
+               
               </div>
             </div>
           </div>
 
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-4 text-sm text-white/60">
-              <Clock className="w-4 h-4" />
-              Posted {formatDate(reply.createdAt.toISOString())}
+            
+              {formatDate(reply.createdAt.toISOString())}
             </div>
             <div className="text-white/90 leading-relaxed whitespace-pre-line">
               {reply.content}
@@ -118,7 +116,7 @@ const DiscussionReply = ({
                 onClick={() => handleLike(reply.id)}
               >
                 <Heart className="w-4 h-4" />
-                Like ({reply.likes})
+                <span className="text-sm">{reply.likes}</span>
               </button>
               <button
                 className="flex items-center gap-2 text-white/60 hover:text-[#FFC300] transition-colors"

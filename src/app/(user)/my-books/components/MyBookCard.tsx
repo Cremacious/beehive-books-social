@@ -34,7 +34,7 @@ const MyBookCard = ({
           />
         </div>
 
-        <div className="flex flex-col gap-3 p-4 bg-[#2a2a2a] h-[150px]">
+        <div className="flex flex-col gap-3 p-4 bg-[#1f1f1f] h-[150px]">
           <div className="flex-1">
             <h3
               className="text-sm font-bold text-white truncate leading-tight mb-1"

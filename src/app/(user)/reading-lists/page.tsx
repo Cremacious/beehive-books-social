@@ -1,5 +1,5 @@
 import NewPage from '@/components/layout/NewPage';
-import { BookOpen, Plus, Trash2, Edit, List, Star } from 'lucide-react';
+import { Plus, List } from 'lucide-react';
 import ReadingListCard from './ReadingListCard';
 import { getReadingListsAction } from '@/actions/reading-list.actions';
 import Link from 'next/link';
@@ -11,33 +11,24 @@ const ReadingListsPage = async () => {
   return (
     <NewPage>
       <div className="w-full space-y-8">
-        <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
-                My Reading Lists
-              </h1>
-              <p className="text-white/70">
-                Organize your favorite books and plan your reading journey
-              </p>
-            </div>
-          </div>
-        </div>
+        <div className=" p-6 md:p-8 ">
+          <div className="flex flex-col md:flex-row items-center md:justify-between mb-6">
+            <h2 className="text-xl font-bold text-white text-center md:text-left">
+              Your Reading Lists
+            </h2>
 
-        <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 ">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-                <List className="w-4 h-4 text-[#FFC300]" />
-              </div>
-              <h2 className="text-xl font-bold text-white">
-                Your Reading Lists
-              </h2>
-            </div>
- 
-            <Link href="/reading-lists/create">
-              <Button variant={'beeYellow'}>Create New List</Button>
-            </Link>
+            {readingLists.length > 0 && (
+              <>
+                <Link href="/reading-lists/create">
+                  <Button
+                    className="w-full md:w-auto mt-4 md:mt-0"
+                    variant={'beeYellow'}
+                  >
+                    Create New List
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {readingLists.length > 0 ? (
@@ -59,10 +50,10 @@ const ReadingListsPage = async () => {
                 and plan your reading journey.
               </p>
               <Link href="/reading-lists/create">
-                <button className="px-8 py-4 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center gap-3">
+                <Button size={'lg'} variant={'beeYellow'}>
                   <Plus className="w-5 h-5" />
                   Create Your First List
-                </button>
+                </Button>
               </Link>
             </div>
           )}

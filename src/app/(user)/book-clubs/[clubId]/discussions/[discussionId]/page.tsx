@@ -1,18 +1,11 @@
 import NewPage from '@/components/layout/NewPage';
-import {
-  ArrowLeft,
-  User,
-  MessageSquare,
-  Heart,
-  Reply,
-  Clock,
-  Eye,
-} from 'lucide-react';
+import { ArrowLeft, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import DiscussionReplySection from './components/DiscussionReplySection';
 import DiscussionReply from './components/DiscussionReply';
 import { getRoleColor, formatDate } from '@/lib/utils';
 import { getClubDiscussionByIdAction } from '@/actions/club.actions';
+import Image from 'next/image';
 
 const DiscussionThreadPage = async ({
   params,
@@ -43,10 +36,6 @@ const DiscussionThreadPage = async ({
             </h1>
             <div className="flex items-center gap-4 text-sm text-white/60">
               <div className="flex items-center gap-2">
-                <Heart className="w-4 h-4" />
-                {discussion.likes} likes
-              </div>
-              <div className="flex items-center gap-2">
                 <MessageSquare className="w-4 h-4" />
                 {discussion.comments.length + 1} posts
               </div>
@@ -58,19 +47,21 @@ const DiscussionThreadPage = async ({
               <div className="w-48 shrink-0">
                 <div className="darkContainer3 rounded-2xl p-4 ">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-12 h-12 bg-[#FFC300]/20 rounded-full flex items-center justify-center">
+                    <Image
+                      src={
+                        discussion.author.user.image ?? '/default-avatar.png'
+                      }
+                      alt={discussion.author.user.name ?? 'User avatar'}
+                      width={48}
+                      height={48}
+                      className="rounded-full"
+                    />
+                    {/* <div className="w-12 h-12 bg-[#FFC300]/20 rounded-full flex items-center justify-center">
                       <User className="w-6 h-6 text-[#FFC300]" />
-                    </div>
+                    </div> */}
                     <div>
                       <div className="font-semibold text-white">
                         {discussion.author.user.name}
-                      </div>
-                      <div
-                        className={`text-xs ${getRoleColor(
-                          discussion.author.role
-                        )}`}
-                      >
-                        {discussion.author.role}
                       </div>
                     </div>
                   </div>
@@ -81,20 +72,18 @@ const DiscussionThreadPage = async ({
                         discussion.author.joinedAt
                       ).toLocaleDateString()}
                     </div>
-                    <div>Posts: {discussion.author.postCount}</div>
                   </div>
                 </div>
               </div>
 
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-4 text-sm text-white/60">
-                  <Clock className="w-4 h-4" />
-                  Posted {discussion.createdAt.toLocaleDateString()}
+                  {discussion.createdAt.toLocaleDateString()}
                 </div>
                 <div className="text-white/90 leading-relaxed whitespace-pre-line">
                   {discussion.content}
                 </div>
-                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-[#2a2a2a]">
+                {/* <div className="flex items-center gap-4 mt-4 pt-4 border-t border-[#2a2a2a]">
                   <button className="flex items-center gap-2 text-white/60 hover:text-[#FFC300] transition-colors">
                     <Heart className="w-4 h-4" />
                     Like ({discussion.likes})
@@ -103,7 +92,7 @@ const DiscussionThreadPage = async ({
                     <Reply className="w-4 h-4" />
                     Reply
                   </button>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

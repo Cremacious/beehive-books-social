@@ -1,10 +1,11 @@
 'use client';
 
-import { BookOpen } from 'lucide-react';
 import ReadingListItem from './ReadingListItem';
 import { useState, useEffect } from 'react';
 import { useReadingListStore } from '@/stores/useReadingListStore';
 import type { ReadingList } from '@/stores/useReadingListStore';
+import { Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface BookListViewProps {
   readingList: ReadingList;
@@ -78,23 +79,17 @@ const BookListView = ({ readingList }: BookListViewProps) => {
           onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
           required
         />
-        <button
-          type="submit"
-          className="px-6 py-2 bg-[#FFC300] hover:bg-[#FFD700] text-black font-bold rounded-lg transition-all flex items-center gap-2"
-        >
-          <BookOpen className="w-4 h-4" />
+        <Button type="submit" variant={'beeYellow'}>
+          <Plus className="w-4 h-4" />
           Add Book
-        </button>
+        </Button>
       </form>
-
+      <div className="border mx-auto w-full border-yellow-600 mb-8" />
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-white flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-[#FFC300]" />
           Books in This List
         </h2>
-        <div className="text-[#FFC300]/60 text-sm">
-          {books.length} total books
-        </div>
+     
       </div>
 
       <div className="space-y-4">
@@ -110,19 +105,17 @@ const BookListView = ({ readingList }: BookListViewProps) => {
 
       {books.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
-          <div className="w-24 h-24 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6">
-            <BookOpen className="w-12 h-12 text-[#FFC300]" />
-          </div>
+          <div className="w-24 h-24 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6"></div>
           <h3 className="text-2xl font-bold text-[#FFC300] mb-3">
             No Books in This List
           </h3>
           <p className="text-white/70 mb-8 max-w-md leading-relaxed">
             This reading list is empty. Add some books to get started!
           </p>
-          <button className="px-8 py-4 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center gap-3">
-            <BookOpen className="w-5 h-5" />
+          <Button variant={'beeYellow'}>
+            <Plus className="w-5 h-5" />
             Add Books
-          </button>
+          </Button>
         </div>
       )}
     </div>

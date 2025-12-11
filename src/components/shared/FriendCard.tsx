@@ -13,7 +13,7 @@ interface FriendCardProps {
 
 const FriendCard = ({ name, bio, id }: FriendCardProps) => {
   return (
-    <div className="darkContainer3 rounded-xl p-4 h-80 flex flex-col items-center text-center">
+    <div className="darkContainer3 rounded-xl p-4 h-75 flex flex-col items-center text-center">
       <div className="w-20 h-20 rounded-full overflow-hidden mb-3 border-2 border-yellow-500/30">
         <Image
           src={defaultImage}

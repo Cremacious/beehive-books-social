@@ -1,10 +1,14 @@
 'use client';
 
 import { Heart, User } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { formatDate, getRoleColor } from '@/lib/utils';
 import { DiscussionCommentType } from '@/lib/types';
-import { useClubStore } from '@/stores/useClubStore';
+import {
+  likeDiscussionReplyAction,
+  unlikeDiscussionReplyAction,
+} from '@/actions/club.actions';
+import Image from 'next/image';
 
 const DiscussionNestedReply = ({
   nestedReply,
@@ -15,22 +19,24 @@ const DiscussionNestedReply = ({
     {}
   );
 
-  const { likeDiscussionReply, unlikeDiscussionReply } = useClubStore();
+  useEffect(() => {
+    const liked = localStorage.getItem(`liked-comment-${nestedReply.id}`);
+    if (liked === 'true') {
+      setLikedComments((prev) => ({ ...prev, [nestedReply.id]: true }));
+    }
+  }, [nestedReply.id]);
 
   const handleLike = async (commentId: string) => {
     const isLiked = likedComments[commentId] || false;
     try {
       if (isLiked) {
-        await unlikeDiscussionReply(commentId);
+        await unlikeDiscussionReplyAction(commentId);
+        localStorage.removeItem(`liked-comment-${commentId}`);
       } else {
-        await likeDiscussionReply(commentId);
+        await likeDiscussionReplyAction(commentId);
+        localStorage.setItem(`liked-comment-${commentId}`, 'true');
       }
       setLikedComments((prev) => ({ ...prev, [commentId]: !isLiked }));
-
-      // Update the nested reply likes count
-      nestedReply.likes = isLiked
-        ? Math.max(0, nestedReply.likes - 1)
-        : nestedReply.likes + 1;
     } catch (error) {
       console.log(error);
     }
@@ -38,18 +44,19 @@ const DiscussionNestedReply = ({
   return (
     <div
       key={nestedReply.id}
-      className="ml-8 pl-4 border-l-2 rounded-2xl darkContainer3 p-4"
+      className="ml-8 pl-4  rounded-2xl darkContainer3 p-4"
     >
-      <div className="flex gap-3 mb-3">
-        <div className="w-8 h-8 bg-[#FFC300]/20 rounded-full flex items-center justify-center shrink-0">
-          <User className="w-4 h-4 text-[#FFC300]" />
-        </div>
-        <div>
+      <div className="flex gap-3 mb-3 justify-center items-center">
+        <div className="flex flex-row justify-center items-center gap-2">
+          <Image
+            src={nestedReply.author.user.image ?? '/default-avatar.png'}
+            alt={`${nestedReply.author.user.name}'s avatar`}
+            width={32}
+            height={32}
+            className="rounded-full"
+          />
           <div className="font-semibold text-white text-sm">
             {nestedReply.author.user.name}
-          </div>
-          <div className={`text-xs ${getRoleColor(nestedReply.author.role)}`}>
-            {nestedReply.author.role}
           </div>
         </div>
         <div className="text-xs text-white/60 ml-auto">
@@ -69,7 +76,7 @@ const DiscussionNestedReply = ({
           onClick={() => handleLike(nestedReply.id)}
         >
           <Heart className="w-3 h-3" />
-          Like ({nestedReply.likes})
+          <span className="text-sm">{nestedReply.likes}</span>
         </button>
       </div>
     </div>

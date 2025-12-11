@@ -27,7 +27,7 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
   return (
     <div
       key={prompt.id}
-      className="relative group rounded-xl p-6 shadow-lg darkContainer3"
+      className="relative group rounded-xl p-6 shadow-lg darkContainer2"
     >
       <div className="flex items-center gap-3 mb-2">
         <BadgeCheck

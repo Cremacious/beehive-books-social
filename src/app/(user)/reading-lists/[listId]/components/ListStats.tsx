@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle, Circle } from 'lucide-react';
+import { CheckCircle, Flag } from 'lucide-react';
 import { useReadingListStore } from '@/stores/useReadingListStore';
 
 const ListStats = () => {
@@ -9,7 +9,7 @@ const ListStats = () => {
   const unreadCount = items.length - readCount;
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div className="customDark2 rounded-2xl shadow-xl p-6 border border-[#2a2a2a]">
+      <div className="customDark2 rounded-2xl shadow-xl p-6 ">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
             <CheckCircle className="w-5 h-5 text-green-400" />
@@ -33,10 +33,10 @@ const ListStats = () => {
         </div>
       </div>
 
-      <div className="customDark2 rounded-2xl shadow-xl p-6 border border-[#2a2a2a]">
+      <div className="customDark2 rounded-2xl shadow-xl p-6 ">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 bg-[#FFC300]/20 rounded-lg flex items-center justify-center">
-            <Circle className="w-5 h-5 text-[#FFC300]" />
+            <Flag className="w-5 h-5 text-[#FFC300]" />
           </div>
           <div>
             <h3 className="text-lg font-bold text-white">Books to Read</h3>

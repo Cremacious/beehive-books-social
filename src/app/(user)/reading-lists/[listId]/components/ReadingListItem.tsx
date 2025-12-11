@@ -73,7 +73,7 @@ const ReadingListItem = ({
                 )}
               </button>
               {isEditing && (
-                <Button onClick={() => onDelete?.(book.id)}>Delete</Button>
+                <Button variant={'destructive'} onClick={() => onDelete?.(book.id)}>Delete</Button>
               )}
             </div>
           </div>

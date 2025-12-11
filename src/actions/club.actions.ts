@@ -772,6 +772,9 @@ export async function getClubDiscussionByIdAction(
           },
         },
         comments: {
+          where: {
+            parentId: null,
+          },
           include: {
             author: {
               include: {
@@ -785,7 +788,18 @@ export async function getClubDiscussionByIdAction(
                     user: true,
                   },
                 },
+                replies: {
+                  include: {
+                    author: {
+                      include: {
+                        user: true,
+                      },
+                    },
+                  },
+                  orderBy: { createdAt: 'asc' },
+                },
               },
+              orderBy: { createdAt: 'asc' },
             },
           },
           orderBy: {
@@ -963,7 +977,9 @@ export async function createDiscussionReplyAction(
       },
     });
 
-    revalidatePath(`/clubs/${discussion.clubId}/discussions/${discussionId}`);
+    revalidatePath(
+      `/book-clubs/${discussion.clubId}/discussions/${discussionId}`
+    );
 
     return comment;
   } catch (error) {
@@ -982,7 +998,6 @@ export async function createNestedDiscussionReplyAction(
       throw new Error(error || 'User not authenticated');
     }
 
-
     const parentComment = await prisma.discussionComment.findFirst({
       where: { id: parentCommentId },
       include: {
@@ -995,7 +1010,6 @@ export async function createNestedDiscussionReplyAction(
     if (!parentComment) {
       throw new Error('Parent comment not found');
     }
-
 
     const clubMember = await prisma.clubMember.findFirst({
       where: {
@@ -1047,7 +1061,7 @@ export async function createNestedDiscussionReplyAction(
     });
 
     revalidatePath(
-      `/clubs/${parentComment.discussion.clubId}/discussions/${parentComment.discussionId}`
+      `/book-clubs/${parentComment.discussion.clubId}/discussions/${parentComment.discussionId}`
     );
 
     return reply;
@@ -1111,7 +1125,7 @@ export async function likeDiscussionReplyAction(commentId: string) {
     });
 
     revalidatePath(
-      `/clubs/${comment.discussion.clubId}/discussions/${comment.discussionId}`
+      `/book-clubs/${comment.discussion.clubId}/discussions/${comment.discussionId}`
     );
 
     return { success: true };
@@ -1182,7 +1196,7 @@ export async function unlikeDiscussionReplyAction(commentId: string) {
     }
 
     revalidatePath(
-      `/clubs/${comment.discussion.clubId}/discussions/${comment.discussionId}`
+      `/book-clubs/${comment.discussion.clubId}/discussions/${comment.discussionId}`
     );
 
     return { success: true };

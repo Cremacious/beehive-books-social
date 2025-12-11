@@ -1,8 +1,9 @@
 'use client';
 
-import { BookOpen, Edit, CheckCircle, Circle, Calendar } from 'lucide-react';
+import { BookOpen, Edit, CheckCircle, Calendar, Flag } from 'lucide-react';
 import { useReadingListStore } from '@/stores/useReadingListStore';
 import type { ReadingList } from '@/stores/useReadingListStore';
+import { Button } from '@/components/ui/button';
 
 interface ReadingListHeaderProps {
   initialReadingList: ReadingList;
@@ -22,9 +23,6 @@ const ReadingListHeader = ({ initialReadingList }: ReadingListHeaderProps) => {
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-[#FFC300]/10 rounded-xl flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-[#FFC300]" />
-            </div>
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
                 {readingList.title}
@@ -39,7 +37,7 @@ const ReadingListHeader = ({ initialReadingList }: ReadingListHeaderProps) => {
                   {readCount} read
                 </div>
                 <div className="flex items-center gap-1">
-                  <Circle className="w-4 h-4" />
+                  <Flag className="w-4 h-4" />
                   {unreadCount} unread
                 </div>
               </div>
@@ -55,13 +53,10 @@ const ReadingListHeader = ({ initialReadingList }: ReadingListHeaderProps) => {
             </div>
           </div>
         </div>
-        <button
-          onClick={() => setIsEditing(!isEditing)}
-          className="px-6 py-3 bg-[#FFC300] hover:bg-[#FFD700] text-black font-bold rounded-xl transition-all flex items-center gap-2"
-        >
+        <Button onClick={() => setIsEditing(!isEditing)} variant={'beeYellow'}>
           <Edit className="w-5 h-5" />
           {isEditing ? 'Save Changes' : 'Edit List'}
-        </button>
+        </Button>
       </div>
     </div>
   );

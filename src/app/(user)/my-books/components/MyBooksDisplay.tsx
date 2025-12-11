@@ -73,7 +73,7 @@ const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
 
   return (
     <div className="space-y-8">
-      <div className="rounded-2xl shadow-xl p-6 md:p-8 min-h-[1000px] darkContainer2">
+      <div className=" p-6 md:p-8 min-h-[1000px] ">
         <div className="max-w-3xl mx-auto mb-8">
           <SearchMyBooks
             searchTerm={searchTerm}

@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ChapterListItem = ({
@@ -17,7 +17,7 @@ const ChapterListItem = ({
   index: number;
   bookId: string;
 }) => {
-  const router = useRouter();
+
 
   return (
     <div

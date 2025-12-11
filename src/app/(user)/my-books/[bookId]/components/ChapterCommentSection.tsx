@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useBookStore } from '@/stores/useBookStore';
 
 interface Comment {
@@ -58,6 +58,28 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
   const [likedComments, setLikedComments] = useState<Record<string, boolean>>(
     {}
   );
+
+  useEffect(() => {
+    const loadLikedStates = (comments: Comment[]): Record<string, boolean> => {
+      const liked: Record<string, boolean> = {};
+      const processComments = (comms: Comment[]) => {
+        comms.forEach((comment) => {
+          const likedKey = localStorage.getItem(`liked-comment-${comment.id}`);
+          if (likedKey === 'true') {
+            liked[comment.id] = true;
+          }
+          if (comment.replies) {
+            processComments(comment.replies);
+          }
+        });
+      };
+      processComments(comments);
+      return liked;
+    };
+
+    const initialLiked = loadLikedStates(chapter.comments);
+    setLikedComments(initialLiked);
+  }, [chapter.comments]);
 
   const { addComment, addReply, likeComment, unlikeComment } = useBookStore();
 
@@ -111,8 +133,10 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
     try {
       if (isLiked) {
         await unlikeComment(commentId);
+        localStorage.removeItem(`liked-comment-${commentId}`);
       } else {
         await likeComment(commentId);
+        localStorage.setItem(`liked-comment-${commentId}`, 'true');
       }
       setLikedComments((prev) => ({ ...prev, [commentId]: !isLiked }));
 
@@ -123,7 +147,7 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
               ...comment,
               likes: isLiked
                 ? Math.max(0, comment.likes - 1)
-                : comment.likes + 1,
+              : comment.likes + 1,
             };
           }
           if (comment.replies) {
@@ -140,9 +164,7 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const toggleReplyForm = (commentId: string) => {
+  };  const toggleReplyForm = (commentId: string) => {
     setShowReplyForm((prev) => ({
       ...prev,
       [commentId]: !prev[commentId],
