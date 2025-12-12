@@ -27,11 +27,11 @@ const MyClubs = ({ userClubs }: { userClubs: UserBookClubs[] }) => {
   const endIdx = startIdx + CLUBS_PER_PAGE;
   const clubsToShow = userClubs.slice(startIdx, endIdx);
   return (
-    <div className="p-6 md:p-8 ">
-      <div className="flex items-center gap-3 mb-6">
+    <div className="p-6 md:p-8 w-full">
+      <div className="flex items-center gap-3 mb-6 darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0 w-full">
           <div className="flex flex-row gap-2 items-center">
-            <h2 className="text-xl font-bold text-white">My Clubs</h2>
+            <h2 className="text-4xl font-bold text-white mainFont">My Clubs</h2>
             <span className="yellowBadge h-7 w-7">{userClubs.length}</span>
           </div>
           {userClubs.length !== 0 && (
@@ -51,7 +51,7 @@ const MyClubs = ({ userClubs }: { userClubs: UserBookClubs[] }) => {
         </div>
       </div>
 
-      <div className="border-2 border-yellow-500/30 rounded-2xl min-h-[500px] py-4 md:py-8 px-4 md:px-8">
+      <div className="darkContainer2 rounded-2xl min-h-[500px] py-4 md:py-8 px-4 md:px-8">
         {userClubs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
             <div className="w-24 h-24 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6">
@@ -77,7 +77,7 @@ const MyClubs = ({ userClubs }: { userClubs: UserBookClubs[] }) => {
               {clubsToShow.map((club) => (
                 <div
                   key={club.id}
-                  className="rounded-xl p-4 darkContainer2 cursor-pointer"
+                  className="rounded-xl p-4 darkContainer3 cursor-pointer"
                 >
                   <div className="flex items-start gap-3 mb-3">
                     <div className="flex-1 min-w-0 flex flex-col justify-center mx-4">

@@ -24,7 +24,7 @@ const ReadingListHeader = ({ initialReadingList }: ReadingListHeaderProps) => {
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-4">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
+              <h1 className="text-3xl md:text-4xl mainFont font-bold text-yellow-400 mb-2">
                 {readingList.title}
               </h1>
               <div className="flex items-center gap-4 text-white/60 text-sm">

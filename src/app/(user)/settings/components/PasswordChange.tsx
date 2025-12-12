@@ -1,6 +1,5 @@
-'use client'
+'use client';
 import { useState } from 'react';
-import { Lock } from 'lucide-react';
 
 const PasswordChange = () => {
   const [password, setPassword] = useState('');
@@ -13,9 +12,8 @@ const PasswordChange = () => {
     alert('Password changed (placeholder)');
   };
   return (
-    <div className="mb-8">
-      <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-        <Lock className="w-5 h-5 text-yellow-400" />
+    <div className="mb-8 darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
+      <h2 className="text-2xl mainFont text-white mb-4 flex items-center gap-2">
         Change Password
       </h2>
       <form className="space-y-4" onSubmit={handleChangePassword}>

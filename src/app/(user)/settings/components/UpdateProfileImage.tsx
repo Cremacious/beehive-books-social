@@ -1,11 +1,11 @@
 'use client';
 
-import { ImageIcon, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-
 import { useSettingStore } from '@/stores/useSettingStore';
 import { getUserByIdAction } from '@/actions/user.actions';
+
 
 const UpdateProfileImage = ({ userId }: { userId: string }) => {
   const [profileImage, setProfileImage] = useState<File | null>(null);
@@ -45,7 +45,6 @@ const UpdateProfileImage = ({ userId }: { userId: string }) => {
     formData.append('file', profileImage);
     const success = await updateProfileImage(formData);
     if (success) {
-
       try {
         const data = await getUserByIdAction(userId);
         setCurrentUser(data.user);
@@ -58,9 +57,8 @@ const UpdateProfileImage = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="mb-8">
-      <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-        <ImageIcon className="w-5 h-5 text-yellow-400" />
+    <div className="mb-8 darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
+      <h2 className="text-2xl mainFont font-bold text-white mb-4 flex items-center gap-2">
         Profile Image
       </h2>
       <div className="flex items-center gap-6">
@@ -93,7 +91,7 @@ const UpdateProfileImage = ({ userId }: { userId: string }) => {
           />
           <label
             htmlFor="profile-upload"
-            className="px-4 py-2 bg-yellow-400 text-black font-bold rounded-lg cursor-pointer hover:bg-yellow-500 transition-all"
+            className="bg-yellow-500 hover:bg-yellow-600 text-slate-800 rounded-lg font-bold transition-colors hover:cursor-pointer border-b-2 border-yellow-700 shadow-lg p-3"
           >
             Change Image
           </label>

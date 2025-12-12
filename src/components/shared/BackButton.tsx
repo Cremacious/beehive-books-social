@@ -6,7 +6,7 @@ const BackButton = ({ text, href }: { text: string; href: string }) => {
   return (
     <div className="my-4 ">
       <Link className="ml-4" href={href}>
-        <Button variant="beeDark">
+        <Button variant="beeDark" className='mainFont text-lg'>
           <ArrowLeft className="mr-2" />
           {text}
         </Button>

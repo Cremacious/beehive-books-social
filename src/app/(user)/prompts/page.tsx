@@ -8,10 +8,10 @@ const PromptsPage = async () => {
   const { myPrompts, invitedPrompts } = await getPromptsAction();
   return (
     <NewPage>
-      <div className="w-full max-w-5xl mx-auto ">
-        <div className=" p-6 md:p-8">
-          <div className="relative flex md:flex-row flex-col items-center justify-center mb-6 darkContainer2 rounded-2xl p-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+      <div className="w-full flex-col items-center justify-center min-h-[calc(100vh-200px)]">
+        <div className="">
+          <div className="relative flex md:flex-row flex-col items-center justify-between mb-6 darkContainer2 rounded-2xl p-4 max-w-5xl mx-auto">
+            <h2 className="text-4xl font-bold mainFont text-white flex items-center ml-4">
               My Prompts
             </h2>
             <Link
@@ -29,12 +29,12 @@ const PromptsPage = async () => {
               </Button>
             </Link>
           </div>
-          <PromptsList prompts={myPrompts} />
         </div>
+        <PromptsList prompts={myPrompts} />
 
         <div className=" p-6 md:p-8">
-          <div className="flex justify-center  items-center mb-6 darkContainer2 rounded-2xl p-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2 ">
+          <div className="relative flex md:flex-row flex-col items-center justify-between mb-6 darkContainer2 rounded-2xl p-4 max-w-5xl mx-auto">
+            <h2 className="text-4xl font-bold mainFont text-white flex items-center ml-4">
               Invited &amp; Friends&apos; Prompts
             </h2>
           </div>

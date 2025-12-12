@@ -35,7 +35,7 @@ const ReadingListCard = ({ list }: ReadingListCardProps) => {
   return (
     <div
       key={list.id}
-      className="darkContainer2 rounded-xl p-6 flex flex-col justify-between items-stretch w-full h-[300px] "
+      className="darkContainer3 rounded-xl p-6 flex flex-col justify-between items-stretch w-full h-[300px] "
     >
       <div>
         <div className="flex justify-between items-start mb-4">

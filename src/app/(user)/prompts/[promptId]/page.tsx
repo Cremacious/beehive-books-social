@@ -25,11 +25,10 @@ const PromptPage = async ({
         <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
           <div className="flex justify-between">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
+              <h1 className="text-3xl md:text-4xl mainFont text-yellow-400 mb-2">
                 {prompt.title}
               </h1>
               <div className="flex items-center gap-3 mb-4">
-             
                 <span className="text-white font-medium">
                   {prompt.user.name}
                 </span>
@@ -48,7 +47,6 @@ const PromptPage = async ({
 
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-yellow-400 mb-2 flex items-center gap-2">
-            
               Participants
               <span className="yellowBadge w-7 h-7">
                 {prompt.invitedUsers.length}
@@ -60,7 +58,6 @@ const PromptPage = async ({
                   key={p.id}
                   className="flex items-center gap-2 bg-[#232323] border border-[#FFC300]/10 rounded-lg px-4 py-2"
                 >
-                 
                   <span className="text-white font-medium">{p.name}</span>
                 </div>
               ))}
@@ -80,8 +77,7 @@ const PromptPage = async ({
           <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-2 mb-6">
               <div className="flex flex-row items-center gap-2">
-                <MessageCircle className="w-5 h-5 text-[#FFC300]" />
-                <h2 className="text-xl font-bold text-white">Entries</h2>
+                <h2 className="text-2xl mainFont text-white">Entries</h2>
               </div>
               <span className="yellowBadge w-7 h-7">
                 {prompt._count?.entries || 0}

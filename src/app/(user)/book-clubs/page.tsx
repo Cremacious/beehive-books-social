@@ -9,7 +9,7 @@ const BookClubsPage = async () => {
 
   return (
     <NewPage>
-      <div className="w-full space-y-8">
+      <div className="w-full flex items-center justify-center min-h-[calc(100vh-200px)]">
         <MyClubs userClubs={userClubs} />
       </div>
     </NewPage>

@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Poppins } from 'next/font/google';
 import './globals.css';
-import BottomNavBar from '@/components/layout/BottomNavBar';
-import DesktopSidebar from '@/components/layout/DesktopSidebar';
-import MobileHeader from '@/components/layout/MobileHeader';
 import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({

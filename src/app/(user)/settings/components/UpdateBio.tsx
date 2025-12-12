@@ -1,8 +1,9 @@
 'use client';
-import { FileText, Edit } from 'lucide-react';
+import { Edit } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useSettingStore } from '@/stores/useSettingStore';
 import { getUserByIdAction } from '@/actions/user.actions';
+import { Button } from '@/components/ui/button';
 
 const UpdateBio = ({ userId }: { userId: string }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -52,9 +53,8 @@ const UpdateBio = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="mb-8">
-      <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-        <FileText className="w-5 h-5 text-yellow-400" />
+    <div className="mb-8 darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
+      <h2 className="text-2xl mainFont text-white mb-4 flex items-center gap-2">
         Bio
       </h2>
 
@@ -65,13 +65,10 @@ const UpdateBio = ({ userId }: { userId: string }) => {
               {currentBio || 'No bio yet. Tell others about yourself!'}
             </p>
           </div>
-          <button
-            onClick={handleEdit}
-            className="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all"
-          >
+          <Button onClick={handleEdit} variant={'beeYellow'}>
             <Edit className="w-4 h-4" />
             Edit Bio
-          </button>
+          </Button>
         </div>
       ) : (
         <div className="space-y-4">

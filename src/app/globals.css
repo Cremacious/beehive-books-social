@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import '@fontsource/madimi-one';
 
 :root {
   --honey-yellow: #fdd835;
@@ -94,5 +95,8 @@ body {
   }
   .iconCircle {
     @apply w-40 h-40 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6;
+  }
+  .mainFont {
+    font-family: 'Madimi One', sans-serif;
   }
 }

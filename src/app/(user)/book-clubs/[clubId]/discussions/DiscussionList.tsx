@@ -74,7 +74,7 @@ const DiscussionList = ({ discussions, clubId }: DiscussionListProps) => {
           </div>
         </div>
       </div>
-      <div className="border-2 border-yellow-500/30 rounded-2xl min-h-[600px] py-8 md:py-8 px-4 md:px-8">
+      <div className="darkContainer2 rounded-2xl min-h-[600px] py-8 md:py-8 px-4 md:px-8">
         <div className="space-y-8 max-w-4xl mx-auto">
           {discussionsToShow.map((discussion) => (
             <DiscussionListItem

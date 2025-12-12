@@ -55,7 +55,7 @@ const ClubMembersPreview = ({ members, }: ClubMembersPreviewProps) => {
       )} */}
 
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-white flex items-center gap-2">
+        <h3 className="text-xl mainFont text-white flex items-center gap-2">
        
           Members <span className="yellowBadge w-8">{members.length}</span>
         </h3>

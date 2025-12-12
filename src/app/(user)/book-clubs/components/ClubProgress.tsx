@@ -53,16 +53,15 @@ const ClubProgress = ({
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 ">
       <div className="flex items-center gap-3 mb-6">
-        <h2 className="text-xl font-bold text-white">Currently Reading</h2>
+        <h2 className="text-2xl mainFont text-white">Currently Reading</h2>
       </div>
 
       <div className="flex items-start gap-6">
-    
         <div className="flex-1">
-          <h3 className="text-2xl font-bold text-white mb-2">
+          <h3 className="text-2xl font-bold text-[#FFC300]/80 mb-2">
             {club.currentBook.title}
           </h3>
-          <p className="text-[#FFC300]/80 text-lg mb-4">
+          <p className=" text-lg mb-4 text-white">
             by {club.currentBook.author}
           </p>
 

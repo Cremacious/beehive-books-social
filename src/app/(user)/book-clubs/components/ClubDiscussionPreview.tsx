@@ -20,7 +20,7 @@ const ClubDiscussionPreview = ({
     <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div className="flex items-center gap-3">
-          <h2 className="text-xl font-bold text-white">Discussions</h2>
+          <h2 className="text-2xl mainFont text-white">Discussions</h2>
         </div>
         <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
           {discussions.length > 0 && (

@@ -16,7 +16,7 @@ const ClubReadingListPreview = ({
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-white flex items-center gap-2">
+        <h3 className="text-xl mainFont text-white flex items-center gap-2">
   
           Reading List
         </h3>

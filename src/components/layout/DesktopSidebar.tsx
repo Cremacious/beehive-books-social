@@ -1,18 +1,23 @@
 'use client';
 
-import { Home, Plus } from 'lucide-react';
+import { Home, Settings } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import logoImg from '@/assets/logo.png';
 import Image from 'next/image';
-import { Button } from '../ui/button';
 import { useEffect, useState } from 'react';
 import { getUserByIdAction } from '@/actions/user.actions';
 import { useSession } from '@/lib/auth-client';
-import newLogo from '@/assets/logo-trim3.png'
+import newLogo from '@/assets/logo-trim3.png';
+import dashIcon from '@/assets/icons/dashboard.png';
+import myBooksIcon from '@/assets/icons/my-books.png';
+import friendIcon from '@/assets/icons/friends.png';
+import pencilIcon from '@/assets/icons/pencil.png';
+import listIcon from '@/assets/icons/list.png';
+import clubIcon from '@/assets/icons/hive.png';
+import userIcon from '@/assets/icons/user.png';
 
 const DesktopSidebar = () => {
-  const currentUser = useSession()
+  const currentUser = useSession();
   const userId = currentUser.data?.user?.id;
   const pathname = usePathname();
   const [user, setUser] = useState<{
@@ -38,14 +43,13 @@ const DesktopSidebar = () => {
   }, [userId]);
 
   const navLinks = [
-    { name: 'Dashboard', href: '/dashboard' },
-    { name: 'My Books', href: '/my-books' },
-    { name: 'Friends', href: '/friends' },
-    { name: 'Book Clubs', href: '/book-clubs' },
-    { name: 'Reading Lists', href: '/reading-lists' },
-    { name: 'Writing Prompts', href: '/prompts' },
-    { name: 'Settings', href: '/settings' },
-    { name: 'Profile', href: `/profile/${userId}` },
+    { name: 'Dashboard', href: '/dashboard', icon: dashIcon },
+    { name: 'My Books', href: '/my-books', icon: myBooksIcon },
+    { name: 'Friends', href: '/friends', icon: friendIcon },
+    { name: 'Book Clubs', href: '/book-clubs', icon: clubIcon },
+    { name: 'Reading Lists', href: '/reading-lists', icon: listIcon },
+    { name: 'Writing Prompts', href: '/prompts', icon: pencilIcon },
+    { name: 'Profile', href: `/profile/${userId}`, icon: userIcon },
   ];
 
   return (
@@ -53,9 +57,8 @@ const DesktopSidebar = () => {
       <div className="ml-2">
         {/* <Book size={30} className="transform rotate-12" /> */}
         <Image src={newLogo} alt="Beehive Books Logo" width={200} height={90} />
-    
       </div>
-      <Link href="/my-books/create">
+      {/* <Link href="/my-books/create">
         <Button
           variant={'beeYellow'}
           className="flex items-center justify-center space-x-2 w-full"
@@ -63,7 +66,7 @@ const DesktopSidebar = () => {
           <Plus size={20} />
           New Book
         </Button>
-      </Link>
+      </Link> */}
 
       <nav className="space-y-4 pt-4">
         {navLinks.map((item) => (
@@ -76,31 +79,49 @@ const DesktopSidebar = () => {
                 : 'text-white hover:bg-[#1b1b1b]'
             }`}
           >
-            <Home size={20} />
+            {item.icon ? (
+              <Image
+                src={item.icon}
+                alt={`${item.name} icon`}
+                width={20}
+                height={20}
+                className="w-5 h-5"
+              />
+            ) : (
+              <Home size={20} />
+            )}
             <span className="font-medium">{item.name}</span>
           </Link>
         ))}
       </nav>
-      <div className="mt-auto pt-6 border-t border-gray-700">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
-            {user?.image ? (
-              <Image
-                src={user.image}
-                alt="Profile"
-                width={40}
-                height={40}
-                className="w-full h-full object-cover rounded-full"
-              />
-            ) : (
-              <div className="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center text-white">
-                {user?.name?.charAt(0).toUpperCase() || 'A'}
-              </div>
-            )}
+      <div className="mt-auto pt-6 border-t border-yellow-500 ">
+        <div className="flex flex-row justify-between items-center">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+              {user?.image ? (
+                <Image
+                  src={user.image}
+                  alt="Profile"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-cover rounded-full"
+                />
+              ) : (
+                <div className="w-10 h-10 animate-pulse bg-[#FFC300]/10 rounded-full flex items-center justify-center text-yellow-400">
+                  {' '}
+                </div>
+              )}
+            </div>
+
+            <span className="text-white font-medium">
+              {user?.name || (
+                <div className="bg-[#FFC300]/10 h-8 w-45 rounded-2xl animate-pulse"></div>
+              )}
+            </span>
           </div>
-          <span className="text-white font-medium">
-            {user?.name || 'Loading...'}
-          </span>
+          <Link href="/settings">
+            <Settings className="text-yellow-500 h-7 w-7 hover:text-yellow-600 hover:transform hover:-translate-y-0.5" />
+          </Link>
         </div>
       </div>
     </div>

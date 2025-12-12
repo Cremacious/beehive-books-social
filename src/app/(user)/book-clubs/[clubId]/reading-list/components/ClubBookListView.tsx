@@ -5,6 +5,7 @@ import ClubReadingListItem from './ClubReadingListItem';
 import { useState, useEffect } from 'react';
 import { useClubReadingListStore } from '@/stores/useClubReadingListStore';
 import type { ClubReadingList } from '@/stores/useClubReadingListStore';
+import { Button } from '@/components/ui/button';
 
 interface ClubBookListViewProps {
   readingList: ClubReadingList;
@@ -86,33 +87,26 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
             onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
             required
           />
-          <button
-            type="submit"
-            className="px-6 py-2 bg-[#FFC300] hover:bg-[#FFD700] text-black font-bold rounded-lg transition-all flex items-center gap-2"
-          >
+          <Button type="submit" variant={'beeYellow'}>
             <BookOpen className="w-4 h-4" />
             Add Book
-          </button>
+          </Button>
         </form>
       )}
 
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-white flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-[#FFC300]" />
+        <h2 className="text-2xl font-bold mainFont text-yellow-400 flex items-center gap-2">
           Books in This List
         </h2>
         <div className="flex items-center gap-3">
-          <div className="text-[#FFC300]/60 text-sm">
-            {books.length} total books
-          </div>
-          {readingList.userRole === 'OWNER' && (
+          {/* {readingList.userRole === 'OWNER' && (
             <button
               onClick={() => setIsEditing(!isEditing)}
               className="px-4 py-2 bg-[#FFC300]/10 hover:bg-[#FFC300]/20 text-[#FFC300] rounded-lg transition-colors flex items-center gap-2"
             >
               {isEditing ? 'Done Editing' : 'Edit List'}
             </button>
-          )}
+          )} */}
         </div>
       </div>
 

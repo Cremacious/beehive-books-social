@@ -21,7 +21,7 @@ const SearchFriends = () => {
 
   return (
     <div className="p-4 md:p-6">
-      <h2 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
+      <h2 className="text-2xl mainFont text-yellow-400 mb-4 flex items-center gap-2">
         Find Friends
       </h2>
       <form onSubmit={handleSubmit} className="relative">

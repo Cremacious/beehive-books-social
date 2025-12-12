@@ -1,6 +1,5 @@
 import NewPage from '@/components/layout/NewPage';
 import { Plus, List } from 'lucide-react';
-import ReadingListCard from './ReadingListCard';
 import { getReadingListsAction } from '@/actions/reading-list.actions';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -13,32 +12,30 @@ const ReadingListsPage = async () => {
     <NewPage>
       <div className="w-full space-y-8">
         <div className=" p-6 md:p-8 ">
-          <div className="flex flex-col md:flex-row items-center md:justify-between mb-6">
-            <h2 className="text-xl font-bold text-white text-center md:text-left">
-              Your Reading Lists
-            </h2>
-
-            {readingLists.length > 0 && (
-              <>
-                <Link href="/reading-lists/create">
-                  <Button
-                    className="w-full md:w-auto mt-4 md:mt-0"
-                    variant={'beeYellow'}
-                  >
-                    Create New List
-                  </Button>
-                </Link>
-              </>
-            )}
+          <div className="items-center gap-3 mb-6 darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 max-w-5xl mx-auto justify-between">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0 w-full">
+              <h2 className="text-3xl font-bold mainFont text-white text-center md:text-left">
+                Your Reading Lists
+              </h2>
+              <div className="w-full md:w-auto">
+                {readingLists.length > 0 && (
+                  <>
+                    <Link href="/reading-lists/create" className="w-full">
+                      <Button
+                        className="w-full md:w-auto mt-4 md:mt-0"
+                        variant={'beeYellow'}
+                      >
+                        Create New List
+                      </Button>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
-          <div className="border-2 border-yellow-500/30 rounded-2xl min-h-[650px] py-4 md:py-8 px-4 md:px-8">
+          <div className="darkContainer2 rounded-2xl min-h-[650px] py-4 md:py-8 px-4 md:px-8">
             {readingLists.length > 0 ? (
               <ReadingListDisplay readingLists={readingLists} />
-              // <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              //   {readingLists.map((list) => (
-              //     <ReadingListCard key={list.id} list={list} />
-              //   ))}
-              // </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
                 <div className="w-24 h-24 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6">

@@ -7,8 +7,7 @@ const MyBooksPage = async () => {
 
   return (
     <NewPage>
-      <div className="space-y-8 w-full">
-      
+      <div className="w-full flex items-center justify-center min-h-[calc(100vh-200px)]">
         <MyBooksDisplay books={userBooks} />
       </div>
     </NewPage>

@@ -58,9 +58,7 @@ const CreateReadingListPage = () => {
           onSubmit={handleSubmit}
           className="customDark2 rounded-2xl shadow-xl p-8 md:p-10 space-y-6 w-full"
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-4 flex items-center gap-3">
-            Create Reading List
-          </h1>
+          
 
           <div className="space-y-4">
             <div>

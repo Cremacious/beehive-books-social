@@ -1,13 +1,6 @@
 import NewPage from '@/components/layout/NewPage';
 import Image from 'next/image';
-import {
-  BookOpen,
-  Edit,
-  MessageCircle,
-  FileText,
-  Hash,
-  Plus,
-} from 'lucide-react';
+import { Edit, MessageCircle, FileText, Hash, Plus } from 'lucide-react';
 import ChapterListItem from '../components/ChapterListItem';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -46,7 +39,7 @@ const BookPage = async ({
             <div className="lg:col-span-2 space-y-4">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
+                  <h1 className="text-3xl md:text-4xl mainFont font-bold text-yellow-400 mb-2">
                     {book.title}
                   </h1>
                   <p className="text-xl text-white mb-4">by {book.author}</p>
@@ -116,8 +109,7 @@ const BookPage = async ({
 
         <div className="darkContainer2 rounded-2xl shadow-xl p-2 md:p-10 min-h-[450px] max-w-5xl mx-auto">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-yellow-400 flex items-center gap-2 p-2">
-              <BookOpen className="w-6 h-6 text-yellow-400" />
+            <h2 className="text-4xl font-bold text-white flex items-center gap-2 p-2 mainFont">
               Chapters
             </h2>
             <div>
@@ -141,7 +133,6 @@ const BookPage = async ({
                     href={`/my-books/${book.id}/create-chapter`}
                   >
                     <Button
-                      size={'sm'}
                       variant={'beeYellow'}
                       className="flex items-center gap-2"
                     >

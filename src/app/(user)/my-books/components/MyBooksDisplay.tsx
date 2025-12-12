@@ -69,9 +69,9 @@ const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full">
       <div className=" p-2 md:p-8 min-h-[1000px] ">
-        <div className="max-w-3xl mx-auto mb-8">
+        <div className="max-w-5xl mx-auto mb-8">
           <SearchMyBooks
             searchTerm={searchTerm}
             sortBy={sortBy}
@@ -82,7 +82,7 @@ const MyBooksDisplay = ({ books }: { books: MyBooksDisplayProps[] }) => {
 
         {/* <div className="border-2 mx-auto w-full border-yellow-600 mb-8" /> */}
 
-        <div className="border-2 border-yellow-500/30 rounded-2xl min-h-[1000px] px-4 md:px-8">
+        <div className="darkContainer2 rounded-2xl min-h-[1000px] py-4 md:pb-8 px-4 md:px-8">
           {filteredAndSortedBooks.length === 0 ? (
             <div className="max-w-6xl mx-auto mt-8">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

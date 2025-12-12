@@ -64,7 +64,7 @@ const PromptsList = ({ prompts }: PromptsListProps) => {
   };
 
   return (
-    <div className="border-2 border-yellow-500/30 rounded-2xl min-h-[500px] py-4 md:py-8 px-4 md:px-8">
+    <div className="darkContainer2 rounded-2xl min-h-[500px] py-4 md:py-8 px-4 md:px-8 max-w-6xl mx-auto w-full">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {currentPrompts.map((prompt) => (
           <PromptCard key={prompt.id} prompt={prompt} />

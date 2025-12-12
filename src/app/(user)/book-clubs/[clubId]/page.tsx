@@ -49,7 +49,7 @@ const ClubPage = async ({
             )}
             <div className="absolute inset-0 " />
             <div className="absolute bottom-6 left-6 md:left-8 text-white">
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">
+              <h1 className="text-3xl md:text-4xl font-bold mainFont mb-2">
                 {club.name}
               </h1>
               <div className="flex items-center gap-4 text-white/80">
@@ -91,7 +91,7 @@ const ClubPage = async ({
             <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
               <div className="flex items-center gap-3 mb-4">
              
-                <h2 className="text-xl font-bold text-white">
+                <h2 className="text-2xl mainFont text-white">
                   About This Club
                 </h2>
               </div>
