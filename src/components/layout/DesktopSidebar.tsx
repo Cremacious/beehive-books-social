@@ -9,6 +9,7 @@ import { Button } from '../ui/button';
 import { useEffect, useState } from 'react';
 import { getUserByIdAction } from '@/actions/user.actions';
 import { useSession } from '@/lib/auth-client';
+import newLogo from '@/assets/logo-trim3.png'
 
 const DesktopSidebar = () => {
   const currentUser = useSession()
@@ -49,10 +50,10 @@ const DesktopSidebar = () => {
 
   return (
     <div className="hidden md:flex w-80 bg-[#252525] flex-col p-6 shadow-xl space-y-8 h-screen sticky top-0">
-      <div className="flex items-center space-x-2 text-[#FFC300] text-2xl font-bold">
+      <div className="ml-2">
         {/* <Book size={30} className="transform rotate-12" /> */}
-        <Image src={logoImg} alt="Beehive Books Logo" width={60} height={60} />
-        <span>Beehive Books</span>
+        <Image src={newLogo} alt="Beehive Books Logo" width={200} height={90} />
+    
       </div>
       <Link href="/my-books/create">
         <Button
