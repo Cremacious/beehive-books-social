@@ -115,7 +115,7 @@ const DesktopSidebar = () => {
 
             <span className="text-white font-medium">
               {user?.name || (
-                <div className="bg-[#FFC300]/10 h-8 w-45 rounded-2xl animate-pulse"></div>
+                <div className="bg-[#FFC300]/10 h-8 w-28 rounded-2xl animate-pulse"></div>
               )}
             </span>
           </div>
@@ -129,3 +129,6 @@ const DesktopSidebar = () => {
 };
 
 export default DesktopSidebar;
+
+
+// I want to create a rich text editor for writing. I want it to support basic formatting options like bold, italic, underline, headings, lists, and links. The editor should have a clean and user-friendly interface that matches the dark style of the website, with a toolbar for formatting options. It should also support keyboard shortcuts for common actions. The editor will replace a textarea in multiple different components across the site. This includes CreatePromptReplyForm, CreateChapterForm, and EditChapterForm. On chapter forms it will replace the "Content" textarea.  Look at my version of Next.js and Tailwind CSS to ensure compatibility. I am also using TypeScript. 

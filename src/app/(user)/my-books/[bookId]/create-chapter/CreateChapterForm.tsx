@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { chapterSchema } from '@/lib/schemas/index';
 import { useBookStore } from '@/stores/useBookStore';
 import { useRouter } from 'next/navigation';
+import RichTextEditor from '@/components/RichTextEditor';
 
 export default function CreateChapterForm({ bookId }: { bookId: string }) {
   const router = useRouter();
@@ -14,6 +15,8 @@ export default function CreateChapterForm({ bookId }: { bookId: string }) {
   const form = useForm<z.infer<typeof chapterSchema>>({
     resolver: zodResolver(chapterSchema),
   });
+
+  const content = form.watch('content');
 
   async function onSubmit(values: z.infer<typeof chapterSchema>) {
     await createChapter(bookId, values);
@@ -72,11 +75,10 @@ export default function CreateChapterForm({ bookId }: { bookId: string }) {
               </p>
             </div>
           </div>
-          <textarea
-            {...form.register('content')}
+          <RichTextEditor
+            value={content || ''}
+            onChange={(value) => form.setValue('content', value)}
             placeholder="Begin your chapter... Every great story starts with a single word."
-            rows={20}
-            className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-6 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all resize-y font-serif text-lg leading-relaxed"
           />
           {form.formState.errors.content && (
             <p className="text-red-400 text-sm flex items-center gap-2">

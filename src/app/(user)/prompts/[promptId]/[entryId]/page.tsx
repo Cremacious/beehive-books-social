@@ -26,15 +26,16 @@ const PromptEntryPage = async ({
                   <span className="font-medium">
                     Added {entry?.createdAt.toLocaleDateString()}
                   </span>
-                </div>
+                </div> 
               </div>
             </div>
           </div>
 
           <div className="prose prose-lg prose-invert max-w-none">
-            <div className="text-white/90 leading-relaxed whitespace-pre-line font-serif text-lg">
-              {entry?.content}
-            </div>
+            <div
+              className="text-white/90 leading-relaxed font-serif text-lg"
+              dangerouslySetInnerHTML={{ __html: entry?.content || '' }}
+            />
           </div>
         </div>
 

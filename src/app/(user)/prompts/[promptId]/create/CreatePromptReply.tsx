@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { usePromptStore } from '@/stores/usePromptStore';
 import { useRouter } from 'next/navigation';
+import RichTextEditor from '@/components/RichTextEditor';
 
 interface CreatePromptReplyFormProps {
   promptId: string;
@@ -26,13 +27,10 @@ const CreatePromptReplyForm = ({ promptId }: CreatePromptReplyFormProps) => {
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
       <div>
-        <textarea
+        <RichTextEditor
           value={replyText}
-          onChange={(e) => setReplyText(e.target.value)}
+          onChange={setReplyText}
           placeholder="Write your story or poem here..."
-          rows={8}
-          className="w-full bg-[#232323] border border-[#FFC300]/20 rounded-lg p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 resize-none"
-          required
         />
       </div>
       <div className="flex justify-end pt-4 border-t border-[#FFC300]/10">

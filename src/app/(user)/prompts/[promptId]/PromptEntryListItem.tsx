@@ -23,9 +23,10 @@ const PromptEntryListItem = ({ entry, promptId }: PromptEntryListItemProps) => {
         <span className="text-white font-semibold">{entry.author}</span>
         <span className="text-white/50 text-xs">{entry.submittedAt}</span>
       </div>
-      <div className="text-white/80 leading-relaxed whitespace-pre-line">
-        {entry.content}
-      </div>
+      <div
+        className="text-white/80 leading-relaxed whitespace-pre-line"
+        dangerouslySetInnerHTML={{ __html: entry.content }}
+      />
       <div className="flex justify-end mt-4">
         <Link href={`/prompts/${promptId}/${entry.id}`}>
           <Button variant={'beeYellow'}>Read</Button>
