@@ -233,3 +233,33 @@ export async function getReadingListAction(listId: string) {
 
   return readingList;
 }
+
+export async function setCurrentBookAction(listId: string, itemId: string) {
+  const { user } = await getAuthenticatedUser();
+  if (!user) throw new Error('Unauthorized');
+
+  const readingList = await prisma.readingList.findUnique({
+    where: { id: listId },
+  });
+
+  if (!readingList || readingList.userId !== user.id) {
+    throw new Error('Reading list not found');
+  }
+
+ 
+  const item = await prisma.readingListItem.findUnique({
+    where: { id: itemId },
+  });
+
+  if (!item || item.readingListId !== listId) {
+    throw new Error('Item not found in this reading list');
+  }
+
+  await prisma.readingList.update({
+    where: { id: listId },
+    data: { currentBookId: itemId },
+  });
+
+  revalidatePath(`/reading-lists/${listId}`);
+  return { success: true, message: 'Current book updated successfully' };
+}

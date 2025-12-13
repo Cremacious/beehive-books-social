@@ -95,18 +95,18 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
       )}
 
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl  mainFont text-white flex items-center gap-2">
+        <h2 className="text-xl  mainFont text-white flex items-center gap-2">
           Books in This List
         </h2>
         <div className="flex items-center gap-3">
-          {/* {readingList.userRole === 'OWNER' && (
-            <button
+          {readingList.userRole === 'OWNER' && (
+            <Button
               onClick={() => setIsEditing(!isEditing)}
-              className="px-4 py-2 bg-[#FFC300]/10 hover:bg-[#FFC300]/20 text-[#FFC300] rounded-lg transition-colors flex items-center gap-2"
+              variant={'beeYellow'}
             >
               {isEditing ? 'Done Editing' : 'Edit List'}
-            </button>
-          )} */}
+            </Button>
+          )}
         </div>
       </div>
 

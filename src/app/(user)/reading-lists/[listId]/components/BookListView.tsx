@@ -18,8 +18,10 @@ const BookListView = ({ readingList }: BookListViewProps) => {
     addBookToList,
     toggleBookReadStatus,
     removeBookFromList,
+    setCurrentBook,
   } = useReadingListStore();
   const [newBook, setNewBook] = useState({ title: '', author: '' });
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     setCurrentList(readingList);
@@ -34,6 +36,7 @@ const BookListView = ({ readingList }: BookListViewProps) => {
       dateAdded: item.addedAt.toISOString().split('T')[0],
       rating: null,
       cover: '/assets/stock/cover.jpeg',
+      isCurrentBook: item.id === currentList.currentBookId,
     })) || [];
 
   const handleAddBook = async () => {
@@ -52,6 +55,10 @@ const BookListView = ({ readingList }: BookListViewProps) => {
 
   const handleRemoveBook = async (itemId: string) => {
     await removeBookFromList(readingList.id, itemId);
+  };
+
+  const handleSetCurrentBook = async (itemId: string) => {
+    await setCurrentBook(readingList.id, itemId);
   };
 
   return (
@@ -89,7 +96,14 @@ const BookListView = ({ readingList }: BookListViewProps) => {
         <h2 className="text-xl mainFont text-white flex items-center gap-2">
           Books in This List
         </h2>
-     
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={() => setIsEditing(!isEditing)}
+            variant={'beeYellow'}
+          >
+            {isEditing ? 'Done Editing' : 'Edit List'}
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -99,6 +113,8 @@ const BookListView = ({ readingList }: BookListViewProps) => {
             book={book}
             toggleReadStatus={handleToggleReadStatus}
             onDelete={handleRemoveBook}
+            onSetCurrent={handleSetCurrentBook}
+            isEditing={isEditing}
           />
         ))}
       </div>

@@ -132,6 +132,7 @@ model ReadingList {
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   items       ReadingListItem[]
+  currentBookId String?
 
   @@map("reading_list")
 }

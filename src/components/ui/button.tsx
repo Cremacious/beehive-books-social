@@ -15,6 +15,8 @@ const buttonVariants = cva(
           ' bg-yellow-500 hover:bg-yellow-600 text-slate-800 rounded-lg font-bold transition-colors hover:cursor-pointer border-b-2 border-yellow-700 shadow-lg',
         beeDark:
           'bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white rounded-lg font-bold transition-colors hover:cursor-pointer border-b-2 border-[#1a1a1a] shadow-lg',
+        beeSuccess:
+          ' bg-green-500 hover:bg-green-600 text-slate-800 rounded-lg font-bold transition-colors hover:cursor-pointer border-b-2 border-green-700 shadow-lg',
         destructive:
           'bg-[var(--destructive)] text-white hover:bg-[var(--destructive)]/90 shadow-md hover:shadow-lg border-b-2 border-red-700',
         outline:

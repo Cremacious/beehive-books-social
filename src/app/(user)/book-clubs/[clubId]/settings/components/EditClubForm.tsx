@@ -84,7 +84,11 @@ export default function EditClubForm({ club }: EditClubFormProps) {
       currentBookChapters: club.currentBookChapters,
       privacy: club.privacy,
       rules: club.rules || '',
-      invites: club.invites || '',
+      invites: club.invites
+        ? Array.isArray(club.invites)
+          ? club.invites
+          : club.invites.split(',').map((s) => s.trim()).filter(Boolean)
+        : [],
       tags: club.tags || [],
     },
   });

@@ -26,7 +26,7 @@ export const clubCreateSchema = z.object({
     .min(1, 'Number of chapters must be at least 1'),
   privacy: z.enum(['public', 'private', 'invite-only']),
   rules: z.string().nullable().optional(),
-  invites: z.string().nullable().optional(),
+  invites: z.array(z.string()).optional(),
   tags: z.array(z.string()).optional(),
 });
 

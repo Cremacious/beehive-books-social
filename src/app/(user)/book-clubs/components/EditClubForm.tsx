@@ -18,7 +18,7 @@ interface EditClubFormProps {
     currentBookChapters: number;
     privacy: 'public' | 'private' | 'invite-only';
     rules?: string | null;
-    invites?: string | null;
+    invites?: string[];
     tags?: string[];
   };
 }
@@ -37,7 +37,7 @@ export default function EditClubForm({ club }: EditClubFormProps) {
       currentBookChapters: club.currentBookChapters,
       privacy: club.privacy,
       rules: club.rules || '',
-      invites: club.invites || '',
+      invites: club.invites || [],
       tags: club.tags || [],
     },
   });
@@ -54,7 +54,9 @@ export default function EditClubForm({ club }: EditClubFormProps) {
     );
     formData.append('privacy', values.privacy);
     if (values.rules) formData.append('rules', values.rules);
-    if (values.invites) formData.append('invites', values.invites);
+    if (values.invites) {
+      values.invites.forEach((invite) => formData.append('invites', invite));
+    }
     if (values.tags) {
       values.tags.forEach((tag) => formData.append('tags', tag));
     }

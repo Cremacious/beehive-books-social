@@ -8,6 +8,7 @@ import {
   toggleBookReadStatusAction,
   getReadingListsAction,
   getReadingListAction,
+  setCurrentBookAction,
 } from '@/actions/reading-list.actions';
 import { toast } from 'sonner';
 
@@ -28,6 +29,7 @@ export interface ReadingList {
   updatedAt: Date;
   userId: string;
   items: ReadingListItem[];
+  currentBookId: string | null;
   _count?: {
     items: number;
   };
@@ -47,6 +49,7 @@ interface ReadingListStoreType {
   fetchReadingLists: () => Promise<void>;
   fetchReadingList: (listId: string) => Promise<void>;
   setCurrentList: (list: ReadingList | null) => void;
+  setCurrentBook: (listId: string, itemId: string) => Promise<void>;
   setIsEditing: (editing: boolean) => void;
 }
 
@@ -178,6 +181,23 @@ export const useReadingListStore = create<ReadingListStoreType>((set, get) => ({
       }
     } catch (error) {
       toast.error((error as Error).message || 'Failed to update book status');
+    }
+  },
+
+  setCurrentBook: async (listId: string, itemId: string) => {
+    set({ isLoading: true });
+    try {
+      const result = await setCurrentBookAction(listId, itemId);
+      if (result.success) {
+        toast.success(result.message);
+        await get().fetchReadingList(listId);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      toast.error((error as Error).message || 'Failed to set current book');
+    } finally {
+      set({ isLoading: false });
     }
   },
 

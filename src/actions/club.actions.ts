@@ -21,7 +21,7 @@ export async function createClubAction(formData: FormData) {
       ),
       privacy: formData.get('privacy') as string,
       rules: formData.get('rules') as string,
-      invites: formData.get('invites') as string,
+      invites: formData.getAll('invites') as string[],
       tags: formData.getAll('tags') as string[],
     };
 
@@ -89,26 +89,15 @@ export async function createClubAction(formData: FormData) {
       });
     }
 
-    if (parsedData.invites) {
-      const inviteList = parsedData.invites
-        .split(',')
-        .map((email) => email.trim())
-        .filter(Boolean);
-      for (const invite of inviteList) {
-        const invitedUser = await prisma.user.findFirst({
-          where: {
-            OR: [{ email: invite }, { name: invite }],
+    if (parsedData.invites && parsedData.invites.length > 0) {
+      for (const userId of parsedData.invites) {
+        await prisma.clubMember.create({
+          data: {
+            userId,
+            clubId: club.id,
+            role: 'MEMBER',
           },
         });
-        if (invitedUser) {
-          await prisma.clubMember.create({
-            data: {
-              userId: invitedUser.id,
-              clubId: club.id,
-              role: 'MEMBER',
-            },
-          });
-        }
       }
     }
 
@@ -148,7 +137,7 @@ export async function editClubAction(clubId: string, formData: FormData) {
       ),
       privacy: formData.get('privacy') as string,
       rules: formData.get('rules') as string,
-      invites: formData.get('invites') as string,
+      invites: formData.getAll('invites') as string[],
       tags: formData.getAll('tags') as string[],
     };
 
@@ -233,6 +222,24 @@ export async function editClubAction(clubId: string, formData: FormData) {
             status: 'CURRENT',
           },
         });
+      }
+    }
+
+    if (parsedData.invites && parsedData.invites.length > 0) {
+      for (const userId of parsedData.invites) {
+        // Check if already member
+        const existing = await prisma.clubMember.findFirst({
+          where: { clubId, userId },
+        });
+        if (!existing) {
+          await prisma.clubMember.create({
+            data: {
+              userId,
+              clubId,
+              role: 'MEMBER',
+            },
+          });
+        }
       }
     }
 

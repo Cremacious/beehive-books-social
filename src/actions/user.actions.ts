@@ -355,6 +355,32 @@ export async function getNotificationsAction() {
       });
     });
 
+    const clubMemberships = await prisma.clubMember.findMany({
+      where: {
+        userId: user.id,
+        club: {
+          members: {
+            some: {
+              role: 'OWNER',
+              userId: { not: user.id },
+            },
+          },
+        },
+      },
+      include: {
+        club: { select: { name: true } },
+      },
+      orderBy: { joinedAt: 'desc' },
+    });
+    clubMemberships.forEach((membership) => {
+      notifications.push({
+        id: `club-invite-${membership.id}`,
+        type: 'club',
+        message: `You have been added to "${membership.club.name}"`,
+        createdAt: membership.joinedAt,
+      });
+    });
+
     const promptComments = await prisma.promptComment.findMany({
       where: {
         entry: {
@@ -465,7 +491,17 @@ export async function getNotificationsCountAction() {
     });
 
     const clubInvites = await prisma.clubMember.count({
-      where: { userId: user.id },
+      where: {
+        userId: user.id,
+        club: {
+          members: {
+            some: {
+              role: 'OWNER',
+              userId: { not: user.id },
+            },
+          },
+        },
+      },
     });
 
     const promptInvites = await prisma.prompt.count({

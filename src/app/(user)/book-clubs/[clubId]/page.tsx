@@ -1,25 +1,18 @@
 import NewPage from '@/components/layout/NewPage';
 import Image from 'next/image';
-import {
-  Users,
-
-  Shield,
-  Crown,
-  User,
-  Settings,
-} from 'lucide-react';
+import { Users, Shield, Crown, User, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 // import coverImage from '@/assets/stock/club-cover.jpg';
 import ClubProgress from '../components/ClubProgress';
 import ClubDiscussionPreview from '../components/ClubDiscussionPreview';
 import ClubMembersPreview from '../components/ClubMembersPreview';
+import BackButton from '@/components/shared/BackButton';
 import ClubReadingListPreview from '../components/ClubReadingListPreview';
 
 import Link from 'next/link';
 import { getAuthenticatedUser } from '@/lib/auth-server';
 import { getClubByIdAction } from '@/actions/club.actions';
 import { getUserRoleInClub } from '@/lib/utils';
-import BackButton from '@/components/shared/BackButton';
 
 const ClubPage = async ({
   params,
@@ -37,7 +30,7 @@ const ClubPage = async ({
 
   return (
     <NewPage>
-      <BackButton text='Back to Clubs' href="/book-clubs" />
+      <BackButton text="Back to Clubs" href="/book-clubs" />
       <div className="w-full space-y-8">
         <div className="relative darkContainer2 rounded-2xl shadow-xl overflow-hidden">
           <div className="h-48 md:h-64 rounded-3xl overflow-hidden relative">
@@ -73,26 +66,26 @@ const ClubPage = async ({
               </div>
             </div>
           </div>
+          {userRole === 'OWNER' && (
+            <div className="absolute top-6 right-6 flex gap-3">
+              {/* <Button variant={'beeDark'}>
+                <Share className="w-4 h-4" />
+                Share
+              </Button> */}
 
-          <div className="absolute top-6 right-6 flex gap-3">
-            {/* <Button variant={'beeDark'}>
-              <Share className="w-4 h-4" />
-              Share
-            </Button> */}
-
-            <Link href={`/book-clubs/${club.id}/settings`}>
-              <Button variant={'beeYellow'}>
-                <Settings className="w-4 h-4 text-black" /> Edit Club
-              </Button>
-            </Link>
-          </div>
+              <Link href={`/book-clubs/${club.id}/settings`}>
+                <Button variant={'beeYellow'}>
+                  <Settings className="w-4 h-4 text-black" /> Edit Club
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
               <div className="flex items-center gap-3 mb-4">
-             
                 <h2 className="text-2xl mainFont text-white">
                   About This Club
                 </h2>

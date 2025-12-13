@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { BookOpen, Calendar, CheckCircle, Circle, Star } from 'lucide-react';
-import { useReadingListStore } from '@/stores/useReadingListStore';
 
 export interface ReadingListBookItem {
   id: string;
@@ -10,78 +9,101 @@ export interface ReadingListBookItem {
   dateAdded: string;
   rating: number | null;
   cover: string;
+  isCurrentBook?: boolean;
 }
 
 export interface ReadingListItemProps {
   book: ReadingListBookItem;
   toggleReadStatus?: (id: string) => void;
   onDelete?: (id: string) => void;
+  onSetCurrent?: (id: string) => void;
+  isEditing?: boolean;
 }
 
 const ReadingListItem = ({
   book,
   toggleReadStatus,
   onDelete,
+  onSetCurrent,
+  isEditing,
 }: ReadingListItemProps) => {
-  const isEditing = useReadingListStore((state) => state.isEditing);
   return (
-    <div key={book.id} className="darkContainer3 rounded-2xl p-4 md:p-6">
-      <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <h3 className="text-xl font-bold text-white mb-2 wrap-break-word">
-                {book.title}
-              </h3>
-              <p className="text-white/70 mb-3">by {book.author}</p>
-              <div className="flex flex-wrap items-center gap-4 text-white/60 text-sm">
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
-                  Added {book.dateAdded}
-                </div>
-                {book.rating && (
-                  <div className="flex items-center gap-1">
-                    <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                    {book.rating}/5
-                  </div>
-                )}
-              </div>
-            </div>
+    <div className="darkContainer3 rounded-2xl p-3 sm:p-4 md:p-6">
+      <div className="flex flex-col gap-3 sm:gap-4">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="text-lg sm:text-xl font-bold text-white leading-tight flex-1 min-w-0">
+              <span className="wrap-break-word">{book.title}</span>
+            </h3>
+            {book.isCurrentBook && (
+              <span className="px-2 py-1 bg-[#FFC300]/20 text-[#FFC300] text-xs rounded-full whitespace-nowrap shrink-0 mt-0.5">
+                Currently Reading
+              </span>
+            )}
+          </div>
+          <p className="text-white/70 text-sm sm:text-base">by {book.author}</p>
+        </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
-              <button
-                onClick={() => toggleReadStatus?.(book.id)}
-                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-all text-sm font-medium w-full sm:w-auto ${
-                  book.isRead
-                    ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30'
-                    : 'bg-[#FFC300]/20 text-[#FFC300] hover:bg-[#FFC300]/30 border border-[#FFC300]/30'
-                }`}
-              >
-                {book.isRead ? (
-                  <>
-                    <CheckCircle className="w-4 h-4" />
-                    Read
-                  </>
-                ) : (
-                  <>
-                    <Circle className="w-4 h-4" />
-                    Mark as Read
-                  </>
-                )}
-              </button>
-              {isEditing && (
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-white/60 text-xs sm:text-sm">
+          <div className="flex items-center gap-1">
+            <Calendar className="w-3 h-3 shrink-0" />
+            <span>Added {book.dateAdded}</span>
+          </div>
+          {book.rating && (
+            <div className="flex items-center gap-1">
+              <Star className="w-3 h-3 text-yellow-400 fill-current shrink-0" />
+              <span>{book.rating}/5</span>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+          {toggleReadStatus && (
+            <Button
+              onClick={() => toggleReadStatus(book.id)}
+              variant={book.isRead ? 'beeSuccess' : 'beeDark'}
+              size={'default'}
+              className="flex-1 sm:flex-none min-h-11 sm:min-h-8"
+            >
+              {book.isRead ? (
+                <>
+                  <CheckCircle className="w-4 h-4" />
+                  Read
+                </>
+              ) : (
+                <>
+                  <Circle className="w-4 h-4" />
+                  Mark as Read
+                </>
+              )}
+            </Button>
+          )}
+
+          {isEditing && (
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 flex-1 sm:flex-none">
+              {onSetCurrent && !book.isCurrentBook && (
                 <Button
+                  onClick={() => onSetCurrent(book.id)}
+                  variant={'beeYellow'}
+                  size={'default'}
+                  className="flex-1 sm:flex-none min-h-11 sm:min-h-8"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  Set as Current
+                </Button>
+              )}
+              {onDelete && (
+                <Button
+                  onClick={() => onDelete(book.id)}
                   variant={'destructive'}
-                  onClick={() => onDelete?.(book.id)}
-                  className="w-full sm:w-auto"
-                  size="sm"
+                  size={'default'}
+                  className="flex-1 sm:flex-none min-h-11 sm:min-h-8"
                 >
                   Delete
                 </Button>
               )}
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

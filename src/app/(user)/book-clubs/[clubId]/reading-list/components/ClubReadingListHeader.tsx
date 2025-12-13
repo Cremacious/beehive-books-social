@@ -1,9 +1,9 @@
 'use client';
 
-import { BookOpen, Edit, CheckCircle, Circle } from 'lucide-react';
+import { BookOpen, CheckCircle, Circle } from 'lucide-react';
 import { useClubReadingListStore } from '@/stores/useClubReadingListStore';
 import type { ClubReadingList } from '@/stores/useClubReadingListStore';
-import { Button } from '@/components/ui/button';
+
 
 interface ClubReadingListHeaderProps {
   initialReadingList: ClubReadingList;
@@ -13,8 +13,7 @@ const ClubReadingListHeader = ({
   initialReadingList,
 }: ClubReadingListHeaderProps) => {
   const currentList = useClubReadingListStore((state) => state.currentList);
-  const isEditing = useClubReadingListStore((state) => state.isEditing);
-  const setIsEditing = useClubReadingListStore((state) => state.setIsEditing);
+
   const readingList = currentList || initialReadingList;
   const readCount =
     readingList.readingList?.filter((item) => item.isRead).length || 0;
@@ -30,18 +29,7 @@ const ClubReadingListHeader = ({
               {readingList.name} Reading List
             </h1>
           </div>
-          {readingList.userRole === 'OWNER' && (
-            <div className="shrink-0">
-              <Button
-                variant={'beeYellow'}
-                onClick={() => setIsEditing(!isEditing)}
-                className="w-full sm:w-auto"
-              >
-                <Edit className="w-4 h-4 mr-2" />
-                {isEditing ? 'Save Changes' : 'Edit List'}
-              </Button>
-            </div>
-          )}
+         
         </div>
 
         {/* Stats */}
