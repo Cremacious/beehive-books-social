@@ -3,7 +3,7 @@
 @import '@fontsource/madimi-one';
 
 :root {
-  --honey-yellow: #fdd835;
+  --honey-yellow: #303030;
   --warm-yellow: #fff8e1;
   --amber: #ffab00;
   --dark-slate: #1e293b;
@@ -26,7 +26,7 @@
 
   --radius: 16px;
 
-  --background: #f8da55;
+  --background: #303030;
   --foreground: #1e293b;
   --card: #fefefe;
   --card-foreground: #1e293b;

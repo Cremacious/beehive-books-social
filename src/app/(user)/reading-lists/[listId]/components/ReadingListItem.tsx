@@ -25,20 +25,16 @@ const ReadingListItem = ({
 }: ReadingListItemProps) => {
   const isEditing = useReadingListStore((state) => state.isEditing);
   return (
-    <div key={book.id} className="darkContainer3 rounded-2xl p-4 md:p-6 ">
-      <div className="flex items-start gap-6">
-        <div className="w-16 h-24 bg-[#FFC300]/10 rounded-lg flex items-center justify-center shrink-0">
-          <BookOpen className="w-8 h-8 text-[#FFC300]/60" />
-        </div>
-
-        <div className="flex-1">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-white mb-2">
+    <div key={book.id} className="darkContainer3 rounded-2xl p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-xl font-bold text-white mb-2 wrap-break-word">
                 {book.title}
               </h3>
               <p className="text-white/70 mb-3">by {book.author}</p>
-              <div className="flex items-center gap-4 text-white/60 text-sm">
+              <div className="flex flex-wrap items-center gap-4 text-white/60 text-sm">
                 <div className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   Added {book.dateAdded}
@@ -51,13 +47,15 @@ const ReadingListItem = ({
                 )}
               </div>
             </div>
-            <div className="flex flex-row gap-4">
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
               <button
                 onClick={() => toggleReadStatus?.(book.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-all text-sm font-medium w-full sm:w-auto ${
                   book.isRead
-                    ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
-                    : 'bg-[#FFC300]/20 text-[#FFC300] hover:bg-[#FFC300]/30'
+                    ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30'
+                    : 'bg-[#FFC300]/20 text-[#FFC300] hover:bg-[#FFC300]/30 border border-[#FFC300]/30'
                 }`}
               >
                 {book.isRead ? (
@@ -73,7 +71,14 @@ const ReadingListItem = ({
                 )}
               </button>
               {isEditing && (
-                <Button variant={'destructive'} onClick={() => onDelete?.(book.id)}>Delete</Button>
+                <Button
+                  variant={'destructive'}
+                  onClick={() => onDelete?.(book.id)}
+                  className="w-full sm:w-auto"
+                  size="sm"
+                >
+                  Delete
+                </Button>
               )}
             </div>
           </div>

@@ -11,6 +11,7 @@ const BookCard = ({
   genre,
   coverImage,
   href,
+  category,
 }: {
   id: string;
   title: string;
@@ -18,6 +19,7 @@ const BookCard = ({
   genre: string;
   coverImage: string | null;
   href?: string;
+  category: string;
 }) => {
   const bookHref = href || `/book/${id}`;
 
@@ -47,6 +49,9 @@ const BookCard = ({
             </p>
             <span className="text-[10px] bg-[#FFC300]/20 text-[#FFC300] px-2 py-1 rounded-md font-semibold">
               {genre}
+            </span>
+            <span className="text-[10px] ml-1 bg-[#FFC300]/20 text-[#FFC300] px-2 py-1 rounded-md font-semibold">
+              {category}
             </span>
           </div>
 

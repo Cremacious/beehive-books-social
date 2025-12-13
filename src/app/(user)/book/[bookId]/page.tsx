@@ -29,6 +29,7 @@ const PublicBookPage = async ({
   try {
     book = await getPublicBookByIdAction(bookId);
   } catch (error) {
+    console.log(error);
     notFound();
   }
 
@@ -64,15 +65,7 @@ const PublicBookPage = async ({
                     </span>
                   </div>
                 </div>
-                <Link
-                  className="hidden md:flex items-center gap-2 "
-                  href={`/my-books/${book.id}/edit`}
-                >
-                  <Button size={'lg'} variant={'beeYellow'} className="">
-                    <Edit className="w-4 h-4 text-black" />
-                    Edit Book
-                  </Button>
-                </Link>
+               
               </div>
 
               <p className="text-white leading-relaxed mb-6">
@@ -111,12 +104,7 @@ const PublicBookPage = async ({
             </div>
           </div>
 
-          <Link className="md:hidden" href={`/my-books/${book.id}/edit`}>
-            <Button size={'lg'} variant={'beeYellow'} className="w-full mt-6">
-              <Edit className="w-4 h-4 text-black" />
-              Edit Book
-            </Button>
-          </Link>
+         
         </div>
 
         <div className="darkContainer2 rounded-2xl shadow-xl p-2 md:p-10 min-h-[450px] max-w-5xl mx-auto">
@@ -125,34 +113,7 @@ const PublicBookPage = async ({
               <BookOpen className="w-6 h-6 text-yellow-400" />
               Chapters
             </h2>
-            <div>
-              <Link
-                className="md:flex hidden"
-                href={`/my-books/${book.id}/create-chapter`}
-              >
-                <Button
-                  size={'lg'}
-                  variant={'beeYellow'}
-                  className="flex items-center gap-2"
-                >
-                  <Plus className="w-5 h-5 text-black" />
-                  Add Chapter
-                </Button>
-              </Link>
-              <Link
-                className="md:hidden block"
-                href={`/my-books/${book.id}/create-chapter`}
-              >
-                <Button
-                  size={'sm'}
-                  variant={'beeYellow'}
-                  className="flex items-center gap-2"
-                >
-                  <Plus className="w-5 h-5 text-black" />
-                  Add Chapter
-                </Button>
-              </Link>
-            </div>
+          
           </div>
 
           <div className="space-y-4 ">

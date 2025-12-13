@@ -149,7 +149,6 @@ export default function CreateClubForm() {
     formData.append('privacy', values.privacy);
     if (values.rules) formData.append('rules', values.rules);
 
- 
     selectedFriends.forEach((friendId) => formData.append('invites', friendId));
 
     selectedTags.forEach((tag) => formData.append('tags', tag));
@@ -158,8 +157,10 @@ export default function CreateClubForm() {
       formData.append('coverUrl', coverImage);
     }
 
-    await createClub(formData);
-    router.push('/book-clubs');
+    const result = await createClub(formData);
+    if (result.success && result.clubId) {
+      router.push(`/book-clubs/${result.clubId}`);
+    }
   }
 
   return (

@@ -18,7 +18,7 @@ const PromptEntryPage = async ({
         <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
           <div className="flex justify-between items-start mb-6">
             <div className="flex-1">
-              <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-3">
+              <h1 className="text-3xl md:text-4xl mainFont text-yellow-400 mb-3">
                 Entry by {entry?.user?.name}
               </h1>
               <div className="flex items-center gap-6 text-white/70">

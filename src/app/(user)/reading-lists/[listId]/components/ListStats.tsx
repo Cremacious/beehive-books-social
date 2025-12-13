@@ -15,7 +15,7 @@ const ListStats = () => {
             <CheckCircle className="w-5 h-5 text-green-400" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">Books Read</h3>
+            <h3 className="text-lg mainFont text-white">Books Read</h3>
             <p className="text-white/60 text-sm">
               {readCount} of {items.length} books
             </p>
@@ -39,7 +39,7 @@ const ListStats = () => {
             <Flag className="w-5 h-5 text-[#FFC300]" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">Books to Read</h3>
+            <h3 className="text-lg mainFont text-white">Books to Read</h3>
             <p className="text-white/60 text-sm">{unreadCount} remaining</p>
           </div>
         </div>

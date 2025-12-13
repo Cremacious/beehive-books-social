@@ -95,7 +95,7 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
       )}
 
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold mainFont text-yellow-400 flex items-center gap-2">
+        <h2 className="text-2xl  mainFont text-white flex items-center gap-2">
           Books in This List
         </h2>
         <div className="flex items-center gap-3">

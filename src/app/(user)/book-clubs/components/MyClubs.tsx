@@ -27,12 +27,12 @@ const MyClubs = ({ userClubs }: { userClubs: UserBookClubs[] }) => {
   const endIdx = startIdx + CLUBS_PER_PAGE;
   const clubsToShow = userClubs.slice(startIdx, endIdx);
   return (
-    <div className="p-6 md:p-8 w-full">
+    <div className="p-2 md:p-4 w-full">
       <div className="flex items-center gap-3 mb-6 darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0 w-full">
           <div className="flex flex-row gap-2 items-center">
             <h2 className="text-4xl font-bold text-white mainFont">My Clubs</h2>
-            <span className="yellowBadge h-7 w-7">{userClubs.length}</span>
+           
           </div>
           {userClubs.length !== 0 && (
             <div className="w-full  md:w-auto">

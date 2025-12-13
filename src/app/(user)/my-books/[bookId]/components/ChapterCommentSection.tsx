@@ -174,7 +174,7 @@ const ChapterCommentSection = ({ chapter }: ChapterCommentSectionProps) => {
 
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-4 md:p-10">
-      <h2 className="text-3xl font-bold text-yellow-400 mb-8 flex items-center gap-3 mainFont">
+      <h2 className="text-3xl text-white mb-8 flex items-center gap-3 mainFont">
    
         Comments
         <span className="yellowBadge w-7 h-7">{comments.length}</span>

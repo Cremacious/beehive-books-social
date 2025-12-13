@@ -19,44 +19,59 @@ const ReadingListHeader = ({ initialReadingList }: ReadingListHeaderProps) => {
   const unreadCount = (readingList.items?.length || 0) - readCount;
 
   return (
-    <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-4">
-            <div>
-              <h1 className="text-3xl md:text-4xl mainFont font-bold text-yellow-400 mb-2">
-                {readingList.title}
-              </h1>
-              <div className="flex items-center gap-4 text-white/60 text-sm">
-                <div className="flex items-center gap-1">
-                  <BookOpen className="w-4 h-4" />
-                  {readingList.items?.length || 0} books
-                </div>
-                <div className="flex items-center gap-1">
-                  <CheckCircle className="w-4 h-4 text-green-400" />
-                  {readCount} read
-                </div>
-                <div className="flex items-center gap-1">
-                  <Flag className="w-4 h-4" />
-                  {unreadCount} unread
-                </div>
-              </div>
-            </div>
+    <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 lg:p-10">
+      <div className="flex flex-col space-y-4">
+        {/* Header with title and edit button */}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl mainFont font-bold text-yellow-400 mb-2 wrap-break-word">
+              {readingList.title}
+            </h1>
           </div>
-          <p className="text-white/80 leading-relaxed mb-6">
-            {readingList.description}
-          </p>
-          <div className="flex items-center gap-4 text-white/50 text-sm">
-            <div className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
-              Created {readingList.createdAt.toLocaleDateString()}
-            </div>
+          <div className="shrink-0">
+            <Button
+              onClick={() => setIsEditing(!isEditing)}
+              variant={'beeYellow'}
+              className="w-full sm:w-auto"
+            >
+              <Edit className="w-4 h-4 mr-2" />
+              {isEditing ? 'Save Changes' : 'Edit List'}
+            </Button>
           </div>
         </div>
-        <Button onClick={() => setIsEditing(!isEditing)} variant={'beeYellow'}>
-          <Edit className="w-5 h-5" />
-          {isEditing ? 'Save Changes' : 'Edit List'}
-        </Button>
+
+        {/* Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 text-white/70 text-sm bg-[#1a1a1a]/50 rounded-lg p-3">
+            <BookOpen className="w-4 h-4 text-[#FFC300] shrink-0" />
+            <span className="font-medium">
+              {readingList.items?.length || 0} books
+            </span>
+          </div>
+          <div className="flex items-center gap-2 text-white/70 text-sm bg-[#1a1a1a]/50 rounded-lg p-3">
+            <CheckCircle className="w-4 h-4 text-green-400 shrink-0" />
+            <span className="font-medium">{readCount} read</span>
+          </div>
+          <div className="flex items-center gap-2 text-white/70 text-sm bg-[#1a1a1a]/50 rounded-lg p-3">
+            <Flag className="w-4 h-4 shrink-0" />
+            <span className="font-medium">{unreadCount} unread</span>
+          </div>
+        </div>
+
+        {/* Description */}
+        {readingList.description && (
+          <div className="bg-[#1a1a1a]/30 rounded-lg p-4">
+            <p className="text-white/80 leading-relaxed text-sm md:text-base">
+              {readingList.description}
+            </p>
+          </div>
+        )}
+
+        {/* Created date */}
+        <div className="flex items-center gap-2 text-white/50 text-sm bg-[#1a1a1a]/30 rounded-lg p-3">
+          <Calendar className="w-4 h-4 shrink-0" />
+          <span>Created {readingList.createdAt.toLocaleDateString()}</span>
+        </div>
       </div>
     </div>
   );

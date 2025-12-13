@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { getAuthenticatedUser } from '@/lib/auth-server';
 import { getClubByIdAction } from '@/actions/club.actions';
 import { getUserRoleInClub } from '@/lib/utils';
+import BackButton from '@/components/shared/BackButton';
 
 const ClubPage = async ({
   params,
@@ -36,6 +37,7 @@ const ClubPage = async ({
 
   return (
     <NewPage>
+      <BackButton text='Back to Clubs' href="/book-clubs" />
       <div className="w-full space-y-8">
         <div className="relative darkContainer2 rounded-2xl shadow-xl overflow-hidden">
           <div className="h-48 md:h-64 rounded-3xl overflow-hidden relative">

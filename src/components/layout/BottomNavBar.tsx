@@ -12,10 +12,13 @@ const BottomNavBar = () => {
         <span className="text-[10px]">Discover</span>
       </div>
 
-      <div className="p-3 rounded-full bg-[#FFC300] shadow-xl transform -translate-y-4 border-4 border-[#1E3A4B] cursor-pointer">
+      {/* <div className="p-3 rounded-full bg-[#FFC300] shadow-xl transform -translate-y-4 border-4 border-[#1E3A4B] cursor-pointer">
         <Plus size={28} className="text-[#1E3A4B]" />
+      </div> */}
+      <div className="flex flex-col items-center justify-center space-y-0.5 text-[#FFC300]">
+        <User size={22} />
+        <span className="text-[10px] font-semibold">Hive</span>
       </div>
-
       <div className="flex flex-col items-center justify-center space-y-0.5 text-[#FFC300]">
         <User size={22} />
         <span className="text-[10px] font-semibold">Hive</span>

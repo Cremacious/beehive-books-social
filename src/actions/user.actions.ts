@@ -269,3 +269,225 @@ export async function updateBioAction(bio: string) {
     throw error;
   }
 }
+
+export async function getNotificationsAction() {
+  interface Notification {
+    id: string;
+    type: 'friend' | 'book' | 'club' | 'prompt' | 'reply';
+    message: string;
+    createdAt: Date;
+    from?: {
+      id: string;
+      name: string;
+      email: string;
+      image: string | null;
+    };
+  }
+
+  try {
+    const { user } = await getAuthenticatedUser();
+    if (!user) return { notifications: [] };
+
+    const notifications: Notification[] = [];
+
+    const friendRequests = await prisma.friendRequest.findMany({
+      where: { toId: user.id, status: 'PENDING' },
+      include: { from: true },
+      orderBy: { createdAt: 'desc' },
+    });
+    friendRequests.forEach((req) => {
+      notifications.push({
+        id: `friend-${req.id}`,
+        type: 'friend',
+        message: `${req.from.name} sent you a friend request`,
+        createdAt: req.createdAt,
+        from: req.from,
+      });
+    });
+
+    const bookComments = await prisma.comment.findMany({
+      where: {
+        chapter: {
+          book: {
+            userId: user.id,
+          },
+        },
+      },
+      include: {
+        user: { select: { name: true } },
+        chapter: { select: { title: true, book: { select: { title: true } } } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    bookComments.forEach((comment) => {
+      notifications.push({
+        id: `book-${comment.id}`,
+        type: 'book',
+        message: `${comment.user.name} commented on "${comment.chapter.book.title}" - "${comment.chapter.title}"`,
+        createdAt: comment.createdAt,
+      });
+    });
+
+    const clubDiscussions = await prisma.discussion.findMany({
+      where: {
+        club: {
+          members: {
+            some: { userId: user.id },
+          },
+        },
+      },
+      include: {
+        author: {
+          include: {
+            user: { select: { name: true } },
+          },
+        },
+        club: { select: { name: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    clubDiscussions.forEach((disc) => {
+      notifications.push({
+        id: `club-${disc.id}`,
+        type: 'club',
+        message: `${disc.author.user.name} started a discussion in "${disc.club.name}"`,
+        createdAt: disc.createdAt,
+      });
+    });
+
+    const promptComments = await prisma.promptComment.findMany({
+      where: {
+        entry: {
+          userId: user.id,
+        },
+      },
+      include: {
+        user: { select: { name: true } },
+        entry: { select: { prompt: { select: { title: true } } } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    promptComments.forEach((comment) => {
+      notifications.push({
+        id: `prompt-${comment.id}`,
+        type: 'prompt',
+        message: `${comment.user.name} commented on your entry for "${comment.entry.prompt.title}"`,
+        createdAt: comment.createdAt,
+      });
+    });
+
+    const commentReplies = await prisma.comment.findMany({
+      where: {
+        parentId: { not: null },
+        parent: { userId: user.id },
+      },
+      include: {
+        user: { select: { name: true } },
+        parent: {
+          select: {
+            chapter: {
+              select: { title: true, book: { select: { title: true } } },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    commentReplies.forEach((reply) => {
+      notifications.push({
+        id: `reply-${reply.id}`,
+        type: 'reply',
+        message: `${reply.user.name} replied to your comment on "${
+          reply.parent?.chapter?.book?.title ?? 'your book'
+        }"`,
+        createdAt: reply.createdAt,
+      });
+    });
+
+    notifications.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    return { notifications: notifications.slice(0, 20) };
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    return { notifications: [] };
+  }
+}
+
+export async function getNotificationsCountAction() {
+  try {
+    const { user } = await getAuthenticatedUser();
+    if (!user) return { total: 0 };
+
+    const friendRequests = await prisma.friendRequest.count({
+      where: { toId: user.id, status: 'PENDING' },
+    });
+
+    const bookComments = await prisma.comment.count({
+      where: {
+        chapter: {
+          book: {
+            userId: user.id,
+          },
+        },
+      },
+    });
+
+    const clubDiscussions = await prisma.discussion.count({
+      where: {
+        club: {
+          members: {
+            some: { userId: user.id },
+          },
+        },
+      },
+    });
+
+    const promptComments = await prisma.promptComment.count({
+      where: {
+        entry: {
+          userId: user.id,
+        },
+      },
+    });
+
+    const commentReplies = await prisma.comment.count({
+      where: {
+        parentId: {
+          not: null,
+        },
+        parent: {
+          userId: user.id,
+        },
+      },
+    });
+
+    const clubInvites = await prisma.clubMember.count({
+      where: { userId: user.id },
+    });
+
+    const promptInvites = await prisma.prompt.count({
+      where: {
+        invitedUsers: {
+          some: { id: user.id },
+        },
+      },
+    });
+
+    const total =
+      friendRequests +
+      bookComments +
+      clubDiscussions +
+      promptComments +
+      commentReplies +
+      clubInvites +
+      promptInvites;
+
+    return { total };
+  } catch (error) {
+    console.error('Error fetching notifications count:', error);
+    return { total: 0 };
+  }
+}

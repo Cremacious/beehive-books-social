@@ -15,6 +15,7 @@ import pencilIcon from '@/assets/icons/pencil.png';
 import listIcon from '@/assets/icons/list.png';
 import clubIcon from '@/assets/icons/hive.png';
 import userIcon from '@/assets/icons/user.png';
+import { NotificationDropdown } from './NotificationDropdown';
 
 const DesktopSidebar = () => {
   const currentUser = useSession();
@@ -58,15 +59,10 @@ const DesktopSidebar = () => {
         {/* <Book size={30} className="transform rotate-12" /> */}
         <Image src={newLogo} alt="Beehive Books Logo" width={200} height={90} />
       </div>
-      {/* <Link href="/my-books/create">
-        <Button
-          variant={'beeYellow'}
-          className="flex items-center justify-center space-x-2 w-full"
-        >
-          <Plus size={20} />
-          New Book
-        </Button>
-      </Link> */}
+
+      <div className="flex items-center justify-center border-2 bg-yellow-500/10 rounded-2xl py-2 border-yellow-500/30 w-full">
+        <NotificationDropdown />
+      </div>
 
       <nav className="space-y-4 pt-4">
         {navLinks.map((item) => (
@@ -94,7 +90,7 @@ const DesktopSidebar = () => {
           </Link>
         ))}
       </nav>
-      <div className="mt-auto pt-6 border-t border-yellow-500 ">
+      <div className="mt-auto pt-6 border-t border-yellow-500/30 ">
         <div className="flex flex-row justify-between items-center">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
@@ -112,12 +108,13 @@ const DesktopSidebar = () => {
                 </div>
               )}
             </div>
-
-            <span className="text-white font-medium">
-              {user?.name || (
-                <div className="bg-[#FFC300]/10 h-8 w-28 rounded-2xl animate-pulse"></div>
-              )}
-            </span>
+            <Link href={`/profile/${user?.id}`}>
+              <span className="text-white font-medium mainFont hover:text-yellow-500 overflow-hidden text-ellipsis whitespace-nowrap">
+                {user?.name || (
+                  <div className="bg-[#FFC300]/10 h-8 w-28 rounded-2xl animate-pulse"></div>
+                )}
+              </span>
+            </Link>
           </div>
           <Link href="/settings">
             <Settings className="text-yellow-500 h-7 w-7 hover:text-yellow-600 hover:transform hover:-translate-y-0.5" />
@@ -130,5 +127,4 @@ const DesktopSidebar = () => {
 
 export default DesktopSidebar;
 
-
-// I want to create a rich text editor for writing. I want it to support basic formatting options like bold, italic, underline, headings, lists, and links. The editor should have a clean and user-friendly interface that matches the dark style of the website, with a toolbar for formatting options. It should also support keyboard shortcuts for common actions. The editor will replace a textarea in multiple different components across the site. This includes CreatePromptReplyForm, CreateChapterForm, and EditChapterForm. On chapter forms it will replace the "Content" textarea.  Look at my version of Next.js and Tailwind CSS to ensure compatibility. I am also using TypeScript. 
+// I want to create a rich text editor for writing. I want it to support basic formatting options like bold, italic, underline, headings, lists, and links. The editor should have a clean and user-friendly interface that matches the dark style of the website, with a toolbar for formatting options. It should also support keyboard shortcuts for common actions. The editor will replace a textarea in multiple different components across the site. This includes CreatePromptReplyForm, CreateChapterForm, and EditChapterForm. On chapter forms it will replace the "Content" textarea.  Look at my version of Next.js and Tailwind CSS to ensure compatibility. I am also using TypeScript.

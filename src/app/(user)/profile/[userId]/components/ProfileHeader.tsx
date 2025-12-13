@@ -134,7 +134,7 @@ export default function ProfileHeader({
 
         <div className="flex-1 space-y-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
+            <h1 className="text-3xl md:text-4xl  text-yellow-400 mb-2 mainFont">
               {user.name}
             </h1>
           </div>

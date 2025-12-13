@@ -6,14 +6,19 @@ import {
   createClubDiscussionAction,
   removeClubMemberAction,
   inviteFriendToClubAction,
-  createDiscussionReplyAction, createNestedDiscussionReplyAction, unlikeDiscussionReplyAction, likeDiscussionReplyAction
+  createDiscussionReplyAction,
+  createNestedDiscussionReplyAction,
+  unlikeDiscussionReplyAction,
+  likeDiscussionReplyAction,
 } from '@/actions/club.actions';
 import { DiscussionCommentType } from '@/lib/types';
 import { toast } from 'sonner';
 
 interface ClubStoreType {
   isLoading: boolean;
-  createClub: (formData: FormData) => Promise<void>;
+  createClub: (
+    formData: FormData
+  ) => Promise<{ success: boolean; message: string; clubId?: string }>;
   editClub: (clubId: string, formData: FormData) => Promise<void>;
   deleteClub: (clubId: string) => Promise<void>;
 
@@ -21,8 +26,14 @@ interface ClubStoreType {
   removeClubMember: (clubId: string, memberId: string) => Promise<void>;
   inviteFriend: (clubId: string, friendId: string) => Promise<void>;
 
-  addDiscussionReply: (discussionId: string, content: string) => Promise<DiscussionCommentType>;
-  addNestedDiscussionReply: (parentCommentId: string, content: string) => Promise<DiscussionCommentType>;
+  addDiscussionReply: (
+    discussionId: string,
+    content: string
+  ) => Promise<DiscussionCommentType>;
+  addNestedDiscussionReply: (
+    parentCommentId: string,
+    content: string
+  ) => Promise<DiscussionCommentType>;
   likeDiscussionReply: (commentId: string) => Promise<void>;
   unlikeDiscussionReply: (commentId: string) => Promise<void>;
 }
@@ -35,13 +46,16 @@ export const useClubStore = create<ClubStoreType>((set) => ({
       const result = await createClubAction(formData);
       if (result.success) {
         toast.success(result.message);
+        return result;
       } else {
         toast.error(result.message);
         console.log(result);
+        return result;
       }
     } catch (error) {
       toast.error('Failed to create club');
       console.log(error);
+      return { success: false, message: 'Failed to create club' };
     } finally {
       set({ isLoading: false });
     }
@@ -128,9 +142,15 @@ export const useClubStore = create<ClubStoreType>((set) => ({
     }
   },
 
-  addNestedDiscussionReply: async (parentCommentId: string, content: string) => {
+  addNestedDiscussionReply: async (
+    parentCommentId: string,
+    content: string
+  ) => {
     try {
-      const reply = await createNestedDiscussionReplyAction(parentCommentId, content);
+      const reply = await createNestedDiscussionReplyAction(
+        parentCommentId,
+        content
+      );
       return reply;
     } catch (error) {
       toast.error('Failed to post reply');

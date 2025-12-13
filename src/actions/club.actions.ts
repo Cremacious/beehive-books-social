@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma';
 import { getAuthenticatedUser } from '@/lib/auth-server';
 import { z } from 'zod';
 import { clubCreateSchema } from '@/lib/schemas';
-import cloudinary from '@/lib/cloudinary';
+// import cloudinary from '@/lib/cloudinary';
 import { revalidatePath } from 'next/cache';
 
 export async function createClubAction(formData: FormData) {
@@ -249,7 +249,9 @@ export async function editClubAction(clubId: string, formData: FormData) {
 }
 export async function deleteClubAction() {
   try {
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function getAllUserClubsAction() {

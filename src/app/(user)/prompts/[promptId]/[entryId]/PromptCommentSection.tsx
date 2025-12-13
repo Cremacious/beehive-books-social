@@ -20,8 +20,7 @@ interface PromptCommentSectionProps {
 const PromptCommentSection = ({ comments }: PromptCommentSectionProps) => {
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-2 md:p-10">
-      <h2 className="text-2xl font-bold text-yellow-400 mb-8 flex items-center gap-3">
-        <MessageCircle className="w-6 h-6" />
+      <h2 className="text-2xl mainFont text-white mb-8 flex items-center gap-3">
         Comments
         <span className="yellowBadge w-7 h-7">{comments.length}</span>
       </h2>

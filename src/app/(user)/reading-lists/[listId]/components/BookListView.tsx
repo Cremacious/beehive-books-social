@@ -4,7 +4,7 @@ import ReadingListItem from './ReadingListItem';
 import { useState, useEffect } from 'react';
 import { useReadingListStore } from '@/stores/useReadingListStore';
 import type { ReadingList } from '@/stores/useReadingListStore';
-import { Plus } from 'lucide-react';
+import { Plus, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface BookListViewProps {
@@ -84,9 +84,9 @@ const BookListView = ({ readingList }: BookListViewProps) => {
           Add Book
         </Button>
       </form>
-      <div className="border mx-auto w-full border-yellow-600 mb-8" />
+
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+        <h2 className="text-xl mainFont text-white flex items-center gap-2">
           Books in This List
         </h2>
      
@@ -105,7 +105,9 @@ const BookListView = ({ readingList }: BookListViewProps) => {
 
       {books.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
-          <div className="w-24 h-24 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6"></div>
+          <div className="w-24 h-24 bg-[#FFC300]/10 rounded-full flex items-center justify-center mb-6">
+            <BookOpen className="w-12 h-12 text-[#FFC300]" />
+          </div>
           <h3 className="text-2xl font-bold text-[#FFC300] mb-3">
             No Books in This List
           </h3>

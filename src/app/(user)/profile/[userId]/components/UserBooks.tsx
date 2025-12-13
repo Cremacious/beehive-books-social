@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import BookCard from '@/components/BookCard';
-import { Search, Filter,  } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 
 interface Book {
   id: string;
@@ -86,12 +86,10 @@ export default function UserBooks({ books, isOwnProfile }: UserBooksProps) {
 
   return (
     <div className="space-y-6">
-
       <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
         <div className="flex items-center gap-3 mb-6">
-       
           <div>
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-3xl mainFont text-white">
               {isOwnProfile ? 'Your Books' : `${books.length} Published Books`}
             </h2>
             <p className="text-[#FFC300]/60 text-sm">
@@ -102,7 +100,6 @@ export default function UserBooks({ books, isOwnProfile }: UserBooksProps) {
           </div>
         </div>
 
- 
         <div className="space-y-4">
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             <div className="relative flex-1">
@@ -130,19 +127,15 @@ export default function UserBooks({ books, isOwnProfile }: UserBooksProps) {
             </div>
           </div>
 
-     
-          <div className="text-white/60 text-sm">
+          <div className="text-white/60 text-sm ml-4">
             Showing {booksToShow.length} of {filteredAndSortedBooks.length}{' '}
             books
             {searchTerm && ` for "${searchTerm}"`}
           </div>
         </div>
-      </div>
-
-      <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8">
         {booksToShow.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
               {booksToShow.map((book) => (
                 <BookCard
                   key={book.id}
@@ -151,11 +144,11 @@ export default function UserBooks({ books, isOwnProfile }: UserBooksProps) {
                   author={book.author}
                   genre={book.genre}
                   coverImage={book.cover}
+                  category={book.category}
                 />
               ))}
             </div>
 
-     
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-2 mt-8">
                 <button
@@ -200,7 +193,6 @@ export default function UserBooks({ books, isOwnProfile }: UserBooksProps) {
           </>
         ) : (
           <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
-           
             <h3 className="text-2xl font-bold text-[#FFC300] mb-3">
               {searchTerm ? 'No Books Found' : 'No Books Yet'}
             </h3>
