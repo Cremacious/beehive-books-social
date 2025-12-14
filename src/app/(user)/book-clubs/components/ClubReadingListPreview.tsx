@@ -26,12 +26,25 @@ const ClubReadingListPreview = ({
       </div>
 
       <div className="space-y-3">
+        {readingList.length === 0 && (
+          <>
+            <p className="text-white/70 text-sm text-center mt-8">
+              The reading list is currently empty.
+            </p>
+            <div className='flex justify-center'>
+              <Button size={'sm'} variant={'beeYellow'}>
+                <Link href={`/book-clubs/${clubId}/reading-list`}>
+                  Add Books
+                </Link>
+              </Button>
+            </div>
+          </>
+        )}
         {readingList
           .sort((a, b) => {
-    
             if (a.status === 'CURRENT' && b.status !== 'CURRENT') return -1;
             if (a.status !== 'CURRENT' && b.status === 'CURRENT') return 1;
-      
+
             if (a.status === 'READ' && b.status !== 'READ') return -1;
             if (a.status !== 'READ' && b.status === 'READ') return 1;
             return 0;

@@ -140,12 +140,6 @@ export default function CreateClubForm() {
 
     formData.append('clubName', values.clubName);
     formData.append('description', values.description);
-    formData.append('currentBookTitle', values.currentBookTitle);
-    formData.append('currentBookAuthor', values.currentBookAuthor);
-    formData.append(
-      'currentBookChapters',
-      values.currentBookChapters.toString()
-    );
     formData.append('privacy', values.privacy);
     if (values.rules) formData.append('rules', values.rules);
 
@@ -209,63 +203,6 @@ export default function CreateClubForm() {
               {form.formState.errors.description.message}
             </p>
           )}
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <div>
-              <label className="text-lg font-semibold text-white">
-                Current Book
-              </label>
-              <p className="text-[#FFC300]/60 text-sm">
-                The book your club will start reading together
-              </p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <input
-                {...form.register('currentBookTitle')}
-                type="text"
-                placeholder="Book title..."
-                className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
-              />
-              {form.formState.errors.currentBookTitle && (
-                <p className="text-red-400 text-sm flex items-center gap-2 mt-1">
-                  <span className="text-xs">⚠️</span>
-                  {form.formState.errors.currentBookTitle.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <input
-                {...form.register('currentBookAuthor')}
-                type="text"
-                placeholder="Author name..."
-                className="w-full bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
-              />
-              {form.formState.errors.currentBookAuthor && (
-                <p className="text-red-400 text-sm flex items-center gap-2 mt-1">
-                  <span className="text-xs">⚠️</span>
-                  {form.formState.errors.currentBookAuthor.message}
-                </p>
-              )}
-            </div>
-          </div>
-          <div>
-            <input
-              {...form.register('currentBookChapters', { valueAsNumber: true })}
-              type="number"
-              placeholder="Number of chapters..."
-              className="w-1/2 mx-auto bg-[#1a1a1a] border border-[#FFC300]/20 rounded-xl p-4 text-white placeholder-white/50 focus:outline-none focus:border-[#FFC300]/50 focus:ring-1 focus:ring-[#FFC300]/50 transition-all"
-            />
-            {form.formState.errors.currentBookChapters && (
-              <p className="text-red-400 text-sm flex items-center gap-2 mt-1">
-                <span className="text-xs">⚠️</span>
-                {form.formState.errors.currentBookChapters.message}
-              </p>
-            )}
-          </div>
         </div>
 
         <div className="space-y-4">

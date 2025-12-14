@@ -143,7 +143,6 @@ model ReadingListItem {
   readingList   ReadingList @relation(fields: [readingListId], references: [id], onDelete: Cascade)
   bookId        String?
   book          Book?    @relation(fields: [bookId], references: [id], onDelete: SetNull)
-  // Allow adding books that aren't in the user's library
   title         String
   author        String
   addedAt       DateTime @default(now())

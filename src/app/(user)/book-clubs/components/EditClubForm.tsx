@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { BookOpen, Users, FileText, Send, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useClubStore } from '@/stores/useClubStore';
-import { clubCreateSchema } from '@/lib/schemas';
+import { clubEditSchema } from '@/lib/schemas';
 
 interface EditClubFormProps {
   club: {
@@ -27,14 +27,11 @@ export default function EditClubForm({ club }: EditClubFormProps) {
   const editClub = useClubStore((state) => state.editClub);
   const isLoading = useClubStore((state) => state.isLoading);
 
-  const form = useForm<z.infer<typeof clubCreateSchema>>({
-    resolver: zodResolver(clubCreateSchema),
+  const form = useForm<z.infer<typeof clubEditSchema>>({
+    resolver: zodResolver(clubEditSchema),
     defaultValues: {
       clubName: club.clubName,
       description: club.description,
-      currentBookTitle: club.currentBookTitle,
-      currentBookAuthor: club.currentBookAuthor,
-      currentBookChapters: club.currentBookChapters,
       privacy: club.privacy,
       rules: club.rules || '',
       invites: club.invites || [],
@@ -42,16 +39,10 @@ export default function EditClubForm({ club }: EditClubFormProps) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof clubCreateSchema>) {
+  function onSubmit(values: z.infer<typeof clubEditSchema>) {
     const formData = new FormData();
     formData.append('clubName', values.clubName);
     formData.append('description', values.description);
-    formData.append('currentBookTitle', values.currentBookTitle);
-    formData.append('currentBookAuthor', values.currentBookAuthor);
-    formData.append(
-      'currentBookChapters',
-      values.currentBookChapters.toString()
-    );
     formData.append('privacy', values.privacy);
     if (values.rules) formData.append('rules', values.rules);
     if (values.invites) {
@@ -108,76 +99,6 @@ export default function EditClubForm({ club }: EditClubFormProps) {
             <p className="text-red-400 text-sm flex items-center gap-2">
               <span className="text-xs">⚠️</span>
               {form.formState.errors.description.message}
-            </p>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-[#FFC300]" />
-              </div>
-              <label className="text-lg font-semibold text-white">
-                Current Book Title
-              </label>
-            </div>
-            <input
-              {...form.register('currentBookTitle')}
-              type="text"
-              placeholder="Book title..."
-              className="w-full p-4 searchStyle"
-            />
-            {form.formState.errors.currentBookTitle && (
-              <p className="text-red-400 text-sm flex items-center gap-2">
-                <span className="text-xs">⚠️</span>
-                {form.formState.errors.currentBookTitle.message}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-[#FFC300]" />
-              </div>
-              <label className="text-lg font-semibold text-white">Author</label>
-            </div>
-            <input
-              {...form.register('currentBookAuthor')}
-              type="text"
-              placeholder="Book author..."
-              className="w-full p-4 searchStyle"
-            />
-            {form.formState.errors.currentBookAuthor && (
-              <p className="text-red-400 text-sm flex items-center gap-2">
-                <span className="text-xs">⚠️</span>
-                {form.formState.errors.currentBookAuthor.message}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFC300]/10 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-[#FFC300]" />
-            </div>
-            <label className="text-lg font-semibold text-white">
-              Number of Chapters
-            </label>
-          </div>
-          <input
-            {...form.register('currentBookChapters', { valueAsNumber: true })}
-            type="number"
-            min="1"
-            placeholder="Number of chapters..."
-            className="w-full p-4 searchStyle"
-          />
-          {form.formState.errors.currentBookChapters && (
-            <p className="text-red-400 text-sm flex items-center gap-2">
-              <span className="text-xs">⚠️</span>
-              {form.formState.errors.currentBookChapters.message}
             </p>
           )}
         </div>

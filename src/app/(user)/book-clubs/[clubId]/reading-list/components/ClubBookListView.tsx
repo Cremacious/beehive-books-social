@@ -22,7 +22,11 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
     removeBookFromList,
     setCurrentBook,
   } = useClubReadingListStore();
-  const [newBook, setNewBook] = useState({ title: '', author: '' });
+  const [newBook, setNewBook] = useState({
+    title: '',
+    author: '',
+    chapterCount: '',
+  });
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -53,12 +57,17 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
       }) || [];
 
   const handleAddBook = async () => {
-    if (newBook.title.trim() && newBook.author.trim()) {
+    if (
+      newBook.title.trim() &&
+      newBook.author.trim() &&
+      newBook.chapterCount.trim()
+    ) {
       const formData = new FormData();
       formData.append('title', newBook.title.trim());
       formData.append('author', newBook.author.trim());
+      formData.append('chapterCount', newBook.chapterCount.trim());
       await addBookToList(readingList.id, formData);
-      setNewBook({ title: '', author: '' });
+      setNewBook({ title: '', author: '', chapterCount: '' });
     }
   };
 
@@ -104,6 +113,17 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
             className="flex-1 px-4 py-2 rounded-lg bg-[#232323] text-white placeholder:text-white/40 border border-[#FFC300]/20 focus:border-[#FFC300] focus:outline-none"
             value={newBook.author}
             onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
+            required
+          />
+          <input
+            type="number"
+            placeholder="Chapters"
+            min="1"
+            className="w-30 px-4 py-2 rounded-lg bg-[#232323] text-white placeholder:text-white/40 border border-[#FFC300]/20 focus:border-[#FFC300] focus:outline-none"
+            value={newBook.chapterCount}
+            onChange={(e) =>
+              setNewBook({ ...newBook, chapterCount: e.target.value })
+            }
             required
           />
           <Button type="submit" variant={'beeYellow'}>
@@ -163,15 +183,15 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
           <p className="text-white/70 mb-8 max-w-md leading-relaxed">
             This reading list is empty.{' '}
             {readingList.userRole === 'OWNER'
-              ? 'Add some books to get started!'
+              ? 'Add some books to get started! After adding books, select one to mark as your current book.'
               : 'The club owner will add books soon.'}
           </p>
-          {readingList.userRole === 'OWNER' && (
+          {/* {readingList.userRole === 'OWNER' && (
             <button className="px-8 py-4 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center gap-3">
               <BookOpen className="w-5 h-5" />
               Add Books
             </button>
-          )}
+          )} */}
         </div>
       )}
     </div>

@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { getAuthenticatedUser } from '@/lib/auth-server';
 import { getClubByIdAction } from '@/actions/club.actions';
 import { getUserRoleInClub } from '@/lib/utils';
+import { redirect } from 'next/navigation';
 
 const ClubPage = async ({
   params,
@@ -24,11 +25,15 @@ const ClubPage = async ({
 
   const { clubId } = await params;
 
-  const club = await getClubByIdAction(clubId);
+  let club;
+  try {
+    club = await getClubByIdAction(clubId);
+  } catch (error) {
+    redirect('/book-clubs');
+  }
 
   const userRole = getUserRoleInClub(club.members, user.id);
 
-  // Use the currentBook from the club directly, which is always accurate
   const currentBook = club.currentBook
     ? {
         id: club.currentBook.id,

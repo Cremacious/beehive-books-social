@@ -19,11 +19,27 @@ export const chapterSchema = z.object({
 export const clubCreateSchema = z.object({
   clubName: z.string().min(1, 'Club name is required'),
   description: z.string().min(1, 'Club description is required'),
-  currentBookTitle: z.string().min(1, 'Current book title is required'),
-  currentBookAuthor: z.string().min(1, 'Current book author is required'),
+  currentBookTitle: z
+    .string()
+    .min(1, 'Current book title is required')
+    .optional(),
+  currentBookAuthor: z
+    .string()
+    .min(1, 'Current book author is required')
+    .optional(),
   currentBookChapters: z
     .number()
-    .min(1, 'Number of chapters must be at least 1'),
+    .min(1, 'Number of chapters must be at least 1')
+    .optional(),
+  privacy: z.enum(['public', 'private', 'invite-only']),
+  rules: z.string().nullable().optional(),
+  invites: z.array(z.string()).optional(),
+  tags: z.array(z.string()).optional(),
+});
+
+export const clubEditSchema = z.object({
+  clubName: z.string().min(1, 'Club name is required'),
+  description: z.string().min(1, 'Club description is required'),
   privacy: z.enum(['public', 'private', 'invite-only']),
   rules: z.string().nullable().optional(),
   invites: z.array(z.string()).optional(),
