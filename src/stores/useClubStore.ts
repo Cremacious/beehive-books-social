@@ -78,7 +78,21 @@ export const useClubStore = create<ClubStoreType>((set) => ({
     }
   },
   deleteClub: async (clubId: string) => {
-    // Implement later
+    set({ isLoading: true });
+    try {
+      const result = await deleteClubAction(clubId);
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+        console.log(result);
+      }
+    } catch (error) {
+      toast.error('Failed to delete club');
+      console.log(error);
+    } finally {
+      set({ isLoading: false });
+    }
   },
   createClubDiscussion: async (clubId: string, formData: FormData) => {
     set({ isLoading: true });

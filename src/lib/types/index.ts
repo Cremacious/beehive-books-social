@@ -102,7 +102,9 @@ export type BookType = {
 
 export type ClubReadingListItemType = {
   id: string;
-  book: BookType;
+  book: BookType | null;
+  title: string;
+  author: string;
   addedAt: string;
   status: string;
   order: number;

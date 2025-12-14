@@ -28,6 +28,16 @@ const ClubPage = async ({
 
   const userRole = getUserRoleInClub(club.members, user.id);
 
+  // Use the currentBook from the club directly, which is always accurate
+  const currentBook = club.currentBook
+    ? {
+        id: club.currentBook.id,
+        title: club.currentBook.title,
+        author: club.currentBook.author,
+        chapterCount: club.currentBook.chapterCount,
+      }
+    : null;
+
   return (
     <NewPage>
       <BackButton text="Back to Clubs" href="/book-clubs" />
@@ -115,7 +125,7 @@ const ClubPage = async ({
             </div>
             <ClubProgress
               club={{
-                currentBook: club.currentBook,
+                currentBook: currentBook,
                 currentChapter: club.currentChapter,
                 id: club.id,
               }}
@@ -134,17 +144,13 @@ const ClubPage = async ({
             />
             <ClubReadingListPreview
               clubId={club.id}
-              readingList={club.readingList
-                .filter((item) => item.book !== null)
-                .slice(0, 5)
-                .map((item) => ({
-                  ...item,
-                  addedAt:
-                    typeof item.addedAt === 'string'
-                      ? item.addedAt
-                      : item.addedAt.toISOString(),
-                  book: item.book as NonNullable<typeof item.book>,
-                }))}
+              readingList={club.readingList.slice(0, 5).map((item) => ({
+                ...item,
+                addedAt:
+                  typeof item.addedAt === 'string'
+                    ? item.addedAt
+                    : item.addedAt.toISOString(),
+              }))}
             />
           </div>
         </div>

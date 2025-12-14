@@ -22,7 +22,7 @@ const ClubReadingListHeader = ({
   return (
     <div className="darkContainer2 rounded-2xl shadow-xl p-6 md:p-8 lg:p-10">
       <div className="flex flex-col space-y-4">
-        {/* Header with title and edit button */}
+  
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div className="flex-1 min-w-0">
             <h1 className="text-2xl md:text-3xl lg:text-4xl mainFont font-bold text-yellow-400 mb-2 wrap-break-word">
@@ -32,7 +32,6 @@ const ClubReadingListHeader = ({
          
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           <div className="flex items-center gap-2 text-white/70 text-sm bg-[#1a1a1a]/50 rounded-lg p-3">
             <BookOpen className="w-4 h-4 text-[#FFC300] shrink-0" />
@@ -50,7 +49,7 @@ const ClubReadingListHeader = ({
           </div>
         </div>
 
-        {/* Description */}
+
         {readingList.description && (
           <div className="bg-[#1a1a1a]/30 rounded-lg p-4">
             <p className="text-white/80 leading-relaxed text-sm md:text-base">

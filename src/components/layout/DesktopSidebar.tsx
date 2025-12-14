@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { getUserByIdAction } from '@/actions/user.actions';
 import { useSession } from '@/lib/auth-client';
-import newLogo from '@/assets/logo-trim3.png';
+import newLogo from '@/assets/final-logo.png';
 import dashIcon from '@/assets/icons/dashboard.png';
 import myBooksIcon from '@/assets/icons/my-books.png';
 import friendIcon from '@/assets/icons/friends.png';

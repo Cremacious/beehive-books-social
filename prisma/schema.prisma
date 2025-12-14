@@ -284,6 +284,7 @@ model ClubReadingListItem {
   // Allow adding books that aren't in the club's library
   title    String
   author   String
+  chapterCount Int   @default(0)
   addedAt  DateTime  @default(now())
   status   ReadingStatus
   isRead   Boolean   @default(false)

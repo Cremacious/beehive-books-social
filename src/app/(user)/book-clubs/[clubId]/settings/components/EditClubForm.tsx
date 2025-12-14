@@ -9,7 +9,7 @@ import { clubCreateSchema } from '@/lib/schemas';
 import { useState, useEffect } from 'react';
 import { getAllUserFriendsAction } from '@/actions/friend.actions';
 import { Button } from '@/components/ui/button';
-import { Check, Search, Upload, Users } from 'lucide-react';
+import { Check, Search, Upload, Users, Trash2 } from 'lucide-react';
 
 const availableTags = [
   'Mystery',
@@ -60,7 +60,7 @@ interface EditClubFormProps {
 
 export default function EditClubForm({ club }: EditClubFormProps) {
   const router = useRouter();
-  const { editClub } = useClubStore();
+  const { editClub, deleteClub } = useClubStore();
   const [coverImage, setCoverImage] = useState<string | null>(
     club.cover || null
   );
@@ -73,6 +73,7 @@ export default function EditClubForm({ club }: EditClubFormProps) {
   >([]);
   const [loadingFriends, setLoadingFriends] = useState(true);
   const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const form = useForm<z.infer<typeof clubCreateSchema>>({
     resolver: zodResolver(clubCreateSchema),
@@ -87,7 +88,10 @@ export default function EditClubForm({ club }: EditClubFormProps) {
       invites: club.invites
         ? Array.isArray(club.invites)
           ? club.invites
-          : club.invites.split(',').map((s) => s.trim()).filter(Boolean)
+          : club.invites
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean)
         : [],
       tags: club.tags || [],
     },
@@ -194,6 +198,12 @@ export default function EditClubForm({ club }: EditClubFormProps) {
     await editClub(club.id, formData);
     router.push(`/book-clubs/${club.id}`);
   }
+
+  const handleDeleteClub = async () => {
+    await deleteClub(club.id);
+    router.push('/book-clubs');
+    setShowDeleteConfirm(false);
+  };
 
   return (
     <>
@@ -538,27 +548,65 @@ export default function EditClubForm({ club }: EditClubFormProps) {
           </div>
         </div>
 
-        <div className="flex justify-end pt-6 border-t border-[#FFC300]/10">
+        <div className="flex justify-between pt-6 border-t border-[#FFC300]/10">
           <Button
-            variant={'beeDark'}
-            className="p-5 mr-4"
+            variant={'destructive'}
+            className="p-5"
             type="button"
-            onClick={() => router.push(`/book-clubs/${club.id}`)}
+            onClick={() => setShowDeleteConfirm(true)}
           >
-            Cancel
+            <Trash2 className="w-5 h-5" />
+            Delete Club
           </Button>
-          <Button
-            type="submit"
-            disabled={form.formState.isSubmitting}
-            variant="beeYellow"
-          >
-            <Users className="w-5 h-5" />
-            <span>
-              {form.formState.isSubmitting ? 'Updating Club...' : 'Update Club'}
-            </span>
-          </Button>
+
+          <div className="flex gap-4">
+            <Button
+              variant={'beeDark'}
+              className="p-5"
+              type="button"
+              onClick={() => router.push(`/book-clubs/${club.id}`)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={form.formState.isSubmitting}
+              variant="beeYellow"
+            >
+              <Users className="w-5 h-5" />
+              <span>
+                {form.formState.isSubmitting
+                  ? 'Updating Club...'
+                  : 'Update Club'}
+              </span>
+            </Button>
+          </div>
         </div>
       </form>
+
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-[#1a1a1a]  rounded-2xl p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold text-white mb-4">Delete Club</h3>
+            <p className="text-white/70 mb-6">
+              Are you sure you want to delete &quot;{club.clubName}&quot;? This action
+              cannot be undone and will permanently remove the club and all its
+              data.
+            </p>
+            <div className="flex gap-4 justify-end">
+              <Button
+                variant="beeDark"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={handleDeleteClub}>
+                Delete Club
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

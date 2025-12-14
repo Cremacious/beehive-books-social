@@ -614,7 +614,7 @@ export async function addCommentToChapterAction(
       },
     });
 
-    // Update comment count
+   
     await prisma.chapter.update({
       where: { id: chapterId },
       data: { commentCount: { increment: 1 } },

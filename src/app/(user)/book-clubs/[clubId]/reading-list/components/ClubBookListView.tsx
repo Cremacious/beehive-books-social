@@ -6,12 +6,14 @@ import { useState, useEffect } from 'react';
 import { useClubReadingListStore } from '@/stores/useClubReadingListStore';
 import type { ClubReadingList } from '@/stores/useClubReadingListStore';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 interface ClubBookListViewProps {
   readingList: ClubReadingList;
 }
 
 const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
+  const router = useRouter();
   const {
     currentList,
     setCurrentList,
@@ -28,16 +30,27 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
   }, [readingList, setCurrentList]);
 
   const books =
-    currentList?.readingList.map((item) => ({
-      id: item.id,
-      title: item.title,
-      author: item.author,
-      isRead: item.isRead,
-      dateAdded: item.addedAt.toISOString().split('T')[0],
-      rating: null,
-      cover: '/assets/stock/cover.jpeg',
-      isCurrentBook: item.bookId === currentList.currentBookId,
-    })) || [];
+    currentList?.readingList
+      .map((item) => ({
+        id: item.id,
+        title: item.title,
+        author: item.author,
+        isRead: item.isRead,
+        dateAdded: item.addedAt.toISOString().split('T')[0],
+        rating: null,
+        cover: '/assets/stock/cover.jpeg',
+        isCurrentBook: !!(
+          currentList.currentBookId && item.bookId === currentList.currentBookId
+        ),
+      }))
+      .sort((a, b) => {
+        if (a.isCurrentBook && !b.isCurrentBook) return -1;
+        if (!a.isCurrentBook && b.isCurrentBook) return 1;
+
+        return (
+          new Date(a.dateAdded).getTime() - new Date(b.dateAdded).getTime()
+        );
+      }) || [];
 
   const handleAddBook = async () => {
     if (newBook.title.trim() && newBook.author.trim()) {
@@ -58,7 +71,13 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
   };
 
   const handleSetCurrentBook = async (itemId: string) => {
-    await setCurrentBook(readingList.id, itemId);
+    try {
+      await setCurrentBook(readingList.id, itemId);
+
+      router.refresh();
+    } catch (error) {
+      console.error('Error setting current book:', error);
+    }
   };
 
   return (
