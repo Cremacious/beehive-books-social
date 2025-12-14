@@ -33,6 +33,8 @@ model User {
   promptEntries PromptEntry[]
   promptComments PromptComment[]
   comments      Comment[]
+  notifications Notification[]
+  notificationsFrom Notification[] @relation("NotificationFrom")
 
   @@unique([email])
   @@map("user")
@@ -335,5 +337,18 @@ model PromptComment {
   replies   PromptComment[] @relation("PromptCommentReplies")
 
   @@map("prompt_comment")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String
+  message   String
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fromId    String?
+  from      User?    @relation("NotificationFrom", fields: [fromId], references: [id], onDelete: Cascade)
+
+  @@map("notification")
 }
 

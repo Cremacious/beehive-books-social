@@ -428,7 +428,6 @@ export async function getPromptEntryByIdAction(entryId: string) {
       throw new Error('Access denied');
     }
 
-    // Transform comments to match PromptComment interface
     const transformedComments = entry.comments.map((comment) => ({
       id: comment.id,
       author: comment.user.name,
@@ -492,6 +491,17 @@ export async function addPromptCommentAction(entryId: string, content: string) {
 
     revalidatePath(`/prompts/${entry.promptId}/${entryId}`);
 
+    if (entry.userId !== user.id) {
+      await prisma.notification.create({
+        data: {
+          type: 'prompt',
+          message: `${user.name} commented on your prompt entry`,
+          userId: entry.userId,
+          fromId: user.id,
+        },
+      });
+    }
+
     return {
       id: comment.id,
       author: comment.user.name,
@@ -551,6 +561,18 @@ export async function addPromptReplyAction(commentId: string, content: string) {
     revalidatePath(
       `/prompts/${parentComment.entry.promptId}/${parentComment.entryId}`
     );
+
+   
+    if (parentComment.userId !== user.id) {
+      await prisma.notification.create({
+        data: {
+          type: 'reply',
+          message: `${user.name} replied to your comment`,
+          userId: parentComment.userId,
+          fromId: user.id,
+        },
+      });
+    }
 
     return {
       id: reply.id,

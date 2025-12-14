@@ -275,6 +275,7 @@ export async function getChapterByIdAction(chapterId: string) {
           },
         },
         comments: {
+          where: { parentId: null },
           include: {
             user: {
               select: {
@@ -620,6 +621,18 @@ export async function addCommentToChapterAction(
       data: { commentCount: { increment: 1 } },
     });
 
+    // Create notification for chapter author if not the commenter
+    if (chapter.book.userId !== user.id) {
+      await prisma.notification.create({
+        data: {
+          type: 'book',
+          message: `${user.name} commented on your chapter`,
+          userId: chapter.book.userId,
+          fromId: user.id,
+        },
+      });
+    }
+
     return comment;
   } catch (error) {
     console.error('Error adding comment:', error);
@@ -701,6 +714,18 @@ export async function addReplyToCommentAction(
       where: { id: comment.chapterId },
       data: { commentCount: { increment: 1 } },
     });
+
+    // Create notification for comment author if not the replier
+    if (comment.userId !== user.id) {
+      await prisma.notification.create({
+        data: {
+          type: 'reply',
+          message: `${user.name} replied to your comment`,
+          userId: comment.userId,
+          fromId: user.id,
+        },
+      });
+    }
 
     return reply;
   } catch (error) {
