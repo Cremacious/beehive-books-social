@@ -22,7 +22,7 @@ export default async function UserLayout({
       >
         <MobileHeader />
         <DesktopSidebar />
-        <div className="w-full mx-auto max-w-screen-2xl p-2 md:p-8 flex flex-col items-center grow justify-center">
+        <div className="w-full mx-auto max-w-screen-2xl p-2 md:p-6 lg:p-8 flex flex-col items-center grow justify-center">
           {children}
         </div>
         <BottomNavBar />

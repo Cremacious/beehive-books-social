@@ -482,17 +482,16 @@ export default function EditClubForm({ club }: EditClubFormProps) {
           </div>
         </div>
 
+        <Button
+          variant={'destructive'}
+          className="p-5"
+          type="button"
+          onClick={() => setShowDeleteConfirm(true)}
+        >
+          <Trash2 className="w-5 h-5" />
+          Delete Club
+        </Button>
         <div className="flex justify-between pt-6 border-t border-[#FFC300]/10">
-          <Button
-            variant={'destructive'}
-            className="p-5"
-            type="button"
-            onClick={() => setShowDeleteConfirm(true)}
-          >
-            <Trash2 className="w-5 h-5" />
-            Delete Club
-          </Button>
-
           <div className="flex gap-4">
             <Button
               variant={'beeDark'}
@@ -523,9 +522,9 @@ export default function EditClubForm({ club }: EditClubFormProps) {
           <div className="bg-[#1a1a1a]  rounded-2xl p-6 max-w-md w-full mx-4">
             <h3 className="text-xl font-bold text-white mb-4">Delete Club</h3>
             <p className="text-white/70 mb-6">
-              Are you sure you want to delete &quot;{club.clubName}&quot;? This action
-              cannot be undone and will permanently remove the club and all its
-              data.
+              Are you sure you want to delete &quot;{club.clubName}&quot;? This
+              action cannot be undone and will permanently remove the club and
+              all its data.
             </p>
             <div className="flex gap-4 justify-end">
               <Button

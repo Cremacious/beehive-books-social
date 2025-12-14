@@ -1,9 +1,9 @@
 'use client';
 
-import { Clock, Heart, Reply, User } from 'lucide-react';
+import { Heart, Reply } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import DiscussionNestedReply from './DiscussionNestedReply';
-import { formatDate, getRoleColor } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import { DiscussionCommentType } from '@/lib/types';
 import {
   createNestedDiscussionReplyAction,
@@ -11,6 +11,7 @@ import {
   unlikeDiscussionReplyAction,
 } from '@/actions/club.actions';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 const DiscussionReply = ({
   reply,
@@ -75,32 +76,41 @@ const DiscussionReply = ({
       }`}
     >
       <div className="p-6 darkContainer2 rounded-2xl shadow-xl">
-        <div className="flex gap-4 ">
-          <div className="w-48 shrink-0">
-            <div className="darkContainer3 rounded-2xl p-4 ">
+        <div className="flex flex-col md:flex-row gap-2 md:gap-4 ">
+          <div className="w-full md:w-48 shrink-0">
+            <div className="darkContainer3 rounded-2xl p-2 md:p-4 ">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-[#FFC300]/20 rounded-full flex items-center justify-center">
-                  <User className="w-6 h-6 text-[#FFC300]" />
+                <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+                  {reply.author.user.image ? (
+                    <Image
+                      src={reply.author.user.image}
+                      alt="Profile"
+                      width={40}
+                      height={40}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 animate-pulse bg-[#FFC300]/10 rounded-full flex items-center justify-center text-yellow-400">
+                      {' '}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <div className="font-semibold text-white">
                     {reply.author.user.name}
                   </div>
-              
                 </div>
               </div>
               <div className="text-xs text-white/60 space-y-1">
                 <div>
                   Joined: {new Date(reply.author.joinedAt).toLocaleDateString()}
                 </div>
-               
               </div>
             </div>
           </div>
 
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-4 text-sm text-white/60">
-            
               {formatDate(reply.createdAt.toISOString())}
             </div>
             <div className="text-white/90 leading-relaxed whitespace-pre-line">

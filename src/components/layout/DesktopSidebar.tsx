@@ -54,10 +54,16 @@ const DesktopSidebar = () => {
   ];
 
   return (
-    <div className="hidden md:flex w-80 bg-[#252525] flex-col p-6 shadow-xl space-y-8 h-screen sticky top-0">
+    <div className="hidden md:flex w-64 lg:w-72 xl:w-80 bg-[#252525] flex-col p-4 lg:p-6 shadow-xl space-y-6 lg:space-y-8 h-screen sticky top-0">
       <div className="ml-2">
         {/* <Book size={30} className="transform rotate-12" /> */}
-        <Image src={newLogo} alt="Beehive Books Logo" width={200} height={90} />
+        <Image
+          src={newLogo}
+          alt="Beehive Books Logo"
+          width={180}
+          height={80}
+          className="w-auto h-16 lg:h-20"
+        />
       </div>
 
       <NotificationDropdown />
@@ -84,7 +90,9 @@ const DesktopSidebar = () => {
             ) : (
               <Home size={20} />
             )}
-            <span className="font-medium">{item.name}</span>
+            <span className="font-medium text-sm lg:text-base">
+              {item.name}
+            </span>
           </Link>
         ))}
       </nav>

@@ -1,8 +1,8 @@
 'use client';
 
-import { Heart, User } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { formatDate, getRoleColor } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import { DiscussionCommentType } from '@/lib/types';
 import {
   likeDiscussionReplyAction,
@@ -48,13 +48,21 @@ const DiscussionNestedReply = ({
     >
       <div className="flex gap-3 mb-3 justify-center items-center">
         <div className="flex flex-row justify-center items-center gap-2">
-          <Image
-            src={nestedReply.author.user.image ?? '/default-avatar.png'}
-            alt={`${nestedReply.author.user.name}'s avatar`}
-            width={32}
-            height={32}
-            className="rounded-full"
-          />
+          <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+            {nestedReply.author.user.image ? (
+              <Image
+                src={nestedReply.author.user.image}
+                alt="Profile"
+                width={40}
+                height={40}
+                className="w-full h-full object-cover rounded-full"
+              />
+            ) : (
+              <div className="w-10 h-10 animate-pulse bg-[#FFC300]/10 rounded-full flex items-center justify-center text-yellow-400">
+                {' '}
+              </div>
+            )}
+          </div>
           <div className="font-semibold text-white text-sm">
             {nestedReply.author.user.name}
           </div>

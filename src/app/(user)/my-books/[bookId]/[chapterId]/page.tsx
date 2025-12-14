@@ -64,7 +64,7 @@ const ChapterPage = async ({
           )}
 
           <div className="flex md:hidden  justify-center">
-            <Link className="" href={`/my-books/111/11/edit`}>
+            <Link className="" href={`/my-books/${chapter.bookId}/${chapter.id}/edit`}>
               <Button className="w-full" variant={'beeYellow'}>
                 <Edit /> Edit Chapter
               </Button>

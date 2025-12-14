@@ -39,24 +39,28 @@ const DiscussionThreadPage = async ({
           </div>
 
           <div className="p-6 darkContainer2 rounded-2xl shadow-xl">
-            <div className="flex gap-4">
-              <div className="w-48 shrink-0">
-                <div className="darkContainer3 rounded-2xl p-4 ">
+            <div className="flex flex-col md:flex-row gap-2 md:gap-4">
+              <div className="w-full md:w-48 shrink-0">
+                <div className="darkContainer3 rounded-2xl p-2 md:p-4 ">
                   <div className="flex items-center gap-3 mb-3">
-                    <Image
-                      src={
-                        discussion.author.user.image ?? '/default-avatar.png'
-                      }
-                      alt={discussion.author.user.name ?? 'User avatar'}
-                      width={48}
-                      height={48}
-                      className="rounded-full"
-                    />
-                    {/* <div className="w-12 h-12 bg-[#FFC300]/20 rounded-full flex items-center justify-center">
-                      <User className="w-6 h-6 text-[#FFC300]" />
-                    </div> */}
+                    <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+                      {discussion.author.user.image ? (
+                        <Image
+                          src={discussion.author.user.image}
+                          alt="Profile"
+                          width={40}
+                          height={40}
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 animate-pulse bg-[#FFC300]/10 rounded-full flex items-center justify-center text-yellow-400">
+                          {' '}
+                        </div>
+                      )}
+                    </div>
+
                     <div>
-                      <div className="font-semibold text-white">
+                      <div className="font-semibold text-white ml-auto">
                         {discussion.author.user.name}
                       </div>
                     </div>

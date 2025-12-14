@@ -417,7 +417,23 @@ export async function getChapterForEditAction(
       },
     });
 
-    if (!chapter || chapter.book.userId !== user.id) {
+    if (
+      !chapter ||
+      chapter.bookId !== bookId ||
+      chapter.book.userId !== user.id
+    ) {
+      console.log('Debug: chapter exists?', !!chapter);
+      if (chapter) {
+        console.log(
+          'Debug: chapter.bookId === bookId?',
+          chapter.bookId === bookId
+        );
+        console.log(
+          'Debug: chapter.book.userId === user.id?',
+          chapter.book.userId === user.id
+        );
+        console.log('Debug: user.id:', user.id);
+      }
       throw new Error('Chapter not found or access denied');
     }
 
@@ -615,7 +631,6 @@ export async function addCommentToChapterAction(
       },
     });
 
-   
     await prisma.chapter.update({
       where: { id: chapterId },
       data: { commentCount: { increment: 1 } },

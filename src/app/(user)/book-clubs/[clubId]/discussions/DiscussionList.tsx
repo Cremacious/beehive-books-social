@@ -92,11 +92,8 @@ const DiscussionList = ({ discussions, clubId }: DiscussionListProps) => {
                 className="darkContainer2 rounded-xl p-4 md:p-6 mb-4 border-2 border-dashed border-yellow-500/30 flex flex-col md:flex-row md:items-center md:justify-between gap-4 min-h-[120px] md:min-h-20"
               >
                 <div className="flex-1 flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center">
-                
-                  </div>
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center"></div>
                 </div>
-                
               </div>
             )
           )}
@@ -125,10 +122,12 @@ const DiscussionList = ({ discussions, clubId }: DiscussionListProps) => {
             Start the conversation! Create the first discussion for your book
             club.
           </p>
-          <button className="px-8 py-4 bg-linear-to-r from-[#FFC300] to-[#FFD700] text-[#1E3A4B] font-bold rounded-xl shadow-lg hover:shadow-[#FFC300]/20 hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center gap-3">
+          <Link href={`/book-clubs/${clubId}/discussions/create`}>
+          <Button variant={'beeYellow'} size={'lg'}>
             <Plus className="w-5 h-5" />
             Start First Discussion
-          </button>
+          </Button>
+          </Link>
         </div>
       )}
     </div>
