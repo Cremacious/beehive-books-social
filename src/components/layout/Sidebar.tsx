@@ -3,11 +3,15 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
+import { Button } from '../ui/button';
+import FriendSidebarDisplay from './displays/FriendSidebarDisplay';
+import UserSidebarDisplay from './displays/UserSidebarDisplay';
 
 const Sidebar = () => {
   return (
@@ -17,12 +21,15 @@ const Sidebar = () => {
       </SheetTrigger>
       <SheetContent className="bg-[#1d1d1d] border-0">
         <SheetHeader>
-          <SheetTitle>Are you absolutely sure?</SheetTitle>
-          <SheetDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </SheetDescription>
+          <UserSidebarDisplay />
         </SheetHeader>
+        <FriendSidebarDisplay />
+
+        <SheetFooter className="">
+          <Button variant={'beeDark'} type="submit">
+            Logout
+          </Button>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );
