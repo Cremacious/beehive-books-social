@@ -1,32 +1,12 @@
 'use client';
-import { getUserByIdAction } from '@/actions/user.actions';
-import { useSession } from '@/lib/auth-client';
-import { useEffect, useState } from 'react';
+// import { useSession } from '@/lib/auth-client';
 import Image from 'next/image';
+import { useUser } from '@/contexts/UserContext';
 
 const UserSidebarDisplay = () => {
-  const currentUser = useSession();
-  const userId = currentUser.data?.user?.id;
-  const [user, setUser] = useState<{
-    id: string;
-    name: string;
-    image?: string | null;
-  } | null>(null);
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        if (typeof userId === 'string') {
-          const data = await getUserByIdAction(userId);
-          setUser(data.user);
-        }
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    };
-    if (userId) {
-      fetchUser();
-    }
-  }, [userId]);
+  // const currentUser = useSession();
+  // const userId = currentUser.data?.user?.id;
+  const user = useUser();
 
   return (
     <div className="flex items-center gap-3 p-2">

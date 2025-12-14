@@ -4,8 +4,6 @@ import { Home, Settings } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { getUserByIdAction } from '@/actions/user.actions';
 import { useSession } from '@/lib/auth-client';
 import newLogo from '@/assets/final-logo.png';
 import dashIcon from '@/assets/icons/dashboard.png';
@@ -16,32 +14,13 @@ import listIcon from '@/assets/icons/list.png';
 import clubIcon from '@/assets/icons/hive.png';
 import userIcon from '@/assets/icons/user.png';
 import { NotificationDropdown } from './NotificationDropdown';
+import { useUser } from '@/contexts/UserContext';
 
 const DesktopSidebar = () => {
   const currentUser = useSession();
   const userId = currentUser.data?.user?.id;
   const pathname = usePathname();
-  const [user, setUser] = useState<{
-    id: string;
-    name: string;
-    image?: string | null;
-  } | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        if (typeof userId === 'string') {
-          const data = await getUserByIdAction(userId);
-          setUser(data.user);
-        }
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    };
-    if (userId) {
-      fetchUser();
-    }
-  }, [userId]);
+  const user = useUser();
 
   const navLinks = [
     { name: 'Dashboard', href: '/dashboard', icon: dashIcon },
@@ -56,7 +35,6 @@ const DesktopSidebar = () => {
   return (
     <div className="hidden md:flex w-64 lg:w-72 xl:w-80 bg-[#252525] flex-col p-4 lg:p-6 shadow-xl space-y-6 lg:space-y-8 h-screen sticky top-0">
       <div className="ml-2">
-        {/* <Book size={30} className="transform rotate-12" /> */}
         <Image
           src={newLogo}
           alt="Beehive Books Logo"
@@ -132,5 +110,3 @@ const DesktopSidebar = () => {
 };
 
 export default DesktopSidebar;
-
-// I want to create a rich text editor for writing. I want it to support basic formatting options like bold, italic, underline, headings, lists, and links. The editor should have a clean and user-friendly interface that matches the dark style of the website, with a toolbar for formatting options. It should also support keyboard shortcuts for common actions. The editor will replace a textarea in multiple different components across the site. This includes CreatePromptReplyForm, CreateChapterForm, and EditChapterForm. On chapter forms it will replace the "Content" textarea.  Look at my version of Next.js and Tailwind CSS to ensure compatibility. I am also using TypeScript.

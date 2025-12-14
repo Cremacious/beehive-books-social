@@ -3,6 +3,7 @@ import DesktopSidebar from '@/components/layout/DesktopSidebar';
 import MobileHeader from '@/components/layout/MobileHeader';
 import { getCurrentServerUser } from '@/lib/auth-server';
 import { redirect } from 'next/navigation';
+import { Providers } from './Providers';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +17,7 @@ export default async function UserLayout({
     redirect('/sign-in');
   }
   return (
-    <>
+    <Providers>
       <div
         className={`antialiased min-h-screen flex flex-col md:flex-row font-sans bg-[#303030]`}
       >
@@ -27,6 +28,6 @@ export default async function UserLayout({
         </div>
         <BottomNavBar />
       </div>
-    </>
+    </Providers>
   );
 }
