@@ -37,9 +37,11 @@ const PromptPage = async ({
                 </span>
               </div>
             </div>
-            <Link href={`/prompts/${promptId}/edit`}>
-              <Button variant={'beeYellow'}>Edit</Button>
-            </Link>
+            {currentUserId === prompt.userId && (
+              <Link href={`/prompts/${promptId}/edit`}>
+                <Button variant={'beeYellow'}>Edit</Button>
+              </Link>
+            )}
           </div>
           <p className="text-white/80 leading-relaxed mb-6">
             {prompt.description}

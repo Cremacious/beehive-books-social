@@ -396,9 +396,18 @@ export async function getPromptEntryByIdAction(entryId: string) {
           select: { id: true, name: true },
         },
         comments: {
+          where: { parentId: null },
           include: {
             user: {
-              select: { id: true, name: true },
+              select: { id: true, name: true, image: true },
+            },
+            replies: {
+              include: {
+                user: {
+                  select: { id: true, name: true, image: true },
+                },
+              },
+              orderBy: { createdAt: 'asc' },
             },
           },
           orderBy: { createdAt: 'asc' },
@@ -423,11 +432,18 @@ export async function getPromptEntryByIdAction(entryId: string) {
     const transformedComments = entry.comments.map((comment) => ({
       id: comment.id,
       author: comment.user.name,
-      avatar: null, // Assuming no avatar for now
+      avatar: comment.user.image,
       content: comment.content,
       timestamp: comment.createdAt.toISOString(),
       likes: 0,
-      replies: [], // For now, assuming no nested replies
+      replies: comment.replies.map((reply) => ({
+        id: reply.id,
+        author: reply.user.name,
+        avatar: reply.user.image,
+        content: reply.content,
+        timestamp: reply.createdAt.toISOString(),
+        likes: 0,
+      })),
     }));
 
     return {
@@ -439,4 +455,112 @@ export async function getPromptEntryByIdAction(entryId: string) {
   }
 }
 
+export async function addPromptCommentAction(entryId: string, content: string) {
+  try {
+    const { user } = await getAuthenticatedUser();
+    if (!user) throw new Error('Unauthorized');
 
+    const entry = await prisma.promptEntry.findUnique({
+      where: { id: entryId },
+      include: {
+        prompt: {
+          include: {
+            invitedUsers: { select: { id: true } },
+          },
+        },
+      },
+    });
+
+    if (!entry) throw new Error('Entry not found');
+
+    const hasAccess =
+      entry.prompt.userId === user.id ||
+      entry.prompt.invitedUsers.some((invited) => invited.id === user.id);
+
+    if (!hasAccess) throw new Error('Access denied');
+
+    const comment = await prisma.promptComment.create({
+      data: {
+        content,
+        entryId: entryId,
+        userId: user.id,
+      },
+      include: {
+        user: { select: { id: true, name: true, image: true } },
+      },
+    });
+
+    revalidatePath(`/prompts/${entry.promptId}/${entryId}`);
+
+    return {
+      id: comment.id,
+      author: comment.user.name,
+      avatar: comment.user.image,
+      content: comment.content,
+      timestamp: comment.createdAt.toISOString(),
+      likes: 0,
+      replies: [],
+    };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function addPromptReplyAction(commentId: string, content: string) {
+  try {
+    const { user } = await getAuthenticatedUser();
+    if (!user) throw new Error('Unauthorized');
+
+    const parentComment = await prisma.promptComment.findUnique({
+      where: { id: commentId },
+      include: {
+        entry: {
+          include: {
+            prompt: {
+              include: {
+                invitedUsers: { select: { id: true } },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!parentComment) throw new Error('Comment not found');
+
+    const hasAccess =
+      parentComment.entry.prompt.userId === user.id ||
+      parentComment.entry.prompt.invitedUsers.some(
+        (invited) => invited.id === user.id
+      );
+
+    if (!hasAccess) throw new Error('Access denied');
+
+    const reply = await prisma.promptComment.create({
+      data: {
+        content,
+        entryId: parentComment.entryId,
+        userId: user.id,
+        parentId: commentId,
+      },
+      include: {
+        user: { select: { id: true, name: true, image: true } },
+      },
+    });
+
+    revalidatePath(
+      `/prompts/${parentComment.entry.promptId}/${parentComment.entryId}`
+    );
+
+    return {
+      id: reply.id,
+      author: reply.user.name,
+      avatar: reply.user.image,
+      content: reply.content,
+      timestamp: reply.createdAt.toISOString(),
+      likes: 0,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+}

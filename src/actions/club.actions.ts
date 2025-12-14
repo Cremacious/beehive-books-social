@@ -2,7 +2,7 @@
 import prisma from '@/lib/prisma';
 import { getAuthenticatedUser } from '@/lib/auth-server';
 import { z } from 'zod';
-import { clubCreateSchema } from '@/lib/schemas';
+import { clubCreateSchema, clubEditSchema } from '@/lib/schemas';
 // import cloudinary from '@/lib/cloudinary';
 import { revalidatePath } from 'next/cache';
 
@@ -123,18 +123,13 @@ export async function editClubAction(clubId: string, formData: FormData) {
     const data = {
       clubName: formData.get('clubName') as string,
       description: formData.get('description') as string,
-      currentBookTitle: formData.get('currentBookTitle') as string,
-      currentBookAuthor: formData.get('currentBookAuthor') as string,
-      currentBookChapters: parseInt(
-        formData.get('currentBookChapters') as string
-      ),
       privacy: formData.get('privacy') as string,
       rules: formData.get('rules') as string,
       invites: formData.getAll('invites') as string[],
       tags: formData.getAll('tags') as string[],
     };
 
-    const parsedData = clubCreateSchema.parse(data);
+    const parsedData = clubEditSchema.parse(data);
 
     let coverUrl: undefined | string;
     const coverUrlFromForm = formData.get('coverUrl') as string;
@@ -150,62 +145,17 @@ export async function editClubAction(clubId: string, formData: FormData) {
             | 'PRIVATE'
             | 'FRIENDS');
 
-    let currentBookTitle: string | null = null;
-    let currentBookAuthor: string | null = null;
-    let currentBookChapterCount: number = 0;
-    if (parsedData.currentBookTitle && parsedData.currentBookAuthor) {
-      currentBookTitle = parsedData.currentBookTitle;
-      currentBookAuthor = parsedData.currentBookAuthor;
-      currentBookChapterCount = parsedData.currentBookChapters || 0;
-    }
-
     await prisma.club.update({
       where: { id: clubId },
       data: {
         name: parsedData.clubName,
         description: parsedData.description,
-        currentBookTitle,
-        currentBookAuthor,
-        currentBookChapterCount,
         privacy: privacyEnum,
         rules: parsedData.rules,
         tags: parsedData.tags || [],
         ...(coverUrl && { cover: coverUrl }),
       },
     });
-
-    if (parsedData.currentBookTitle && parsedData.currentBookAuthor) {
-      await prisma.clubReadingListItem.updateMany({
-        where: { clubId, status: 'CURRENT' },
-        data: { status: 'UPCOMING' },
-      });
-
-      const existingItem = await prisma.clubReadingListItem.findFirst({
-        where: {
-          clubId,
-          title: parsedData.currentBookTitle,
-          author: parsedData.currentBookAuthor,
-        },
-      });
-
-      if (existingItem) {
-        await prisma.clubReadingListItem.update({
-          where: { id: existingItem.id },
-          data: { status: 'CURRENT' },
-        });
-      } else {
-        await prisma.clubReadingListItem.create({
-          data: {
-            clubId,
-            title: parsedData.currentBookTitle,
-            author: parsedData.currentBookAuthor,
-            chapterCount: parsedData.currentBookChapters || 0,
-            order: 1,
-            status: 'CURRENT',
-          },
-        });
-      }
-    }
 
     if (parsedData.invites && parsedData.invites.length > 0) {
       for (const userId of parsedData.invites) {

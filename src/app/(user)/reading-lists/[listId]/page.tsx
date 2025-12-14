@@ -1,8 +1,9 @@
 import NewPage from '@/components/layout/NewPage';
-import BookListView from './components/BookListView'
+import BookListView from './components/BookListView';
 import { getReadingListAction } from '@/actions/reading-list.actions';
 import ListStats from './components/ListStats';
 import ReadingListHeader from './components/ReadingListHeader';
+import BackButton from '@/components/shared/BackButton';
 
 const ReadingListPage = async ({
   params,
@@ -15,6 +16,7 @@ const ReadingListPage = async ({
 
   return (
     <NewPage>
+      <BackButton text="Back to Reading Lists" href="/reading-lists" />
       <div className="w-full max-w-6xl mx-auto space-y-8">
         <ReadingListHeader initialReadingList={readingList} />
 

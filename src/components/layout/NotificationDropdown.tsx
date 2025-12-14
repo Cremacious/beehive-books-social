@@ -71,7 +71,7 @@ export function NotificationDropdown() {
   return (
     <div className="relative" ref={dropdownRef}>
       <div
-        className="flex items-center justify-center md:border-2 md:bg-yellow-500/10 rounded-2xl py-2 border-yellow-500/30 w-full cursor-pointer"
+        className="relative flex items-center justify-center md:border-2 md:bg-yellow-500/10 rounded-2xl py-2 border-yellow-500/30 w-full cursor-pointer"
         onClick={handleTriggerClick}
       >
         <div className="relative">

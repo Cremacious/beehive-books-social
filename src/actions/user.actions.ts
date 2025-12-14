@@ -358,26 +358,35 @@ export async function getNotificationsAction() {
     const clubMemberships = await prisma.clubMember.findMany({
       where: {
         userId: user.id,
+        role: 'MEMBER',
+      },
+      include: {
         club: {
-          members: {
-            some: {
-              role: 'OWNER',
-              userId: { not: user.id },
+          select: {
+            name: true,
+            members: {
+              where: { role: 'OWNER' },
+              select: {
+                user: {
+                  select: { id: true, name: true, email: true, image: true },
+                },
+              },
             },
           },
         },
       },
-      include: {
-        club: { select: { name: true } },
-      },
       orderBy: { joinedAt: 'desc' },
     });
     clubMemberships.forEach((membership) => {
+      const owner = membership.club.members[0]?.user;
       notifications.push({
         id: `club-invite-${membership.id}`,
         type: 'club',
-        message: `You have been added to "${membership.club.name}"`,
+        message: owner
+          ? `${owner.name} added you to "${membership.club.name}"`
+          : `You have been added to "${membership.club.name}"`,
         createdAt: membership.joinedAt,
+        from: owner,
       });
     });
 
@@ -427,6 +436,27 @@ export async function getNotificationsAction() {
           reply.parent?.chapter?.book?.title ?? 'your book'
         }"`,
         createdAt: reply.createdAt,
+      });
+    });
+
+    const promptInvitations = await prisma.prompt.findMany({
+      where: {
+        invitedUsers: {
+          some: { id: user.id },
+        },
+      },
+      include: {
+        user: { select: { id: true, name: true, email: true, image: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    promptInvitations.forEach((prompt) => {
+      notifications.push({
+        id: `prompt-invite-${prompt.id}`,
+        type: 'prompt',
+        message: `${prompt.user.name} invited you to respond to "${prompt.title}"`,
+        createdAt: prompt.createdAt,
+        from: prompt.user,
       });
     });
 
@@ -493,14 +523,7 @@ export async function getNotificationsCountAction() {
     const clubInvites = await prisma.clubMember.count({
       where: {
         userId: user.id,
-        club: {
-          members: {
-            some: {
-              role: 'OWNER',
-              userId: { not: user.id },
-            },
-          },
-        },
+        role: 'MEMBER',
       },
     });
 

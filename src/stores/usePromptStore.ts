@@ -9,6 +9,8 @@ import {
   inviteFriendToPromptAction,
   uninviteFriendToPromptAction,
   submitPromptEntryAction,
+  addPromptCommentAction,
+  addPromptReplyAction,
 } from '@/actions/prompt.actions';
 
 export interface Prompt {
@@ -81,6 +83,14 @@ interface PromptStoreType {
   inviteFriendToPrompt: (promptId: string, friendId: string) => Promise<void>;
   uninviteFriendToPrompt: (promptId: string, friendId: string) => Promise<void>;
   submitPromptEntry: (promptId: string, content: string) => Promise<void>;
+  addPromptComment: (
+    entryId: string,
+    content: string
+  ) => Promise<PromptComment>;
+  addPromptReply: (
+    commentId: string,
+    content: string
+  ) => Promise<PromptCommentReply>;
 }
 
 export const usePromptStore = create<PromptStoreType>((set) => ({
@@ -218,5 +228,15 @@ export const usePromptStore = create<PromptStoreType>((set) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+  addPromptComment: async (entryId: string, content: string) => {
+    const comment = await addPromptCommentAction(entryId, content);
+    if (!comment) throw new Error('Failed to add comment');
+    return comment as PromptComment;
+  },
+  addPromptReply: async (commentId: string, content: string) => {
+    const reply = await addPromptReplyAction(commentId, content);
+    if (!reply) throw new Error('Failed to add reply');
+    return reply as PromptCommentReply;
   },
 }));

@@ -66,12 +66,11 @@ const PublicChapterPage = async ({
           </div>
         </div>
 
-        <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
-          <div className="prose prose-lg prose-invert max-w-none">
-            <div className="text-white/90 leading-relaxed whitespace-pre-line font-serif text-lg">
-              {chapter.content}
-            </div>
-          </div>
+        <div className="prose prose-lg prose-invert max-w-none">
+          <div
+            className="text-white/90 leading-relaxed whitespace-pre-line font-serif text-lg"
+            dangerouslySetInnerHTML={{ __html: chapter.content }}
+          />
         </div>
 
         <ChapterCommentSection chapter={chapter} />

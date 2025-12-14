@@ -21,7 +21,7 @@ interface NotificationStore {
   count: number;
   notifications: Notification[];
   isLoading: boolean;
-  lastAcknowledgedTotal: number;
+  seenNotificationIds: Set<string>;
   fetchCount: () => Promise<void>;
   fetchNotifications: () => Promise<void>;
   markAsRead: () => void;
@@ -31,20 +31,23 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
   count: 0,
   notifications: [],
   isLoading: false,
-  lastAcknowledgedTotal: (() => {
+  seenNotificationIds: (() => {
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('notificationAcknowledgedTotal');
-      return stored ? parseInt(stored, 10) : 0;
+      const stored = localStorage.getItem('seenNotificationIds');
+      return stored ? new Set(JSON.parse(stored)) : new Set<string>();
     }
-    return 0;
+    return new Set<string>();
   })(),
   fetchCount: async () => {
     try {
-      const { total } = await getNotificationsCountAction();
-      const { lastAcknowledgedTotal } = get();
+      const { notifications } = await getNotificationsAction();
+      const { seenNotificationIds } = get();
 
-      const displayCount = Math.max(0, total - lastAcknowledgedTotal);
-      set({ count: displayCount });
+      const unseenCount = notifications.filter(
+        (n) => !seenNotificationIds.has(n.id)
+      ).length;
+
+      set({ count: unseenCount });
     } catch (error) {
       console.error('Error fetching notification count:', error);
     }
@@ -60,21 +63,21 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
     }
   },
   markAsRead: () => {
-    const { count } = get();
+    const { notifications, seenNotificationIds } = get();
 
-    set((state) => {
-      const newAcknowledgedTotal = state.lastAcknowledgedTotal + count;
+    const newSeenIds = new Set(seenNotificationIds);
+    notifications.forEach((n) => newSeenIds.add(n.id));
 
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(
-          'notificationAcknowledgedTotal',
-          newAcknowledgedTotal.toString()
-        );
-      }
-      return {
-        lastAcknowledgedTotal: newAcknowledgedTotal,
-        count: 0,
-      };
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(
+        'seenNotificationIds',
+        JSON.stringify([...newSeenIds])
+      );
+    }
+
+    set({
+      seenNotificationIds: newSeenIds,
+      count: 0,
     });
   },
 }));

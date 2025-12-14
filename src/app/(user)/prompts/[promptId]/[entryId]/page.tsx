@@ -26,7 +26,7 @@ const PromptEntryPage = async ({
                   <span className="font-medium">
                     Added {entry?.createdAt.toLocaleDateString()}
                   </span>
-                </div> 
+                </div>
               </div>
             </div>
           </div>
@@ -39,7 +39,10 @@ const PromptEntryPage = async ({
           </div>
         </div>
 
-        <PromptCommentSection comments={entry?.comments || []} />
+        <PromptCommentSection
+          comments={entry?.comments || []}
+          entryId={entryId}
+        />
       </div>
     </NewPage>
   );
