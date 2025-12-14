@@ -512,35 +512,6 @@ export async function addBookToClubListAction(
       bookId: formData.get('bookId'),
     });
 
-    let bookId = data.bookId;
-    if (!bookId) {
-      const existingBook = await prisma.book.findFirst({
-        where: {
-          title: data.title,
-          author: data.author,
-          userId: user.id,
-        },
-      });
-
-      if (existingBook) {
-        bookId = existingBook.id;
-      } else {
-        const newBook = await prisma.book.create({
-          data: {
-            title: data.title,
-            author: data.author,
-            chapterCount: data.chapterCount,
-            userId: user.id,
-            category: 'Fiction', // default
-            genre: 'General', // default
-            description: '', // default
-            privacy: 'PRIVATE', // default
-          },
-        });
-        bookId = newBook.id;
-      }
-    }
-
     const club = await prisma.club.findUnique({
       where: { id: clubId },
     });
@@ -557,9 +528,10 @@ export async function addBookToClubListAction(
     await prisma.clubReadingListItem.create({
       data: {
         clubId,
-        bookId,
+        bookId: null,
         title: data.title,
         author: data.author,
+        chapterCount: data.chapterCount,
         order: nextOrder,
         status: 'UPCOMING',
       },
@@ -657,45 +629,11 @@ export async function setClubCurrentBookAction(clubId: string, itemId: string) {
     });
     if (!item) throw new Error('Book not found in reading list');
 
-    let bookId = item.bookId;
-
-    if (!bookId) {
-      const existingBook = await prisma.book.findFirst({
-        where: {
-          title: item.title,
-          author: item.author,
-          userId: user.id,
-        },
-      });
-
-      if (existingBook) {
-        bookId = existingBook.id;
-
-        await prisma.clubReadingListItem.update({
-          where: { id: itemId },
-          data: { bookId },
-        });
-      } else {
-        const newBook = await prisma.book.create({
-          data: {
-            title: item.title,
-            author: item.author,
-            genre: 'Unknown',
-            category: 'Fiction',
-            description: '',
-            privacy: 'PRIVATE',
-            userId: user.id,
-            chapterCount: item.chapterCount || 0,
-          },
-        });
-        bookId = newBook.id;
-
-        await prisma.clubReadingListItem.update({
-          where: { id: itemId },
-          data: { bookId },
-        });
-      }
+    if (!item.bookId) {
+      return { success: false, message: 'Cannot set current book: book not in personal library' };
     }
+
+    const bookId = item.bookId;
 
     await prisma.clubReadingListItem.update({
       where: { id: itemId },
