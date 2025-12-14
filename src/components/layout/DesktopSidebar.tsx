@@ -60,9 +60,7 @@ const DesktopSidebar = () => {
         <Image src={newLogo} alt="Beehive Books Logo" width={200} height={90} />
       </div>
 
-      <div className="flex items-center justify-center border-2 bg-yellow-500/10 rounded-2xl py-2 border-yellow-500/30 w-full">
-        <NotificationDropdown />
-      </div>
+      <NotificationDropdown />
 
       <nav className="space-y-4 pt-4">
         {navLinks.map((item) => (

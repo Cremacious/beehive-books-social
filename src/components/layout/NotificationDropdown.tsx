@@ -1,32 +1,24 @@
 'use client';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Bell } from 'lucide-react';
 import { useNotificationStore } from '@/stores/useNotificationStore';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import friendIcon from '@/assets/icons/friends.png';
 import myBooksIcon from '@/assets/icons/my-books.png';
 import clubIcon from '@/assets/icons/hive.png';
 import pencilIcon from '@/assets/icons/pencil.png';
-import { MessageCircle } from 'lucide-react'; // for replies
+import { MessageCircle } from 'lucide-react';
 
 export function NotificationDropdown() {
-  const { count, notifications, fetchCount, fetchNotifications } =
+  const { count, notifications, fetchCount, fetchNotifications, markAsRead } =
     useNotificationStore();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchCount();
     fetchNotifications();
 
-    // Poll every 30 seconds for updates
     const interval = setInterval(() => {
       fetchCount();
       fetchNotifications();
@@ -34,6 +26,30 @@ export function NotificationDropdown() {
 
     return () => clearInterval(interval);
   }, [fetchCount, fetchNotifications]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleTriggerClick = () => {
+    markAsRead();
+    setIsOpen(!isOpen);
+  };
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -53,8 +69,11 @@ export function NotificationDropdown() {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <div className="relative" ref={dropdownRef}>
+      <div
+        className="flex items-center justify-center md:border-2 md:bg-yellow-500/10 rounded-2xl py-2 border-yellow-500/30 w-full cursor-pointer"
+        onClick={handleTriggerClick}
+      >
         <div className="relative">
           <Bell size={24} className="text-[#FFC300]" />
           {count > 0 && (
@@ -63,46 +82,47 @@ export function NotificationDropdown() {
             </span>
           )}
         </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-80 bg-[#1d1d1d] border-0 max-h-96 overflow-y-auto"
-        align="start"
-      >
-        <DropdownMenuLabel className="text-white mainFont text-lg">
-          Notifications
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          {notifications.length === 0 ? (
-            <DropdownMenuItem disabled className="text-yellow-500">
-              No new notifications
-            </DropdownMenuItem>
-          ) : (
-            notifications.slice(0, 10).map((notification) => (
-              <DropdownMenuItem
-                key={notification.id}
-                className="flex items-start space-x-3 p-3"
-              >
-                <div className="shrink-0">{getIcon(notification.type)}</div>
-                <div className="flex-1">
-                  <p className="text-white text-sm">{notification.message}</p>
-                  <p className="text-gray-400 text-xs">
-                    {new Date(notification.createdAt).toLocaleDateString()}
-                  </p>
+      </div>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 mt-2 w-80 bg-[#1d1d1d] border-0 rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
+          <div className="p-4 border-b border-yellow-500/30">
+            <h3 className="text-white mainFont text-lg">Notifications</h3>
+          </div>
+
+          <div className="py-2">
+            {notifications.length === 0 ? (
+              <div className="px-4 py-2 text-yellow-500 text-sm opacity-60">
+                No new notifications
+              </div>
+            ) : (
+              notifications.slice(0, 10).map((notification) => (
+                <div
+                  key={notification.id}
+                  className="flex items-start space-x-3 p-3 hover:bg-yellow-800/30 cursor-pointer"
+                >
+                  <div className="shrink-0">{getIcon(notification.type)}</div>
+                  <div className="flex-1">
+                    <p className="text-white text-sm">{notification.message}</p>
+                    <p className="text-gray-400 text-xs">
+                      {new Date(notification.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
                 </div>
-              </DropdownMenuItem>
-            ))
+              ))
+            )}
+          </div>
+
+          {notifications.length > 10 && (
+            <>
+              <div className="border-t border-gray-700"></div>
+              <div className="px-4 py-2 text-yellow-500 text-center text-sm cursor-pointer hover:bg-gray-800">
+                View All Notifications
+              </div>
+            </>
           )}
-        </DropdownMenuGroup>
-        {notifications.length > 10 && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-yellow-500 text-center">
-              View All Notifications
-            </DropdownMenuItem>
-          </>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </div>
+      )}
+    </div>
   );
 }
