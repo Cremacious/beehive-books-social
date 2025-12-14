@@ -630,7 +630,10 @@ export async function setClubCurrentBookAction(clubId: string, itemId: string) {
     if (!item) throw new Error('Book not found in reading list');
 
     if (!item.bookId) {
-      return { success: false, message: 'Cannot set current book: book not in personal library' };
+      return {
+        success: false,
+        message: 'Cannot set current book: book not in personal library',
+      };
     }
 
     const bookId = item.bookId;
