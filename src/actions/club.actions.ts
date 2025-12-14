@@ -47,7 +47,6 @@ export async function createClubAction(formData: FormData) {
       data: {
         name: parsedData.clubName,
         description: parsedData.description,
-        currentBookId: null,
         privacy: privacyEnum,
         rules: parsedData.rules,
         tags: parsedData.tags || [],
@@ -61,9 +60,8 @@ export async function createClubAction(formData: FormData) {
       },
     });
 
-    // Add current book to club reading list (not to personal library)
     if (parsedData.currentBookTitle && parsedData.currentBookAuthor) {
-      const readingListItem = await prisma.clubReadingListItem.create({
+      await prisma.clubReadingListItem.create({
         data: {
           clubId: club.id,
           title: parsedData.currentBookTitle,
@@ -74,10 +72,13 @@ export async function createClubAction(formData: FormData) {
         },
       });
 
-      // Update club with currentBookId (reference to the reading list item's book, if it exists)
       await prisma.club.update({
         where: { id: club.id },
-        data: { currentBookId: readingListItem.bookId },
+        data: {
+          currentBookTitle: parsedData.currentBookTitle,
+          currentBookAuthor: parsedData.currentBookAuthor,
+          currentBookChapterCount: parsedData.currentBookChapters || 0,
+        },
       });
     }
 
@@ -149,19 +150,13 @@ export async function editClubAction(clubId: string, formData: FormData) {
             | 'PRIVATE'
             | 'FRIENDS');
 
-    let currentBookId: string | null = null;
+    let currentBookTitle: string | null = null;
+    let currentBookAuthor: string | null = null;
+    let currentBookChapterCount: number = 0;
     if (parsedData.currentBookTitle && parsedData.currentBookAuthor) {
-      const existingBook = await prisma.book.findFirst({
-        where: {
-          userId: user.id,
-          title: parsedData.currentBookTitle,
-          author: parsedData.currentBookAuthor,
-        },
-      });
-
-      if (existingBook) {
-        currentBookId = existingBook.id;
-      }
+      currentBookTitle = parsedData.currentBookTitle;
+      currentBookAuthor = parsedData.currentBookAuthor;
+      currentBookChapterCount = parsedData.currentBookChapters || 0;
     }
 
     await prisma.club.update({
@@ -169,7 +164,9 @@ export async function editClubAction(clubId: string, formData: FormData) {
       data: {
         name: parsedData.clubName,
         description: parsedData.description,
-        currentBookId,
+        currentBookTitle,
+        currentBookAuthor,
+        currentBookChapterCount,
         privacy: privacyEnum,
         rules: parsedData.rules,
         tags: parsedData.tags || [],
@@ -194,13 +191,12 @@ export async function editClubAction(clubId: string, formData: FormData) {
       if (existingItem) {
         await prisma.clubReadingListItem.update({
           where: { id: existingItem.id },
-          data: { status: 'CURRENT', bookId: currentBookId },
+          data: { status: 'CURRENT' },
         });
       } else {
         await prisma.clubReadingListItem.create({
           data: {
             clubId,
-            bookId: currentBookId,
             title: parsedData.currentBookTitle,
             author: parsedData.currentBookAuthor,
             chapterCount: parsedData.currentBookChapters || 0,
@@ -275,7 +271,6 @@ export async function getAllUserClubsAction() {
       include: {
         club: {
           include: {
-            currentBook: true,
             _count: { select: { members: true } },
           },
         },
@@ -286,7 +281,7 @@ export async function getAllUserClubsAction() {
       id: member.club.id,
       name: member.club.name,
       description: member.club.description,
-      currentBook: member.club.currentBook?.title || '',
+      currentBook: member.club.currentBookTitle || '',
       cover: member.club.cover || '',
       members: member.club._count.members,
       role: member.role === 'OWNER' ? 'Owner' : 'Member',
@@ -313,7 +308,6 @@ export async function getClubByIdAction(clubId: string) {
     const club = await prisma.club.findUnique({
       where: { id: clubId },
       include: {
-        currentBook: true,
         members: {
           include: {
             user: true,
@@ -378,7 +372,6 @@ export async function getClubForEditAction(clubId: string) {
     const club = await prisma.club.findUnique({
       where: { id: clubId },
       include: {
-        currentBook: true,
         members: {
           include: {
             user: true,
@@ -393,9 +386,9 @@ export async function getClubForEditAction(clubId: string) {
       id: club.id,
       clubName: club.name,
       description: club.description,
-      currentBookTitle: club.currentBook?.title || '',
-      currentBookAuthor: club.currentBook?.author || '',
-      currentBookChapters: club.currentBook?.chapterCount || 0,
+      currentBookTitle: club.currentBookTitle || '',
+      currentBookAuthor: club.currentBookAuthor || '',
+      currentBookChapters: club.currentBookChapterCount || 0,
       privacy: club.privacy.toLowerCase() as
         | 'public'
         | 'private'
@@ -451,7 +444,6 @@ export async function getClubReadingListAction(clubId: string) {
     const club = await prisma.club.findUnique({
       where: { id: clubId },
       include: {
-        currentBook: true,
         readingList: {
           include: {
             book: true,
@@ -469,8 +461,14 @@ export async function getClubReadingListAction(clubId: string) {
     if (!club) throw new Error('Club not found');
 
     const sortedReadingList = club.readingList.sort((a, b) => {
-      if (a.bookId === club.currentBookId) return -1;
-      if (b.bookId === club.currentBookId) return 1;
+      const aIsCurrent =
+        a.title === club.currentBookTitle &&
+        a.author === club.currentBookAuthor;
+      const bIsCurrent =
+        b.title === club.currentBookTitle &&
+        b.author === club.currentBookAuthor;
+      if (aIsCurrent && !bIsCurrent) return -1;
+      if (!aIsCurrent && bIsCurrent) return 1;
       return a.order - b.order;
     });
 
@@ -629,15 +627,6 @@ export async function setClubCurrentBookAction(clubId: string, itemId: string) {
     });
     if (!item) throw new Error('Book not found in reading list');
 
-    if (!item.bookId) {
-      return {
-        success: false,
-        message: 'Cannot set current book: book not in personal library',
-      };
-    }
-
-    const bookId = item.bookId;
-
     await prisma.clubReadingListItem.update({
       where: { id: itemId },
       data: { status: 'CURRENT' },
@@ -654,7 +643,11 @@ export async function setClubCurrentBookAction(clubId: string, itemId: string) {
 
     await prisma.club.update({
       where: { id: clubId },
-      data: { currentBookId: bookId },
+      data: {
+        currentBookTitle: item.title,
+        currentBookAuthor: item.author,
+        currentBookChapterCount: item.chapterCount,
+      },
     });
 
     revalidatePath(`/book-clubs/${clubId}`);

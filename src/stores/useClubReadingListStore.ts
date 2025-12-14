@@ -27,13 +27,9 @@ export interface ClubReadingList {
   id: string;
   name: string;
   description: string;
-  currentBookId: string | null;
-  currentBook?: {
-    id: string;
-    title: string;
-    author: string;
-    chapterCount: number;
-  } | null;
+  currentBookTitle: string | null;
+  currentBookAuthor: string | null;
+  currentBookChapterCount: number;
   readingList: ClubReadingListItem[];
   userRole: string;
 }

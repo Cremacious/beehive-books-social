@@ -169,7 +169,6 @@ model Book {
   chapters      Chapter[]
   userId        String
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  clubsAsCurrent Club[]
   readingListItems ReadingListItem[]
   clubReadingListItems ClubReadingListItem[]
 
@@ -211,8 +210,9 @@ model Club {
   id            String    @id @default(cuid())
   name          String
   description   String
-  currentBookId String?
-  currentBook   Book?     @relation(fields: [currentBookId], references: [id])
+  currentBookTitle String?
+  currentBookAuthor String?
+  currentBookChapterCount Int @default(0)
   currentChapter Int      @default(0)
   cover         String?
   memberCount   Int       @default(0)

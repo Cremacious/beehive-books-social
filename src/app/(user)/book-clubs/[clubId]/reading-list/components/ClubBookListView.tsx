@@ -44,7 +44,8 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
         rating: null,
         cover: '/assets/stock/cover.jpeg',
         isCurrentBook: !!(
-          currentList.currentBookId && item.bookId === currentList.currentBookId
+          currentList.currentBookTitle === item.title &&
+          currentList.currentBookAuthor === item.author
         ),
       }))
       .sort((a, b) => {
@@ -133,7 +134,7 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
         </form>
       )}
 
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between ">
         <h2 className="text-xl  mainFont text-white flex items-center gap-2">
           Books in This List
         </h2>
@@ -148,7 +149,7 @@ const ClubBookListView = ({ readingList }: ClubBookListViewProps) => {
           )}
         </div>
       </div>
-
+<div className="mb-4 text-white/70">Click edit to make a book the current club book, delete books, or toggle read status.</div>
       <div className="space-y-4">
         {books.map((book) => (
           <ClubReadingListItem

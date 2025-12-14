@@ -8,9 +8,8 @@ import { toast } from 'sonner';
 
 export interface ClubProgressInterface {
   currentBook: {
-    id: string;
     title: string;
-    author: string;
+    author: string | null;
     chapterCount: number;
   } | null;
   currentChapter: number;
@@ -62,7 +61,7 @@ const ClubProgress = ({
             {club.currentBook.title}
           </h3>
           <p className=" text-lg mb-4 text-white">
-            by {club.currentBook.author}
+            by {club.currentBook.author || 'Unknown Author'}
           </p>
 
           <div className="space-y-4">

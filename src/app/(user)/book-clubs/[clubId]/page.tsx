@@ -29,17 +29,17 @@ const ClubPage = async ({
   try {
     club = await getClubByIdAction(clubId);
   } catch (error) {
+    console.log(error);
     redirect('/book-clubs');
   }
 
   const userRole = getUserRoleInClub(club.members, user.id);
 
-  const currentBook = club.currentBook
+  const currentBook = club.currentBookTitle
     ? {
-        id: club.currentBook.id,
-        title: club.currentBook.title,
-        author: club.currentBook.author,
-        chapterCount: club.currentBook.chapterCount,
+        title: club.currentBookTitle,
+        author: club.currentBookAuthor,
+        chapterCount: club.currentBookChapterCount,
       }
     : null;
 
@@ -59,7 +59,7 @@ const ClubPage = async ({
             )}
             <div className="absolute inset-0 " />
             <div className="absolute bottom-6 left-6 md:left-8 text-white">
-              <h1 className="text-3xl md:text-4xl font-bold mainFont mb-2">
+              <h1 className="text-3xl md:text-4xl font-bold mainFont mb-2  text-yellow-500 bg-[#303030] inline-block px-3 py-2 border-b-4 border-[#1a1a1a] rounded-lg shadow-2xl">
                 {club.name}
               </h1>
               <div className="flex items-center gap-4 text-white/80">
