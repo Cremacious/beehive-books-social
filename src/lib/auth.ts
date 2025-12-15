@@ -1,6 +1,6 @@
-import { betterAuth } from 'better-auth'
-import { prismaAdapter } from 'better-auth/adapters/prisma'
-import prisma from '@/lib/prisma'
+import { betterAuth } from 'better-auth';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
+import prisma from '@/lib/prisma';
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -9,4 +9,8 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-})
+  trustedOrigins: [
+    'https://beehive-books-social.vercel.app',
+    'http://localhost:3000',
+  ],
+});

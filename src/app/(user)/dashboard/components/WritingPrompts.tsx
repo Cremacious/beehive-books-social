@@ -2,30 +2,38 @@
 
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/utils';
-import { Sparkles, BadgeCheck, Calendar, FileText } from 'lucide-react';
+import { BadgeCheck, Calendar, FileText, Pencil } from 'lucide-react';
 import Link from 'next/link';
 
-const WritingPrompts = () => {
-  const prompts = [
-    {
-      id: '1',
-      title: 'Daily Writing Prompt',
-      createdAt: new Date(),
-      endDate: new Date(new Date().setDate(new Date().getDate() + 7)),
-      status: 'OPEN',
-      _count: {
-        entries: 42,
-      },
-    },
-  ];
+type Prompt = {
+  id: string;
+  title: string;
+  description: string;
+  createdAt: Date;
+  endDate: Date;
+  status: 'OPEN' | 'CLOSED';
+  user: {
+    id: string;
+    name: string;
+    image: string | null;
+  };
+  _count: {
+    entries: number;
+  };
+};
 
+type WritingPromptsProps = {
+  prompts: Prompt[];
+};
+
+const WritingPrompts = ({ prompts }: WritingPromptsProps) => {
   return (
-    <section className="darkContainer2 rounded-2xl shadow-xl p-6 ">
+    <section className="darkContainer2 rounded-2xl shadow-xl p-6">
       <div className="flex items-center justify-between gap-3 mb-6">
         <div>
           <h3 className="text-xl mainFont text-white">Writing Prompts</h3>
         </div>
-        <Link href="#">
+        <Link href="/prompts">
           <Button variant="beeYellow" size="sm">
             View All
           </Button>
@@ -33,9 +41,9 @@ const WritingPrompts = () => {
       </div>
 
       <div className="space-y-4">
-        {prompts.map((item, index) => (
+        {prompts.map((item) => (
           <div
-            key={index}
+            key={item.id}
             className="relative group rounded-xl p-6 shadow-lg darkContainer3"
           >
             <div className="flex items-center gap-3 mb-2">
@@ -53,9 +61,10 @@ const WritingPrompts = () => {
               </span>
             </div>
             <h3 className="text-lg font-bold text-white mb-1">{item.title}</h3>
+            <p className="text-white/60 text-sm mb-2">by {item.user.name}</p>
             <div className="flex items-center gap-2 text-white/60 text-sm mb-2">
               <Calendar className="w-4 h-4" />
-              Ends {formatDate(item.endDate.toLocaleString())}
+              Ends {formatDate(new Date(item.endDate).toISOString())}
             </div>
             <div className="flex items-center gap-2 text-[#FFC300] font-semibold">
               <FileText className="w-4 h-4" />
@@ -63,13 +72,25 @@ const WritingPrompts = () => {
             </div>
             <div className="flex justify-end">
               <Link href={`/prompts/${item.id}`}>
-                <Button variant={'beeYellow'} size={'sm'} className="mt-4">
+                <Button variant="beeYellow" size="sm" className="mt-4">
                   View
                 </Button>
               </Link>
             </div>
           </div>
         ))}
+
+        {prompts.length === 0 && (
+          <div className="text-center py-8 text-white/50">
+            <Pencil className="w-12 h-12 mx-auto mb-3 opacity-50" />
+            <p>No active writing prompts</p>
+            <Link href="/prompts">
+              <Button variant="beeYellow" size="sm" className="mt-4">
+                Create a Prompt
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

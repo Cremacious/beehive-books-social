@@ -574,3 +574,268 @@ export async function getNotificationsCountAction() {
     return { total: 0 };
   }
 }
+
+
+
+export async function getDashboardDataAction() {
+  try {
+    const { user } = await getAuthenticatedUser();
+    if (!user) {
+      return {
+        readingListItems: [],
+        prompts: [],
+        clubActivities: [],
+      };
+    }
+
+
+    const readingListItems = await prisma.readingListItem.findMany({
+      where: {
+        readingList: {
+          userId: user.id,
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        author: true,
+        addedAt: true,
+        isRead: true,
+        book: {
+          select: {
+            id: true,
+            cover: true,
+          },
+        },
+      },
+      orderBy: { addedAt: 'desc' },
+      take: 3,
+    });
+
+
+    const prompts = await prisma.prompt.findMany({
+      where: {
+        OR: [
+          { userId: user.id },
+          { invitedUsers: { some: { id: user.id } } },
+        ],
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        createdAt: true,
+        endDate: true,
+        status: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        entries: {
+          select: {
+            id: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+        },
+        _count: {
+          select: {
+            entries: true,
+          },
+        },
+      },
+    });
+
+
+    const promptsWithActivity = prompts
+      .filter((prompt) => prompt._count.entries > 0)
+      .map((prompt) => ({
+        ...prompt,
+        latestEntryAt: prompt.entries[0]?.createdAt || prompt.createdAt,
+      }))
+      .sort(
+        (a, b) =>
+          new Date(b.latestEntryAt).getTime() -
+          new Date(a.latestEntryAt).getTime()
+      )
+      .slice(0, 3)
+      .map(({ ...rest }) => rest);
+
+
+    const userClubs = await prisma.clubMember.findMany({
+      where: { userId: user.id },
+      select: { clubId: true },
+    });
+
+    const clubIds = userClubs.map((c) => c.clubId);
+
+    if (clubIds.length === 0) {
+      return {
+        readingListItems,
+        prompts: promptsWithActivity,
+        clubActivities: [],
+      };
+    }
+
+
+    const recentDiscussions = await prisma.discussion.findMany({
+      where: { clubId: { in: clubIds } },
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        club: {
+          select: {
+            id: true,
+            name: true,
+            cover: true,
+            memberCount: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            role: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+    });
+
+  
+    const recentBooksAdded = await prisma.clubReadingListItem.findMany({
+      where: { clubId: { in: clubIds } },
+      select: {
+        id: true,
+        title: true,
+        author: true,
+        addedAt: true,
+        club: {
+          select: {
+            id: true,
+            name: true,
+            cover: true,
+            memberCount: true,
+            members: {
+              where: { role: 'OWNER' },
+              select: {
+                id: true,
+                role: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                  },
+                },
+              },
+              take: 1,
+            },
+          },
+        },
+      },
+      orderBy: { addedAt: 'desc' },
+      take: 5,
+    });
+
+   
+    type ClubActivity = {
+      id: string;
+      club: {
+        id: string;
+        name: string;
+        cover: string | null;
+        memberCount: number;
+      };
+      member: {
+        id: string;
+        name: string;
+        image: string | null;
+        role: 'OWNER' | 'MEMBER';
+      };
+      action: 'discussion' | 'book_added' | 'progress_updated';
+      details: string;
+      createdAt: Date;
+    };
+
+    const clubActivities: ClubActivity[] = [];
+
+    
+    recentDiscussions.forEach((discussion) => {
+      clubActivities.push({
+        id: `discussion-${discussion.id}`,
+        club: {
+          id: discussion.club.id,
+          name: discussion.club.name,
+          cover: discussion.club.cover,
+          memberCount: discussion.club.memberCount,
+        },
+        member: {
+          id: discussion.author.user.id,
+          name: discussion.author.user.name,
+          image: discussion.author.user.image,
+          role: discussion.author.role,
+        },
+        action: 'discussion',
+        details: `Started a discussion: "${discussion.title}"`,
+        createdAt: discussion.createdAt,
+      });
+    });
+
+  
+    recentBooksAdded.forEach((item) => {
+      const owner = item.club.members[0];
+      if (owner) {
+        clubActivities.push({
+          id: `book-added-${item.id}`,
+          club: {
+            id: item.club.id,
+            name: item.club.name,
+            cover: item.club.cover,
+            memberCount: item.club.memberCount,
+          },
+          member: {
+            id: owner.user.id,
+            name: owner.user.name,
+            image: owner.user.image,
+            role: owner.role,
+          },
+          action: 'book_added',
+          details: `Added "${item.title}" by ${item.author} to the reading list`,
+          createdAt: item.addedAt,
+        });
+      }
+    });
+
+
+    clubActivities.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    return {
+      readingListItems,
+      prompts: promptsWithActivity,
+      clubActivities: clubActivities.slice(0, 5),
+    };
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+    return {
+      readingListItems: [],
+      prompts: [],
+      clubActivities: [],
+    };
+  }
+}

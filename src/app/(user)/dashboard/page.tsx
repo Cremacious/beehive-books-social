@@ -1,16 +1,13 @@
-import React from 'react';
-// import MyBooks from './components/MyBooks';
-// import DashboardNotifications from './components/DashboardNotifications';
-// import FriendActivity from './components/FriendActivity';
-// import WritingStats from './components/WritingStats';
 import BookClubs from './components/BookClubs';
 import WritingPrompts from './components/WritingPrompts';
 import ReadingList from './components/ReadingList';
-// import Achievements from './components/Achievements';
 import QuickActions from './components/QuickActions';
 import NewPage from '@/components/layout/NewPage';
+import { getDashboardDataAction } from '@/actions/user.actions';
 
 export default async function DashboardPage() {
+  const data = await getDashboardDataAction();
+
   return (
     <NewPage>
       <div className="space-y-8">
@@ -18,19 +15,11 @@ export default async function DashboardPage() {
           <QuickActions />
         </div>
 
-        {/* <MyBooks /> */}
-
-        {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <DashboardNotifications />
-          <FriendActivity />
-        </div> */}
-
-        <BookClubs />
+        <BookClubs activities={data.clubActivities} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ReadingList />
-          <WritingPrompts />
-          {/* <Achievements /> */}
+          <ReadingList items={data.readingListItems} />
+          <WritingPrompts prompts={data.prompts} />
         </div>
       </div>
     </NewPage>

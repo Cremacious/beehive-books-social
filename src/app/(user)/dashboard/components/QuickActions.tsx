@@ -20,19 +20,19 @@ const QuickActions = () => {
     {
       icon: clubIcon,
       title: 'Start A Book Club',
-      description: 'Find your writing community',
+      href: '/book-clubs/create',
       color: 'hover:bg-yellow-500/20 ',
     },
     {
       icon: listIcon,
       title: 'Edit Reading Lists',
-      description: 'Explore new stories',
+      href: '/reading-lists',
       color: 'hover:bg-yellow-500/20 ',
     },
     {
       icon: pencilIcon,
       title: 'Start A Writing Prompt',
-      description: 'Share your work',
+      href: '/prompts/create',
       color: 'hover:bg-yellow-500/20 ',
     },
   ];
@@ -49,7 +49,7 @@ const QuickActions = () => {
         {actions.map((action, index) => (
           <button
             key={index}
-            className={`darkContainer3 rounded-2xl p-4 text-left transition-all group ${action.color}`}
+            className={`darkContainer3 cursor-pointer rounded-2xl p-4 text-left transition-all group ${action.color}`}
             onClick={() => {
               router.push(`${action.href}`);
             }}
