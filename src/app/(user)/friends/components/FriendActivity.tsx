@@ -25,7 +25,7 @@ const FriendActivity = ({
             </p>
           </div>
         ) : (
-          activities.map((activity) => (
+          activities.slice(0, 5).map((activity) => (
             <div
               key={activity.id}
               className="flex items-start gap-4 p-4 darkContainer3 rounded-xl"

@@ -1,6 +1,8 @@
 'use client';
 
 import { Users, MessageCircle, Calendar, Crown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const BookClubs = () => {
   const clubs = [
@@ -28,68 +30,60 @@ const BookClubs = () => {
   ];
 
   return (
-    <section className="bg-[#1b1b1b] rounded-2xl shadow-xl p-6 border border-[#2a2a2a]">
+    <section className="darkContainer2 rounded-2xl shadow-xl p-6 ">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#FFC300]/10 rounded-xl flex items-center justify-center">
-            <span className="text-2xl">🏛️</span>
-          </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Book Clubs</h3>
-            <p className="text-sm text-[#FFC300]/60">
-              Connect with fellow writers
-            </p>
+            <h3 className="text-xl mainFont text-white">Book Clubs</h3>
           </div>
         </div>
-        <button className="text-sm text-[#FFC300] hover:text-white transition-colors">
+        <Button variant={'beeYellow'} size={'sm'}>
           View All
-        </button>
+        </Button>
       </div>
 
       <div className="space-y-4">
         {clubs.map((club, index) => (
-          <div
-            key={index}
-            className="bg-[#252525] rounded-xl p-4 border border-[#3a3a3a] hover:border-[#FFC300]/30 transition-colors cursor-pointer"
-          >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <h4 className="font-semibold text-white mb-1">{club.name}</h4>
-                <div className="flex items-center gap-4 text-xs text-gray-400">
-                  <span className="flex items-center gap-1">
-                    <Users size={12} />
-                    {club.members} members
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Calendar size={12} />
-                    {club.nextMeeting}
-                  </span>
+          <div key={index} className="darkContainer3 rounded-xl p-4 md:p-6">
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-semibold text-white mb-2 wrap-break-word">
+                    {club.name}
+                  </h4>
+                  <div className="flex flex-col gap-2 text-xs text-gray-400">
+                    <div className="flex items-center gap-2">
+                      <Users size={12} />
+                      <span>{club.members} members</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="shrink-0">
+                  <div
+                    className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center ${
+                      club.role === 'Moderator'
+                        ? 'bg-[#FFC300]/20 text-[#FFC300]'
+                        : 'bg-gray-600 text-gray-300'
+                    }`}
+                  >
+                    {club.role === 'Moderator' && (
+                      <Crown size={10} className="mr-1" />
+                    )}
+                    {club.role}
+                  </div>
+                  <div className="flex justify-end pt-2 md:mt-4">
+                    <Link href="#">
+                      <Button variant="beeYellow" size="sm">
+                        View
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
-              <div
-                className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  club.role === 'Moderator'
-                    ? 'bg-[#FFC300]/20 text-[#FFC300]'
-                    : 'bg-gray-600 text-gray-300'
-                }`}
-              >
-                {club.role === 'Moderator' && (
-                  <Crown size={10} className="inline mr-1" />
-                )}
-                {club.role}
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-400">
-              <MessageCircle size={14} />
-              <span>{club.recentActivity}</span>
             </div>
           </div>
         ))}
       </div>
-
-      <button className="w-full mt-4 bg-[#FFC300]/10 hover:bg-[#FFC300]/20 text-[#FFC300] py-3 rounded-xl transition-colors font-medium">
-        + Create New Club
-      </button>
     </section>
   );
 };
