@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { getAuthenticatedUser } from '@/lib/auth-server';
+import { deleteCloudinaryImage } from '@/lib/cloudinary-utils';
 
 export async function getUserByIdAction(userId: string) {
   try {
@@ -79,6 +80,8 @@ export async function getUserByIdAction(userId: string) {
   }
 }
 
+export async function changeUserPasswordAction() {}
+
 export async function updateUserProfileImageAction(formData: FormData) {
   try {
     const { user } = await getAuthenticatedUser();
@@ -120,37 +123,7 @@ export async function updateUserProfileImageAction(formData: FormData) {
       data: { image: result.secure_url },
     });
 
-    if (oldImageUrl && oldImageUrl.includes('cloudinary.com')) {
-      try {
-        const urlParts = oldImageUrl.split('/');
-        const uploadIndex = urlParts.indexOf('upload');
-        if (uploadIndex !== -1 && uploadIndex + 2 < urlParts.length) {
-          const publicIdParts = urlParts.slice(uploadIndex + 2);
-          const publicIdWithExtension = publicIdParts.join('/');
-          const publicId = publicIdWithExtension.split('.')[0];
-
-          await new Promise<void>((resolve, reject) => {
-            cloudinary.uploader.destroy(publicId, (error, result) => {
-              if (error) {
-                console.warn(
-                  'Failed to delete old profile image from Cloudinary:',
-                  error
-                );
-                reject(error);
-              } else {
-                console.log(
-                  'Old profile image deleted from Cloudinary:',
-                  result
-                );
-                resolve();
-              }
-            });
-          });
-        }
-      } catch (deleteError) {
-        console.warn('Error deleting old profile image:', deleteError);
-      }
-    }
+    await deleteCloudinaryImage(oldImageUrl);
 
     return { success: true };
   } catch (error) {
@@ -159,8 +132,6 @@ export async function updateUserProfileImageAction(formData: FormData) {
   }
 }
 
-export async function changeUserPasswordAction() {}
-
 export async function deleteUserAccountAction() {
   try {
     const { user } = await getAuthenticatedUser();
@@ -168,76 +139,31 @@ export async function deleteUserAccountAction() {
       throw new Error('User not authenticated');
     }
 
-    if (user.image && user.image.includes('cloudinary.com')) {
-      try {
-        const cloudinary = (await import('@/lib/cloudinary')).default;
-        const urlParts = user.image.split('/');
-        const uploadIndex = urlParts.indexOf('upload');
-        if (uploadIndex !== -1 && uploadIndex + 2 < urlParts.length) {
-          const publicIdParts = urlParts.slice(uploadIndex + 2);
-          const publicIdWithExtension = publicIdParts.join('/');
-          const publicId = publicIdWithExtension.split('.')[0];
-
-          await new Promise<void>((resolve, reject) => {
-            cloudinary.uploader.destroy(publicId, (error, result) => {
-              if (error) {
-                console.warn(
-                  'Failed to delete profile image from Cloudinary:',
-                  error
-                );
-                reject(error);
-              } else {
-                console.log('Profile image deleted from Cloudinary:', result);
-                resolve();
-              }
-            });
-          });
-        }
-      } catch (deleteError) {
-        console.warn('Error deleting profile image:', deleteError);
-      }
-    }
+    await deleteCloudinaryImage(user.image);
 
     const userBooks = await prisma.book.findMany({
       where: { userId: user.id },
-      select: { id: true, cover: true },
+      select: { cover: true },
     });
 
     for (const book of userBooks) {
-      if (book.cover && book.cover.includes('cloudinary.com')) {
-        try {
-          const cloudinary = (await import('@/lib/cloudinary')).default;
-          const urlParts = book.cover.split('/');
-          const uploadIndex = urlParts.indexOf('upload');
-          if (uploadIndex !== -1 && uploadIndex + 2 < urlParts.length) {
-            const publicIdParts = urlParts.slice(uploadIndex + 2);
-            const publicIdWithExtension = publicIdParts.join('/');
-            const publicId = publicIdWithExtension.split('.')[0];
+      await deleteCloudinaryImage(book.cover);
+    }
 
-            await new Promise<void>((resolve) => {
-              cloudinary.uploader.destroy(publicId, (error, result) => {
-                if (error) {
-                  console.warn(
-                    `Failed to delete book cover from Cloudinary for book ${book.id}:`,
-                    error
-                  );
-                } else {
-                  console.log(
-                    `Book cover deleted from Cloudinary for book ${book.id}:`,
-                    result
-                  );
-                }
-                resolve();
-              });
-            });
-          }
-        } catch (deleteError) {
-          console.warn(
-            `Error deleting book cover for book ${book.id}:`,
-            deleteError
-          );
-        }
-      }
+    const userClubs = await prisma.club.findMany({
+      where: {
+        members: {
+          some: {
+            userId: user.id,
+            role: 'OWNER',
+          },
+        },
+      },
+      select: { cover: true },
+    });
+
+    for (const club of userClubs) {
+      await deleteCloudinaryImage(club.cover);
     }
 
     await prisma.user.delete({
@@ -250,7 +176,6 @@ export async function deleteUserAccountAction() {
     throw error;
   }
 }
-
 export async function updateBioAction(bio: string) {
   try {
     const { user } = await getAuthenticatedUser();
@@ -575,8 +500,6 @@ export async function getNotificationsCountAction() {
   }
 }
 
-
-
 export async function getDashboardDataAction() {
   try {
     const { user } = await getAuthenticatedUser();
@@ -587,7 +510,6 @@ export async function getDashboardDataAction() {
         clubActivities: [],
       };
     }
-
 
     const readingListItems = await prisma.readingListItem.findMany({
       where: {
@@ -612,13 +534,9 @@ export async function getDashboardDataAction() {
       take: 3,
     });
 
-
     const prompts = await prisma.prompt.findMany({
       where: {
-        OR: [
-          { userId: user.id },
-          { invitedUsers: { some: { id: user.id } } },
-        ],
+        OR: [{ userId: user.id }, { invitedUsers: { some: { id: user.id } } }],
       },
       select: {
         id: true,
@@ -650,7 +568,6 @@ export async function getDashboardDataAction() {
       },
     });
 
-
     const promptsWithActivity = prompts
       .filter((prompt) => prompt._count.entries > 0)
       .map((prompt) => ({
@@ -664,7 +581,6 @@ export async function getDashboardDataAction() {
       )
       .slice(0, 3)
       .map(({ ...rest }) => rest);
-
 
     const userClubs = await prisma.clubMember.findMany({
       where: { userId: user.id },
@@ -680,7 +596,6 @@ export async function getDashboardDataAction() {
         clubActivities: [],
       };
     }
-
 
     const recentDiscussions = await prisma.discussion.findMany({
       where: { clubId: { in: clubIds } },
@@ -714,7 +629,6 @@ export async function getDashboardDataAction() {
       take: 5,
     });
 
-  
     const recentBooksAdded = await prisma.clubReadingListItem.findMany({
       where: { clubId: { in: clubIds } },
       select: {
@@ -750,7 +664,6 @@ export async function getDashboardDataAction() {
       take: 5,
     });
 
-   
     type ClubActivity = {
       id: string;
       club: {
@@ -772,7 +685,6 @@ export async function getDashboardDataAction() {
 
     const clubActivities: ClubActivity[] = [];
 
-    
     recentDiscussions.forEach((discussion) => {
       clubActivities.push({
         id: `discussion-${discussion.id}`,
@@ -794,7 +706,6 @@ export async function getDashboardDataAction() {
       });
     });
 
-  
     recentBooksAdded.forEach((item) => {
       const owner = item.club.members[0];
       if (owner) {
@@ -818,7 +729,6 @@ export async function getDashboardDataAction() {
         });
       }
     });
-
 
     clubActivities.sort(
       (a, b) =>

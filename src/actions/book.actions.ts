@@ -4,25 +4,25 @@ import prisma from '@/lib/prisma';
 import { bookSchema, chapterSchema } from '@/lib/schemas';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import cloudinary from '@/lib/cloudinary';
+import { deleteCloudinaryImage } from '@/lib/cloudinary-utils';
 
-async function deleteCloudinaryImage(imageUrl: string) {
-  try {
-    const urlParts = imageUrl.split('/');
-    const uploadIndex = urlParts.findIndex((part) => part === 'upload');
-    if (uploadIndex === -1) return;
+// async function deleteCloudinaryImage(imageUrl: string) {
+//   try {
+//     const urlParts = imageUrl.split('/');
+//     const uploadIndex = urlParts.findIndex((part) => part === 'upload');
+//     if (uploadIndex === -1) return;
 
-    const publicIdWithVersion = urlParts.slice(uploadIndex + 1).join('/');
+//     const publicIdWithVersion = urlParts.slice(uploadIndex + 1).join('/');
 
-    const publicId = publicIdWithVersion
-      .replace(/^v\d+\//, '')
-      .replace(/\.[^/.]+$/, '');
+//     const publicId = publicIdWithVersion
+//       .replace(/^v\d+\//, '')
+//       .replace(/\.[^/.]+$/, '');
 
-    await cloudinary.uploader.destroy(publicId);
-  } catch (error) {
-    console.error('Error deleting image from Cloudinary:', error);
-  }
-}
+//     await cloudinary.uploader.destroy(publicId);
+//   } catch (error) {
+//     console.error('Error deleting image from Cloudinary:', error);
+//   }
+// }
 
 //Books
 
@@ -161,6 +161,7 @@ export async function editBookAction(
       },
     });
 
+    // Delete old cover image if a new one was uploaded
     if (coverUrl && currentBook.cover && coverUrl !== currentBook.cover) {
       await deleteCloudinaryImage(currentBook.cover);
     }
@@ -169,7 +170,7 @@ export async function editBookAction(
     return { success: true, message: 'Book updated successfully' };
   } catch (error) {
     console.error('Error editing book:', error);
-    return { success: false, message: 'Failed to update bookXXX' };
+    return { success: false, message: 'Failed to update book' };
   }
 }
 
@@ -636,7 +637,6 @@ export async function addCommentToChapterAction(
       data: { commentCount: { increment: 1 } },
     });
 
- 
     if (chapter.book.userId !== user.id) {
       const friendship = await prisma.friendRequest.findFirst({
         where: {

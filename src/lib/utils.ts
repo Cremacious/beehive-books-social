@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { DiscussionFullType, ClubMemberType } from './types';
 
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -55,3 +56,5 @@ export const getUserRoleInClub = (
   const member = members.find((member) => member.userId === userId);
   return member ? member.role : null;
 };
+
+

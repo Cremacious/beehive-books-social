@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { clubCreateSchema, clubEditSchema } from '@/lib/schemas';
 // import cloudinary from '@/lib/cloudinary';
 import { revalidatePath } from 'next/cache';
+import { deleteCloudinaryImage } from '@/lib/cloudinary-utils';
 
 export async function createClubAction(formData: FormData) {
   try {
@@ -120,6 +121,11 @@ export async function editClubAction(clubId: string, formData: FormData) {
     });
     if (!member) throw new Error('Only club owners can edit clubs');
 
+    const currentClub = await prisma.club.findUnique({
+      where: { id: clubId },
+      select: { cover: true },
+    });
+
     const data = {
       clubName: formData.get('clubName') as string,
       description: formData.get('description') as string,
@@ -157,6 +163,10 @@ export async function editClubAction(clubId: string, formData: FormData) {
       },
     });
 
+    if (coverUrl && currentClub?.cover && coverUrl !== currentClub.cover) {
+      await deleteCloudinaryImage(currentClub.cover);
+    }
+
     if (parsedData.invites && parsedData.invites.length > 0) {
       for (const userId of parsedData.invites) {
         const existing = await prisma.clubMember.findFirst({
@@ -185,6 +195,7 @@ export async function editClubAction(clubId: string, formData: FormData) {
     return { success: false, message: 'Failed to update club' };
   }
 }
+
 export async function deleteClubAction(clubId: string) {
   try {
     const { user } = await getAuthenticatedUser();
@@ -199,9 +210,18 @@ export async function deleteClubAction(clubId: string) {
     });
     if (!member) throw new Error('Only club owner can delete the club');
 
+    const club = await prisma.club.findUnique({
+      where: { id: clubId },
+      select: { cover: true },
+    });
+
     await prisma.club.delete({
       where: { id: clubId },
     });
+
+    if (club?.cover) {
+      await deleteCloudinaryImage(club.cover);
+    }
 
     revalidatePath('/book-clubs');
     return { success: true, message: 'Club deleted successfully' };
