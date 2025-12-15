@@ -1,67 +1,61 @@
 import React from 'react';
 import Link from 'next/link';
-import NewPage from '@/components/layout/NewPage';
-import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import logoImage from '@/assets/final-logo.png';
+
 import SignInForm from './SignInForm';
 
 const SignInPage = () => {
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-linear-to-b from-yellow-400 to-yellow-500 p-">
-      <div className="w-full max-w-md mx-auto space-y-8">
-        {/* Sign In Form */}
-        <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
-          {/* <form className="space-y-6">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-white/80 mb-2"
-              >
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                className="w-full px-4 py-3 rounded-lg border border-yellow-400/50 bg-black/50 text-white placeholder-white/50 focus:outline-none focus:border-yellow-400/70 focus:ring-1 focus:ring-yellow-400/70 transition-all"
-                placeholder="Enter your email"
-              />
+    <div className="min-h-screen bg-[#303030] relative overflow-hidden">
+      <div className="relative z-10 flex flex-col justify-center items-center min-h-screen px-4">
+        <div className="w-full max-w-md mx-auto">
+          <div className="darkContainer2 rounded-2xl shadow-2xl p-8 md:p-10 ">
+            <Image
+              src={logoImage}
+              alt="Beehive Books Social Logo"
+              width={200}
+              height={50}
+              className="mx-auto hover:scale-105 transition-transform duration-300"
+            />
+
+            <SignInForm />
+
+            <div className="mt-6 text-center">
+              <p className="text-white/70 text-sm">
+                Don&apos;t have an account?{' '}
+                <Link
+                  href="/sign-up"
+                  className="text-[#FFC300] hover:text-[#FFD700] transition-colors font-medium"
+                >
+                  Sign up here
+                </Link>
+              </p>
             </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-white/80 mb-2"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                required
-                className="w-full px-4 py-3 rounded-lg border border-yellow-400/50 bg-black/50 text-white placeholder-white/50 focus:outline-none focus:border-yellow-400/70 focus:ring-1 focus:ring-yellow-400/70 transition-all"
-                placeholder="Create a password"
-              />
-            </div>
-
-            <Button type="submit" variant={'beeYellow'} className="w-full ">
-              Sign In
-            </Button>
-          </form> */}
-          <SignInForm />
-
-          <div className="mt-6 text-center">
-            <p className="text-white/70 text-sm">
-              Don&apos;t have an account?{' '}
-              <Link
-                href="/sign-up"
-                className="text-yellow-400 hover:text-yellow-300 transition"
-              >
-                Sign up here
-              </Link>
-            </p>
           </div>
+
+          <div className="mt-6 text-center space-y-2">
+            <Link
+              href="/"
+              className="text-white hover:text-gray-400 text-sm transition-colors block"
+            >
+              ← Back to homepage
+            </Link>
+            {/* <Link
+              href="/forgot-password"
+              className="text-gray-500 hover:text-[#FFC300] text-sm transition-colors block"
+            >
+              Forgot your password?
+            </Link> */}
+          </div>
+        </div>
+
+        <div className="mt-12 text-center max-w-md">
+          <p className="text-white text-xs leading-relaxed">
+            Join thousands of writers, readers, and book lovers in our vibrant
+            literary community. Share your stories, discover new books, and
+            connect with fellow enthusiasts.
+          </p>
         </div>
       </div>
     </div>
