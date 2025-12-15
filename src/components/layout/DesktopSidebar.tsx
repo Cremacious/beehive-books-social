@@ -1,10 +1,10 @@
 'use client';
 
-import { Home, Settings } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { Home, Settings, LogOutIcon } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSession } from '@/lib/auth-client';
+import { signOut, useSession } from '@/lib/auth-client';
 import newLogo from '@/assets/final-logo.png';
 import dashIcon from '@/assets/icons/dashboard.png';
 import myBooksIcon from '@/assets/icons/my-books.png';
@@ -15,12 +15,19 @@ import clubIcon from '@/assets/icons/hive.png';
 import userIcon from '@/assets/icons/user.png';
 import { NotificationDropdown } from './NotificationDropdown';
 import { useUser } from '@/contexts/UserContext';
+// import { Button } from '../ui/button';
 
 const DesktopSidebar = () => {
   const currentUser = useSession();
   const userId = currentUser.data?.user?.id;
   const pathname = usePathname();
   const user = useUser();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/sign-in');
+  };
 
   const navLinks = [
     { name: 'Dashboard', href: '/dashboard', icon: dashIcon },
@@ -74,7 +81,7 @@ const DesktopSidebar = () => {
           </Link>
         ))}
       </nav>
-      <div className="mt-auto pt-6 border-t border-yellow-500/30 ">
+      <div className="mt-auto ">
         <div className="flex flex-row justify-between items-center">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
@@ -100,9 +107,16 @@ const DesktopSidebar = () => {
               </span>
             </Link>
           </div>
-          <Link href="/settings">
+        </div>
+
+        <div className="mt-4 border-t border-yellow-500/30 "></div>
+        <div className="grid grid-cols-2 mt-4 justify-items-center items-center gap-4">
+          <Link href="/settings" className=" ">
             <Settings className="text-yellow-500 h-7 w-7 hover:text-yellow-600 hover:transform hover:-translate-y-0.5" />
           </Link>
+          <button onClick={handleSignOut}>
+            <LogOutIcon className="ml-auto text-yellow-500 h-7 w-7 hover:text-yellow-600 hover:transform hover:-translate-y-0.5" />
+          </button>
         </div>
       </div>
     </div>

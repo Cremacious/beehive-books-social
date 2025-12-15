@@ -25,35 +25,34 @@ const DiscussionListItem = ({
 }: DiscussionListItemProps) => {
   return (
     <div className="darkContainer3 rounded-xl p-4 md:p-6 mb-4">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="flex flex-col gap-4">
         <div className="flex-1">
-          <h3 className="text-lg md:text-xl font-bold text-white mb-2 wrap-break-word">
+          <h3 className="text-lg md:text-xl font-bold text-white mb-3 wrap-break-word">
             {discussion.title}
           </h3>
-          <div className="grid grid-cols-2 md:flex md:flex-row gap-2 md:gap-4 text-white/60 text-sm">
+          <div className="flex flex-wrap gap-x-4 gap-y-2 text-white/60 text-sm">
             <div className="flex items-center gap-2">
-              <User className="w-4 h-4" />
-              <span className="truncate max-w-[140px] md:max-w-none">
+              <User className="w-4 h-4 shrink-0" />
+              <span className="truncate max-w-[120px] md:max-w-[200px]">
                 {discussion.author}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <MessageSquare className="w-4 h-4" />
-              {discussion.replies} replies
+              <MessageSquare className="w-4 h-4 shrink-0" />
+              <span>{discussion.replies} replies</span>
             </div>
-
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              { formatDate(discussion.lastActivity)}
+              <Clock className="w-4 h-4 shrink-0" />
+              <span>{formatDate(discussion.lastActivity)}</span>
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-end mt-2 md:mt-0 w-full md:w-auto">
+        <div className="flex w-full md:w-auto">
           <Link
             href={`/book-clubs/${clubId}/discussions/${discussion.id}`}
             className="w-full md:w-auto"
           >
-            <Button variant={'beeYellow'} className="w-full md:w-auto ">
+            <Button variant={'beeYellow'} className="w-full md:w-auto">
               View
             </Button>
           </Link>

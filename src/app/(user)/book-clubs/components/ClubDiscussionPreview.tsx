@@ -94,30 +94,34 @@ const ClubDiscussionPreview = ({
                 key={discussion.id}
                 className="rounded-xl p-4 darkContainer3 highlightYellow"
               >
-                <h4 className="font-semibold text-white mb-2">
-                  {discussion.title}
-                </h4>
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-sm">
-                  <div className="flex items-center gap-4">
-                    <span className="text-[#FFC300]/60">
+                <div className="flex flex-col gap-3">
+                  <h4 className="font-semibold text-white wrap-break-word">
+                    {discussion.title}
+                  </h4>
+                  <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                    <span className="text-[#FFC300]/60 flex items-center gap-1">
                       by {discussion.author.user.name}
                     </span>
                     <span className="text-white/70 flex items-center gap-1">
-                      <MessageCircle className="w-3 h-3" />
+                      <MessageCircle className="w-3 h-3 shrink-0" />
                       {repliesCount} replies
                     </span>
                     <span className="text-white/70 flex items-center gap-1">
-                      <Heart className="w-3 h-3" />
+                      <Heart className="w-3 h-3 shrink-0" />
                       {discussion.likes}
                     </span>
                     <span className="text-white/70">{lastActivity}</span>
                   </div>
-                  <div className="flex">
+                  <div className="flex w-full md:w-auto">
                     <Link
-                      className="w-full"
+                      className="w-full md:w-auto"
                       href={`/book-clubs/${clubId}/discussions/${discussion.id}`}
                     >
-                      <Button className="w-full" variant="beeYellow" size="sm">
+                      <Button
+                        className="w-full md:w-auto"
+                        variant="beeYellow"
+                        size="sm"
+                      >
                         Read
                       </Button>
                     </Link>

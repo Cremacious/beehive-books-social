@@ -51,6 +51,33 @@ export function NotificationDropdown() {
     setIsOpen(!isOpen);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const renderNotificationMessage = (notification: any) => {
+    const { message, fromUserId, fromUserName } = notification;
+
+    if (!fromUserId || !fromUserName) {
+      return message;
+    }
+
+    // Find the user name in the message and replace with link
+    const parts = message.split(fromUserName);
+    if (parts.length < 2) return message;
+
+    return (
+      <>
+        {parts[0]}
+        <a
+          href={`/profile/${fromUserId}`}
+          className="text-[#FFC300] hover:underline cursor-pointer"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {fromUserName}
+        </a>
+        {parts.slice(1).join(fromUserName)}
+      </>
+    );
+  };
+
   const getIcon = (type: string) => {
     switch (type) {
       case 'friend':
@@ -103,7 +130,9 @@ export function NotificationDropdown() {
                 >
                   <div className="shrink-0">{getIcon(notification.type)}</div>
                   <div className="flex-1">
-                    <p className="text-white text-sm">{notification.message}</p>
+                    <p className="text-white text-sm">
+                      {renderNotificationMessage(notification)}
+                    </p>
                     <p className="text-gray-400 text-xs">
                       {new Date(notification.createdAt).toLocaleDateString()}
                     </p>

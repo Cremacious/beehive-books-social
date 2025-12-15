@@ -7,7 +7,6 @@ const LogoutButton = () => {
   const router = useRouter();
 
   const handleSignOut = async () => {
-    console.log('logout clicked');
     await signOut();
     router.push('/sign-in');
   };

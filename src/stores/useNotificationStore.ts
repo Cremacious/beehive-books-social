@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import {
   getNotificationsAction,
-  getNotificationsCountAction,
+  // getNotificationsCountAction,
 } from '@/actions/user.actions';
 
 interface Notification {
@@ -9,6 +9,8 @@ interface Notification {
   type: 'friend' | 'book' | 'club' | 'prompt' | 'reply';
   message: string;
   createdAt: Date;
+  fromUserId?: string;
+  fromUserName?: string;
   from?: {
     id: string;
     name: string;

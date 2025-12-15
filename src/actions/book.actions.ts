@@ -636,16 +636,27 @@ export async function addCommentToChapterAction(
       data: { commentCount: { increment: 1 } },
     });
 
-    // Create notification for chapter author if not the commenter
+ 
     if (chapter.book.userId !== user.id) {
-      await prisma.notification.create({
-        data: {
-          type: 'book',
-          message: `${user.name} commented on your chapter`,
-          userId: chapter.book.userId,
-          fromId: user.id,
+      const friendship = await prisma.friendRequest.findFirst({
+        where: {
+          OR: [
+            { fromId: user.id, toId: chapter.book.userId, status: 'ACCEPTED' },
+            { fromId: chapter.book.userId, toId: user.id, status: 'ACCEPTED' },
+          ],
         },
       });
+
+      if (friendship) {
+        await prisma.notification.create({
+          data: {
+            type: 'book',
+            message: `${user.name} commented on your chapter`,
+            userId: chapter.book.userId,
+            fromId: user.id,
+          },
+        });
+      }
     }
 
     return comment;
@@ -730,16 +741,28 @@ export async function addReplyToCommentAction(
       data: { commentCount: { increment: 1 } },
     });
 
-    // Create notification for comment author if not the replier
+    // Create notification for comment author if replier is a friend
     if (comment.userId !== user.id) {
-      await prisma.notification.create({
-        data: {
-          type: 'reply',
-          message: `${user.name} replied to your comment`,
-          userId: comment.userId,
-          fromId: user.id,
+      // Check if the replier is friends with the comment author
+      const friendship = await prisma.friendRequest.findFirst({
+        where: {
+          OR: [
+            { fromId: user.id, toId: comment.userId, status: 'ACCEPTED' },
+            { fromId: comment.userId, toId: user.id, status: 'ACCEPTED' },
+          ],
         },
       });
+
+      if (friendship) {
+        await prisma.notification.create({
+          data: {
+            type: 'reply',
+            message: `${user.name} replied to your comment`,
+            userId: comment.userId,
+            fromId: user.id,
+          },
+        });
+      }
     }
 
     return reply;

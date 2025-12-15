@@ -1,8 +1,7 @@
 import NewPage from '@/components/layout/NewPage';
-import { MessageCircle, Hash, Edit, NotebookPen } from 'lucide-react';
+import { MessageCircle, Hash, NotebookPen } from 'lucide-react';
 
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+
 import ChapterCommentSection from '@/app/(user)/my-books/[bookId]/components/ChapterCommentSection';
 // import { chapterDetailData } from '@/lib/sampleData/books.sample';
 import { getChapterByIdAction } from '@/actions/book.actions';
@@ -57,13 +56,7 @@ const PublicChapterPage = async ({
               {chapter.authorNotes}
             </p>
           </div>
-          <div className="flex md:hidden  justify-center">
-            <Link className="" href={`/my-books/111/11/edit`}>
-              <Button className="w-full" variant={'beeYellow'}>
-                <Edit /> Edit Chapter
-              </Button>
-            </Link>
-          </div>
+          
         </div>
 
         <div className="prose prose-lg prose-invert max-w-none">

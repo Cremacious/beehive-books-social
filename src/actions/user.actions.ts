@@ -282,6 +282,8 @@ export async function getNotificationsAction() {
       email: string;
       image: string | null;
     };
+    fromUserId?: string;
+    fromUserName?: string;
   }
 
   try {
@@ -302,6 +304,8 @@ export async function getNotificationsAction() {
         message: `${req.from.name} sent you a friend request`,
         createdAt: req.createdAt,
         from: req.from,
+        fromUserId: req.from.id,
+        fromUserName: req.from.name,
       });
     });
 
@@ -312,9 +316,12 @@ export async function getNotificationsAction() {
             userId: user.id,
           },
         },
+        userId: {
+          not: user.id,
+        },
       },
       include: {
-        user: { select: { name: true } },
+        user: { select: { id: true, name: true } },
         chapter: { select: { title: true, book: { select: { title: true } } } },
       },
       orderBy: { createdAt: 'desc' },
@@ -325,6 +332,8 @@ export async function getNotificationsAction() {
         type: 'book',
         message: `${comment.user.name} commented on "${comment.chapter.book.title}" - "${comment.chapter.title}"`,
         createdAt: comment.createdAt,
+        fromUserId: comment.user.id,
+        fromUserName: comment.user.name,
       });
     });
 
@@ -335,11 +344,16 @@ export async function getNotificationsAction() {
             some: { userId: user.id },
           },
         },
+        author: {
+          userId: {
+            not: user.id,
+          },
+        },
       },
       include: {
         author: {
           include: {
-            user: { select: { name: true } },
+            user: { select: { id: true, name: true } },
           },
         },
         club: { select: { name: true } },
@@ -352,6 +366,8 @@ export async function getNotificationsAction() {
         type: 'club',
         message: `${disc.author.user.name} started a discussion in "${disc.club.name}"`,
         createdAt: disc.createdAt,
+        fromUserId: disc.author.user.id,
+        fromUserName: disc.author.user.name,
       });
     });
 
@@ -387,6 +403,8 @@ export async function getNotificationsAction() {
           : `You have been added to "${membership.club.name}"`,
         createdAt: membership.joinedAt,
         from: owner,
+        fromUserId: owner?.id,
+        fromUserName: owner?.name,
       });
     });
 
@@ -397,7 +415,7 @@ export async function getNotificationsAction() {
         },
       },
       include: {
-        user: { select: { name: true } },
+        user: { select: { id: true, name: true } },
         entry: { select: { prompt: { select: { title: true } } } },
       },
       orderBy: { createdAt: 'desc' },
@@ -408,6 +426,8 @@ export async function getNotificationsAction() {
         type: 'prompt',
         message: `${comment.user.name} commented on your entry for "${comment.entry.prompt.title}"`,
         createdAt: comment.createdAt,
+        fromUserId: comment.user.id,
+        fromUserName: comment.user.name,
       });
     });
 
@@ -417,7 +437,7 @@ export async function getNotificationsAction() {
         parent: { userId: user.id },
       },
       include: {
-        user: { select: { name: true } },
+        user: { select: { id: true, name: true } },
         parent: {
           select: {
             chapter: {
@@ -436,6 +456,8 @@ export async function getNotificationsAction() {
           reply.parent?.chapter?.book?.title ?? 'your book'
         }"`,
         createdAt: reply.createdAt,
+        fromUserId: reply.user.id,
+        fromUserName: reply.user.name,
       });
     });
 
@@ -457,6 +479,8 @@ export async function getNotificationsAction() {
         message: `${prompt.user.name} invited you to respond to "${prompt.title}"`,
         createdAt: prompt.createdAt,
         from: prompt.user,
+        fromUserId: prompt.user.id,
+        fromUserName: prompt.user.name,
       });
     });
 
