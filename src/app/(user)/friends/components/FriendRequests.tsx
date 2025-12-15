@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, UserPlus, X } from 'lucide-react';
+import { Check, UserPlus, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useFriendStore } from '@/stores/useFriendStore';
 import { useNotificationStore } from '@/stores/useNotificationStore';
@@ -40,25 +40,14 @@ const FriendRequests = () => {
         Friend Requests
       </h2>
 
-      <div className="mb-6">
-        {isLoading && friendNotifications.length === 0 ? (
-          <div className="space-y-3">
-            {[...Array(1)].map((_, i) => (
-              <div
-                key={i}
-                className="darkContainer3 rounded-xl p-3 md:p-4 min-h-[120px] md:min-h-[140px] animate-pulse"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 md:w-12 md:h-12 bg-yellow-500/30 rounded-full"></div>
-                  <div className="flex-1 space-y-2">
-                    <div className="h-12 bg-yellow-500/30 rounded w-3/4"></div>
-                  </div>
-                </div>
-              </div>
-            ))}
+      <div className="mb-6 min-h-[200px] flex items-center justify-center">
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <Loader2 className="w-8 h-8 text-yellow-400 animate-spin" />
+            <p className="text-white/60 text-sm">Loading friend requests...</p>
           </div>
         ) : friendNotifications.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-3 w-full">
             {friendNotifications.map((notification) => {
               const requestId = notification.id.replace('friend-', '');
               return (
@@ -116,7 +105,7 @@ const FriendRequests = () => {
             })}
           </div>
         ) : (
-          <div className="p-4 md:p-6 text-center">
+          <div className="p-4 md:p-6 text-center w-full">
             <div className="w-12 h-12 md:w-16 md:h-16 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <UserPlus className="w-6 h-6 md:w-8 md:h-8 text-yellow-400" />
             </div>

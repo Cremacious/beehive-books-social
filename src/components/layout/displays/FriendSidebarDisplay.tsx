@@ -54,12 +54,12 @@ const FriendSidebarDisplay = () => {
   return (
     <div className="p-4 space-y-6 max-h-[80vh] overflow-y-auto">
       <FriendRequests />
+      <FriendActivity activities={activities || []} />
+      <FriendsList friends={friends || []} />
       <div className="darkContainer2 rounded-2xl shadow-xl p-2">
         <SearchFriends />
         <RecommendedFriends recommendations={recommendations || []} />
       </div>
-      <FriendActivity activities={activities || []} />
-      <FriendsList friends={friends || []} />
     </div>
   );
 };

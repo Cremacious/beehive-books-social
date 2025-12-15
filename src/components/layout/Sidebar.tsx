@@ -1,34 +1,36 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Menu } from 'lucide-react';
-import { Button } from '../ui/button';
+import { CircleX, Menu } from 'lucide-react';
 import FriendSidebarDisplay from './displays/FriendSidebarDisplay';
 import UserSidebarDisplay from './displays/UserSidebarDisplay';
+import LogoutButton from './LogoutButton';
 
 const Sidebar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger>
         <Menu size={24} className="text-[#FFC300]" />
       </SheetTrigger>
-      <SheetContent className="bg-[#1d1d1d] border-0">
-        <SheetHeader>
+      <SheetContent className="bg-[#1d1d1d] border-0 [&>button]:hidden">
+        <SheetHeader className="flex flex-row gap-2 justify-between items-center p-4">
           <UserSidebarDisplay />
+          <button onClick={() => setIsOpen(false)}>
+            <CircleX size={30} className="text-yellow-500" />
+          </button>
         </SheetHeader>
         <FriendSidebarDisplay />
 
         <SheetFooter className="">
-          <Button variant={'beeDark'} type="submit">
-            Logout
-          </Button>
+          <LogoutButton />
         </SheetFooter>
       </SheetContent>
     </Sheet>
