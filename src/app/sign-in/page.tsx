@@ -2,10 +2,15 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import logoImage from '@/assets/final-logo.png';
-
+import { getCurrentServerUser } from '@/lib/auth-server';
+import { redirect } from 'next/navigation';
 import SignInForm from './SignInForm';
 
-const SignInPage = () => {
+const SignInPage = async () => {
+  const user = await getCurrentServerUser();
+  if (user) {
+    redirect('/dashboard');
+  }
   return (
     <div className="min-h-screen bg-[#303030] relative overflow-hidden">
       <div className="relative z-10 flex flex-col justify-center items-center min-h-screen px-4">

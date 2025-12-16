@@ -1,15 +1,16 @@
 'use client';
 
-import { User } from 'lucide-react';
+import { User, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useSettingStore } from '@/stores/useSettingStore';
 import { getUserByIdAction } from '@/actions/user.actions';
-
+import { Button } from '@/components/ui/button';
 
 const UpdateProfileImage = ({ userId }: { userId: string }) => {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [currentUser, setCurrentUser] = useState<{
     image?: string | null;
   } | null>(null);
@@ -41,18 +42,24 @@ const UpdateProfileImage = ({ userId }: { userId: string }) => {
 
   const handleSubmit = async () => {
     if (!profileImage) return;
-    const formData = new FormData();
-    formData.append('file', profileImage);
-    const success = await updateProfileImage(formData);
-    if (success) {
-      try {
-        const data = await getUserByIdAction(userId);
-        setCurrentUser(data.user);
-        setProfileImage(null);
-        setProfilePreview(null);
-      } catch (error) {
-        console.error('Error refreshing user data:', error);
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', profileImage);
+      const success = await updateProfileImage(formData);
+      if (success) {
+        try {
+          const data = await getUserByIdAction(userId);
+          setCurrentUser(data.user);
+          setProfileImage(null);
+          setProfilePreview(null);
+        } catch (error) {
+          console.error('Error refreshing user data:', error);
+        }
       }
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -96,12 +103,21 @@ const UpdateProfileImage = ({ userId }: { userId: string }) => {
             Change Image
           </label>
           {profileImage && (
-            <button
+            <Button
+              className="py-4 ml-4"
               onClick={handleSubmit}
-              className="px-4 py-2 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 transition-all"
+              variant={'beeSuccess'}
+              disabled={isUploading}
             >
-              Upload Image
-            </button>
+              {isUploading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                'Upload Image'
+              )}
+            </Button>
           )}
         </div>
       </div>

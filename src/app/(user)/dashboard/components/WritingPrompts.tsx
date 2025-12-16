@@ -84,11 +84,11 @@ const WritingPrompts = ({ prompts }: WritingPromptsProps) => {
           <div className="text-center py-8 text-white/50">
             <Pencil className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p>No active writing prompts</p>
-            <Link href="/prompts">
+            {/* <Link href="/prompts">
               <Button variant="beeYellow" size="sm" className="mt-4">
                 Create a Prompt
               </Button>
-            </Link>
+            </Link> */}
           </div>
         )}
       </div>

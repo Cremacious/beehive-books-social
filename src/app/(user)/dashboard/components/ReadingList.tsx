@@ -79,11 +79,11 @@ const ReadingList = ({ items }: ReadingListProps) => {
           <div className="text-center py-8 text-white/50">
             <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p>No books in your reading lists yet</p>
-            <Link href="/reading-lists">
+            {/* <Link href="/reading-lists">
               <Button variant="beeYellow" size="sm" className="mt-4">
                 Create a List
               </Button>
-            </Link>
+            </Link> */}
           </div>
         )}
       </div>

@@ -140,11 +140,11 @@ const BookClubs = ({ activities }: BookClubsProps) => {
           <div className="text-center py-8 text-white/50">
             <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p>No recent club activity</p>
-            <Link href="/book-clubs">
+            {/* <Link href="/book-clubs">
               <Button variant="beeYellow" size="sm" className="mt-4">
                 Join a Club
               </Button>
-            </Link>
+            </Link> */}
           </div>
         )}
       </div>

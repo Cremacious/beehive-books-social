@@ -2,8 +2,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import logoImage from '@/assets/final-logo.png';
 import { Button } from '@/components/ui/button';
+import { getCurrentServerUser } from '@/lib/auth-server';
+import { redirect } from 'next/navigation';
 
-export default function Home() {
+export default async function Home() {
+  const user = await getCurrentServerUser();
+  if (user) {
+    redirect('/dashboard');
+  }
   return (
     <div className="min-h-screen bg-[#222222] text-white">
       <section className="relative py-12 md:py-20 px-4 md:px-12 lg:px-24">
@@ -20,7 +26,7 @@ export default function Home() {
             literary community
           </p>
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center px-4">
-            <Link href="/dashboard">
+            <Link href="/sign-up">
               <Button
                 variant={'beeYellow'}
                 size={'lg'}

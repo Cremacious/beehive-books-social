@@ -45,27 +45,27 @@ const QuickActions = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
         {actions.map((action, index) => (
           <button
             key={index}
-            className={`darkContainer3 cursor-pointer rounded-2xl p-4 text-left transition-all group ${action.color}`}
+            className={`darkContainer3 cursor-pointer rounded-2xl p-4 md:p-6 text-left transition-all group ${action.color}`}
             onClick={() => {
               router.push(`${action.href}`);
             }}
           >
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-[#FFC300]/10 rounded-lg group-hover:bg-[#FFC300]/20 transition-colors">
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="p-2 md:p-3 bg-[#FFC300]/10 rounded-lg group-hover:bg-[#FFC300]/20 transition-colors flex-shrink-0">
                 <Image
                   src={action.icon}
                   alt={action.title}
                   width={20}
                   height={20}
-                  className="w-5 h-5"
+                  className="w-5 h-5 md:w-6 md:h-6"
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className="text-2xl text-white mainFont ">
+                <h4 className="text-lg md:text-xl lg:text-2xl text-white mainFont break-words leading-tight">
                   {action.title}
                 </h4>
               </div>
