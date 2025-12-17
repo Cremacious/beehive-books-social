@@ -19,7 +19,7 @@ const ChapterPage = async ({
     <NewPage>
       <BackButton text="Back to Book" href={`/my-books/${chapter.bookId}`} />
       <div className="w-full max-w-4xl mx-auto space-y-8">
-        <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
+        <div className="darkContainer2 rounded-2xl shadow-xl p-2 md:p-10">
           <div className="flex justify-between items-start mb-6">
             <div className="flex-1">
               <h1 className="text-3xl md:text-4xl mainFont text-yellow-400 mb-3 ">
@@ -72,7 +72,7 @@ const ChapterPage = async ({
           </div>
         </div>
 
-        <div className="darkContainer2 rounded-2xl shadow-xl p-8 md:p-10">
+        <div className="darkContainer2 rounded-2xl shadow-xl p-3 md:p-10">
           <div className="prose prose-lg prose-invert max-w-none">
             <div
               className="text-white/90 leading-relaxed font-serif text-lg"

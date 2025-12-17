@@ -1,7 +1,6 @@
 import NewPage from '@/components/layout/NewPage';
 import { MessageCircle, Hash, NotebookPen } from 'lucide-react';
 
-
 import ChapterCommentSection from '@/app/(user)/my-books/[bookId]/components/ChapterCommentSection';
 // import { chapterDetailData } from '@/lib/sampleData/books.sample';
 import { getChapterByIdAction } from '@/actions/book.actions';
@@ -56,14 +55,15 @@ const PublicChapterPage = async ({
               {chapter.authorNotes}
             </p>
           </div>
-          
         </div>
 
-        <div className="prose prose-lg prose-invert max-w-none">
-          <div
-            className="text-white/90 leading-relaxed whitespace-pre-line font-serif text-lg"
-            dangerouslySetInnerHTML={{ __html: chapter.content }}
-          />
+        <div className="darkContainer2 rounded-2xl shadow-xl p-3 md:p-10">
+          <div className="prose prose-lg prose-invert max-w-none">
+            <div
+              className="text-white/90 leading-relaxed font-serif text-lg"
+              dangerouslySetInnerHTML={{ __html: chapter.content }}
+            />
+          </div>
         </div>
 
         <ChapterCommentSection chapter={chapter} />
