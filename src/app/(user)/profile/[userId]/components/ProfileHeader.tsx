@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Calendar, BookOpen, Edit, Camera } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { useSettingStore } from '@/stores/useSettingStore';
+import { useFriendStore } from '@/stores/useFriendStore';
 import { Button } from '@/components/ui/button';
 
 interface ProfileHeaderProps {
@@ -16,19 +17,25 @@ interface ProfileHeaderProps {
   };
   bookCount: number;
   isOwnProfile: boolean;
+  isFriend: boolean;
+  hasPendingRequest: boolean;
 }
 
 export default function ProfileHeader({
   user,
   bookCount,
   isOwnProfile,
+  isFriend,
+  hasPendingRequest,
 }: ProfileHeaderProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [bioValue, setBioValue] = useState(user.bio || '');
   const [isSavingBio, setIsSavingBio] = useState(false);
+  const [requestSent, setRequestSent] = useState(hasPendingRequest);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { updateProfileImage, updateBio } = useSettingStore();
+  const { sendFriendRequest } = useFriendStore();
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -78,6 +85,15 @@ export default function ProfileHeader({
       console.error('Failed to update bio:', error);
     } finally {
       setIsSavingBio(false);
+    }
+  };
+
+  const handleSendFriendRequest = async () => {
+    try {
+      await sendFriendRequest(user.email);
+      setRequestSent(true);
+    } catch (error) {
+      console.error('Failed to send friend request:', error);
     }
   };
 
@@ -137,6 +153,16 @@ export default function ProfileHeader({
             <h1 className="text-3xl md:text-4xl  text-yellow-400 mb-2 mainFont">
               {user.name}
             </h1>
+            {!isOwnProfile && !isFriend && (
+              <Button
+                onClick={handleSendFriendRequest}
+                disabled={requestSent}
+                variant={requestSent ? 'beeDark' : 'beeYellow'}
+                className="mb-4"
+              >
+                {requestSent ? 'Request Sent' : 'Send Friend Request'}
+              </Button>
+            )}
           </div>
 
           <div className="flex flex-wrap gap-6">

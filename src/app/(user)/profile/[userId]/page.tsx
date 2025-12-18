@@ -20,6 +20,8 @@ const ProfilePage = async ({
             user={profileData.user}
             bookCount={profileData.bookCount}
             isOwnProfile={profileData.isOwnProfile}
+            isFriend={profileData.isFriend}
+            hasPendingRequest={profileData.hasPendingRequest}
           />
 
           <UserBooks

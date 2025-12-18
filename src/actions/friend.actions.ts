@@ -80,6 +80,16 @@ export async function sendFriendRequestAction(formData: FormData) {
     },
   });
 
+  // Create notification for the target user
+  await prisma.notification.create({
+    data: {
+      userId: targetUser.id,
+      type: 'friend',
+      message: `${user.name} sent you a friend request`,
+      fromId: user.id,
+    },
+  });
+
   revalidatePath('/friends');
 }
 
@@ -243,6 +253,7 @@ export async function getRecommendedFriendsAction() {
       select: {
         id: true,
         name: true,
+        email: true,
       },
     });
 
@@ -250,6 +261,7 @@ export async function getRecommendedFriendsAction() {
       .map((u) => ({
         id: u.id,
         name: u.name,
+        email: u.email,
         mutualFriendsCount: mutualMap.get(u.id) || 0,
       }))
       .sort((a, b) => b.mutualFriendsCount - a.mutualFriendsCount)

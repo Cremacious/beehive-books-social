@@ -37,6 +37,19 @@ export async function getUserByIdAction(userId: string) {
       isFriend = !!friendship;
     }
 
+    let hasPendingRequest = false;
+    if (currentUser && !isFriend && currentUser.id !== userId) {
+      const pending = await prisma.friendRequest.findFirst({
+        where: {
+          OR: [
+            { fromId: currentUser.id, toId: userId, status: 'PENDING' },
+            { fromId: userId, toId: currentUser.id, status: 'PENDING' },
+          ],
+        },
+      });
+      hasPendingRequest = !!pending;
+    }
+
     const books = await prisma.book.findMany({
       where: {
         userId: userId,
@@ -73,6 +86,7 @@ export async function getUserByIdAction(userId: string) {
       bookCount: books.length,
       isOwnProfile: currentUser?.id === userId,
       isFriend: isFriend,
+      hasPendingRequest: hasPendingRequest,
     };
   } catch (error) {
     console.error('Error fetching user by ID:', error);
