@@ -62,7 +62,9 @@ export async function getBookByIdAction(bookId: string) {
         userId: user.id,
       },
       include: {
-        chapters: true,
+        chapters: {
+          orderBy: { createdAt: 'asc' },
+        },
       },
     });
 
@@ -222,7 +224,9 @@ export async function getPublicBookByIdAction(bookId: string) {
         id: bookId,
       },
       include: {
-        chapters: true,
+        chapters: {
+          orderBy: { createdAt: 'asc' },
+        },
       },
     });
 

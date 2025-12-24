@@ -2,10 +2,13 @@
 
 import { UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useFriendStore } from '@/stores/useFriendStore';
+import { useState } from 'react';
 
 interface RecommendedFriendsProps {
   id: string;
   name: string;
+  email: string;
   mutualFriendsCount: number;
 }
 
@@ -14,6 +17,17 @@ const RecommendedFriends = ({
 }: {
   recommendations: RecommendedFriendsProps[];
 }) => {
+  const { sendFriendRequest } = useFriendStore();
+  const [sentRequests, setSentRequests] = useState<Set<string>>(new Set());
+
+  const handleSendRequest = async (email: string, id: string) => {
+    try {
+      await sendFriendRequest(email);
+      setSentRequests(prev => new Set(prev).add(id));
+    } catch (error) {
+      console.error('Failed to send friend request:', error);
+    }
+  };
   return (
     <div className="p-4 md:p-6">
       <h2 className="text-2xl mainFont text-yellow-400 mb-4 flex items-center gap-2">
@@ -48,11 +62,13 @@ const RecommendedFriends = ({
               </div>
               <Button
                 size={'sm'}
-                variant={'beeYellow'}
+                variant={sentRequests.has(rec.id) ? 'beeDark' : 'beeYellow'}
                 className="w-full mt-4 flex items-center justify-center gap-2"
+                onClick={() => handleSendRequest(rec.email, rec.id)}
+                disabled={sentRequests.has(rec.id)}
               >
                 <UserPlus className="w-4 h-4" />
-                Add Friend
+                {sentRequests.has(rec.id) ? 'Request Sent' : 'Add Friend'}
               </Button>
             </div>
           ))

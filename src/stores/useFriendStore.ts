@@ -18,7 +18,7 @@ interface PendingFriendRequest {
 }
 
 interface FriendStoreType {
-  sendFriendRequest: (formData: FormData) => Promise<void>;
+  sendFriendRequest: (email: string) => Promise<void>;
   acceptFriendRequest: (requestId: string) => Promise<void>;
   declineFriendRequest: (requestId: string) => Promise<void>;
   removeFriend: (friendId: string) => Promise<void>;
@@ -26,8 +26,10 @@ interface FriendStoreType {
 }
 
 export const useFriendStore = create<FriendStoreType>(() => ({
-  sendFriendRequest: async (formData: FormData) => {
+  sendFriendRequest: async (email: string) => {
     try {
+      const formData = new FormData();
+      formData.append('email', email);
       await sendFriendRequestAction(formData);
       toast.success('Friend request sent!');
     } catch (error) {

@@ -130,10 +130,7 @@ const PublicBookPage = async ({
                   adding your first chapter. Each chapter is a step closer to
                   completing your masterpiece.
                 </p>
-                <button className="px-8 py-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl font-semibold transition-all duration-200 flex items-center gap-3 shadow-lg hover:shadow-yellow-500/25 transform hover:scale-105">
-                  <Plus className="w-5 h-5" />
-                  Add Your First Chapter
-                </button>
+                
               </div>
             ) : (
               book.chapters.map((chapter, index) => (

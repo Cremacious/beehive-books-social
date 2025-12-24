@@ -12,10 +12,7 @@ const SearchFriends = () => {
     e.preventDefault();
     if (!email.trim()) return;
 
-    const formData = new FormData();
-    formData.append('email', email.trim());
-
-    await sendFriendRequest(formData);
+    await sendFriendRequest(email.trim());
     setEmail('');
   };
 
