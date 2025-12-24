@@ -64,7 +64,10 @@ const ChapterPage = async ({
           )}
 
           <div className="flex md:hidden  justify-center">
-            <Link className="" href={`/my-books/${chapter.bookId}/${chapter.id}/edit`}>
+            <Link
+              className=""
+              href={`/my-books/${chapter.bookId}/${chapter.id}/edit`}
+            >
               <Button className="w-full" variant={'beeYellow'}>
                 <Edit /> Edit Chapter
               </Button>
@@ -75,7 +78,7 @@ const ChapterPage = async ({
         <div className="darkContainer2 rounded-2xl shadow-xl p-3 md:p-10">
           <div className="prose prose-lg prose-invert max-w-none">
             <div
-              className="text-white/90 leading-relaxed font-serif text-lg"
+              className="chapter-content text-white/90 leading-relaxed font-serif text-lg"
               dangerouslySetInnerHTML={{ __html: chapter.content }}
             />
           </div>

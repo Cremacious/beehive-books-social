@@ -135,3 +135,16 @@ body {
     max-width: 1536px;
   }
 }
+
+/* Ensure paragraphs and common block elements from pasted HTML keep spacing */
+.chapter-content p,
+.chapter-content div {
+  margin-bottom: 1.15rem;
+}
+.chapter-content p:last-child {
+  margin-bottom: 0;
+}
+.chapter-content br + br {
+  display: block;
+  margin-bottom: 1.15rem;
+}
