@@ -65,7 +65,6 @@ const PublicBookPage = async ({
                     </span>
                   </div>
                 </div>
-               
               </div>
 
               <p className="text-white leading-relaxed mb-6">
@@ -103,8 +102,6 @@ const PublicBookPage = async ({
               </div>
             </div>
           </div>
-
-         
         </div>
 
         <div className="darkContainer2 rounded-2xl shadow-xl p-2 md:p-10 min-h-[450px] max-w-5xl mx-auto">
@@ -113,7 +110,6 @@ const PublicBookPage = async ({
               <BookOpen className="w-6 h-6 text-yellow-400" />
               Chapters
             </h2>
-          
           </div>
 
           <div className="space-y-4 ">
@@ -130,7 +126,6 @@ const PublicBookPage = async ({
                   adding your first chapter. Each chapter is a step closer to
                   completing your masterpiece.
                 </p>
-                
               </div>
             ) : (
               book.chapters.map((chapter, index) => (

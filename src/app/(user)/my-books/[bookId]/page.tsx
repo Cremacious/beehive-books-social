@@ -9,6 +9,7 @@ import defaultImage from '@/assets/stock/cover.jpeg';
 
 import openBook from '@/assets/icons/open-book.png';
 import BackButton from '@/components/shared/BackButton';
+import ChapterDisplay from './components/ChapterDisplay';
 
 const BookPage = async ({
   params,
@@ -106,84 +107,7 @@ const BookPage = async ({
             </Button>
           </Link>
         </div>
-
-        <div className="darkContainer2 rounded-2xl shadow-xl p-2 md:p-10 min-h-[450px] max-w-5xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-4xl font-bold text-white flex items-center gap-2 p-2 mainFont">
-              Chapters
-            </h2>
-            <div>
-              {book.chapters.length !== 0 && (
-                <>
-                  <Link
-                    className="md:flex hidden"
-                    href={`/my-books/${book.id}/create-chapter`}
-                  >
-                    <Button
-                      size={'lg'}
-                      variant={'beeYellow'}
-                      className="flex items-center gap-2"
-                    >
-                      <Plus className="w-5 h-5 text-black" />
-                      Add Chapter
-                    </Button>
-                  </Link>
-                  <Link
-                    className="md:hidden block"
-                    href={`/my-books/${book.id}/create-chapter`}
-                  >
-                    <Button
-                      variant={'beeYellow'}
-                      className="flex items-center gap-2"
-                    >
-                      <Plus className="w-5 h-5 text-black" />
-                      Add Chapter
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div className="space-y-4 ">
-            {book.chapters.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
-                <div className="iconCircle">
-                  <Image
-                    src={openBook}
-                    alt="Empty Shelf"
-                    height={100}
-                    width={100}
-                  />
-                </div>
-                <h3 className="text-2xl font-bold text-yellow-400 mb-3">
-                  No Chapters Yet
-                </h3>
-                <p className="text-white/70 mb-8 max-w-md leading-relaxed">
-                  Your story is waiting to be told! Start building your novel by
-                  adding your first chapter. Each chapter is a step closer to
-                  completing your masterpiece.
-                </p>
-                <Link className="" href={`/my-books/${book.id}/create-chapter`}>
-                  <Button size={'lg'} variant={'beeYellow'} className="">
-                    <Plus className="w-5 h-5 text-black" />
-                    Add Chapter
-                  </Button>
-                </Link>
-              </div>
-            ) : (
-              book.chapters.map((chapter, index) => (
-                <ChapterListItem
-                  key={chapter.id}
-                  chapter={chapter}
-                  chapterId={chapter.id}
-                  index={index}
-                  bookId={book.id}
-                />
-              ))
-            )}
-          </div>
-        </div>
+        <ChapterDisplay book={book} />
       </div>
     </NewPage>
   );
