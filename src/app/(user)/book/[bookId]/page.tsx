@@ -17,6 +17,7 @@ import defaultImage from '@/assets/stock/cover.jpeg';
 import { notFound } from 'next/navigation';
 // const book = bookDetailData;
 // const chapters = book.chapters;
+import ShareButton from '@/components/shared/ShareButton';
 
 const PublicBookPage = async ({
   params,
@@ -100,6 +101,7 @@ const PublicBookPage = async ({
                   <p className="text-sm text-white">Comments</p>
                 </div>
               </div>
+              <ShareButton bookId={book.id} />
             </div>
           </div>
         </div>

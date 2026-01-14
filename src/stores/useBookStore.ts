@@ -44,6 +44,7 @@ interface BookStoreType {
   likeComment: (commentId: string) => Promise<void>;
   unlikeComment: (commentId: string) => Promise<void>;
   updateChapterOrder: (bookId: string, chapterOrder: string[]) => Promise<void>;
+  copyURLToClipboard: (url: string) => void;
 }
 
 export const useBookStore = create<BookStoreType>((set) => ({
@@ -250,5 +251,16 @@ export const useBookStore = create<BookStoreType>((set) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+  copyURLToClipboard: (url: string) => {
+    navigator.clipboard.writeText(url).then(
+      () => {
+        toast.success('URL copied to clipboard');
+      },
+      (error) => {
+        toast.error('Failed to copy URL');
+        console.error(error);
+      }
+    );
   },
 }));

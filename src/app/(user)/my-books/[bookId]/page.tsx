@@ -1,15 +1,16 @@
 import NewPage from '@/components/layout/NewPage';
 import Image from 'next/image';
-import { Edit, MessageCircle, FileText, Hash, Plus } from 'lucide-react';
-import ChapterListItem from '../components/ChapterListItem';
+import { Edit, MessageCircle, FileText, Hash } from 'lucide-react';
+// import ChapterListItem from '../components/ChapterListItem';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { getBookByIdAction } from '@/actions/book.actions';
 import defaultImage from '@/assets/stock/cover.jpeg';
 
-import openBook from '@/assets/icons/open-book.png';
+// import openBook from '@/assets/icons/open-book.png';
 import BackButton from '@/components/shared/BackButton';
 import ChapterDisplay from './components/ChapterDisplay';
+import ShareButton from '@/components/shared/ShareButton';
 
 const BookPage = async ({
   params,
@@ -97,6 +98,7 @@ const BookPage = async ({
                   <p className="text-sm text-white">Comments</p>
                 </div>
               </div>
+              <ShareButton bookId={book.id} />
             </div>
           </div>
 
