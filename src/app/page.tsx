@@ -44,6 +44,14 @@ export default async function Home() {
                 Sign In
               </Button>
             </Link>
+            <Link href="/demo">
+              <Button
+                size={'lg'}
+                className="w-full sm:w-auto border-[#FFC300] text-[#FFC300] hover:bg-[#FFC300] hover:text-black"
+              >
+                Try Demo
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

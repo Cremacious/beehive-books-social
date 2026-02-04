@@ -15,14 +15,15 @@ const BottomNavBar = () => {
   // const currentUser = useSession();
   // const userId = currentUser.data?.user?.id;
   const pathname = usePathname();
+  const isDemo = pathname.startsWith('/demo');
 
   const navLinks = [
-    { name: 'My Books', href: '/my-books', icon: myBooksIcon },
+    { name: 'My Books', href: isDemo ? '/demo/my-books' : '/my-books', icon: myBooksIcon },
     // { name: 'Friends', href: '/friends', icon: friendIcon },
-    { name: 'Book Clubs', href: '/book-clubs', icon: clubIcon },
-    { name: 'Dashboard', href: '/dashboard', icon: dashIcon },
-    { name: 'Reading Lists', href: '/reading-lists', icon: listIcon },
-    { name: 'Writing Prompts', href: '/prompts', icon: pencilIcon },
+    { name: 'Book Clubs', href: isDemo ? '/demo/book-clubs' : '/book-clubs', icon: clubIcon },
+    { name: 'Dashboard', href: isDemo ? '/demo' : '/dashboard', icon: dashIcon },
+    { name: 'Reading Lists', href: isDemo ? '/demo/reading-lists' : '/reading-lists', icon: listIcon },
+    { name: 'Writing Prompts', href: isDemo ? '/demo/prompts' : '/prompts', icon: pencilIcon },
     // { name: 'Profile', href: `/profile/${userId}`, icon: userIcon },
   ];
 
@@ -31,7 +32,7 @@ const BottomNavBar = () => {
       {navLinks.map((link) => {
         const isActive =
           pathname === link.href ||
-          (link.name === 'Profile' && pathname.startsWith('/profile'));
+          (link.name === 'Profile' && pathname.startsWith(isDemo ? '/demo/profile' : '/profile'));
         return (
           <Link
             key={link.name}

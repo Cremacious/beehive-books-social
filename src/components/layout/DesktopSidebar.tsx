@@ -23,20 +23,25 @@ const DesktopSidebar = () => {
   const pathname = usePathname();
   const user = useUser();
   const router = useRouter();
+  const isDemo = pathname.startsWith('/demo');
 
   const handleSignOut = async () => {
-    await signOut();
-    router.push('/sign-in');
+    if (isDemo) {
+      router.push('/');
+    } else {
+      await signOut();
+      router.push('/sign-in');
+    }
   };
 
   const navLinks = [
-    { name: 'Dashboard', href: '/dashboard', icon: dashIcon },
-    { name: 'My Books', href: '/my-books', icon: myBooksIcon },
-    { name: 'Friends', href: '/friends', icon: friendIcon },
-    { name: 'Book Clubs', href: '/book-clubs', icon: clubIcon },
-    { name: 'Reading Lists', href: '/reading-lists', icon: listIcon },
-    { name: 'Writing Prompts', href: '/prompts', icon: pencilIcon },
-    { name: 'Profile', href: `/profile/${userId}`, icon: userIcon },
+    { name: 'Dashboard', href: isDemo ? '/demo' : '/dashboard', icon: dashIcon },
+    { name: 'My Books', href: isDemo ? '/demo/my-books' : '/my-books', icon: myBooksIcon },
+    { name: 'Friends', href: isDemo ? '/demo/friends' : '/friends', icon: friendIcon },
+    { name: 'Book Clubs', href: isDemo ? '/demo/book-clubs' : '/book-clubs', icon: clubIcon },
+    { name: 'Reading Lists', href: isDemo ? '/demo/reading-lists' : '/reading-lists', icon: listIcon },
+    { name: 'Writing Prompts', href: isDemo ? '/demo/prompts' : '/prompts', icon: pencilIcon },
+    { name: 'Profile', href: isDemo ? '/demo/profile' : `/profile/${userId}`, icon: userIcon },
   ];
 
   return (
@@ -51,7 +56,7 @@ const DesktopSidebar = () => {
         />
       </div>
 
-      <NotificationDropdown />
+      {!isDemo && <NotificationDropdown />}
 
       <nav className="space-y-4 pt-4">
         {navLinks.map((item) => (
@@ -99,7 +104,7 @@ const DesktopSidebar = () => {
                 </div>
               )}
             </div>
-            <Link href={`/profile/${user?.id}`}>
+            <Link href={isDemo ? '/demo/profile' : `/profile/${user?.id}`}>
               <span className="text-white font-medium mainFont hover:text-yellow-500 overflow-hidden text-ellipsis whitespace-nowrap">
                 {user?.name || (
                   <div className="bg-[#FFC300]/10 h-8 w-28 rounded-2xl animate-pulse"></div>
@@ -111,9 +116,11 @@ const DesktopSidebar = () => {
 
         <div className="mt-4 border-t border-yellow-500/30 "></div>
         <div className="grid grid-cols-2 mt-4 justify-items-center items-center gap-4">
-          <Link href="/settings" className=" ">
-            <Settings className="text-yellow-500 h-7 w-7 hover:text-yellow-600 hover:transform hover:-translate-y-0.5" />
-          </Link>
+          {!isDemo && (
+            <Link href="/settings" className=" ">
+              <Settings className="text-yellow-500 h-7 w-7 hover:text-yellow-600 hover:transform hover:-translate-y-0.5" />
+            </Link>
+          )}
           <button onClick={handleSignOut}>
             <LogOutIcon className="ml-auto text-yellow-500 h-7 w-7 hover:text-yellow-600 hover:transform hover:-translate-y-0.5" />
           </button>
