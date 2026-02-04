@@ -17,6 +17,7 @@ import defaultImage from '@/assets/stock/cover.jpeg';
 import { notFound } from 'next/navigation';
 // const book = bookDetailData;
 // const chapters = book.chapters;
+import ShareButton from '@/components/shared/ShareButton';
 
 const PublicBookPage = async ({
   params,
@@ -65,7 +66,6 @@ const PublicBookPage = async ({
                     </span>
                   </div>
                 </div>
-               
               </div>
 
               <p className="text-white leading-relaxed mb-6">
@@ -101,10 +101,9 @@ const PublicBookPage = async ({
                   <p className="text-sm text-white">Comments</p>
                 </div>
               </div>
+              <ShareButton bookId={book.id} />
             </div>
           </div>
-
-         
         </div>
 
         <div className="darkContainer2 rounded-2xl shadow-xl p-2 md:p-10 min-h-[450px] max-w-5xl mx-auto">
@@ -113,7 +112,6 @@ const PublicBookPage = async ({
               <BookOpen className="w-6 h-6 text-yellow-400" />
               Chapters
             </h2>
-          
           </div>
 
           <div className="space-y-4 ">
@@ -130,7 +128,6 @@ const PublicBookPage = async ({
                   adding your first chapter. Each chapter is a step closer to
                   completing your masterpiece.
                 </p>
-                
               </div>
             ) : (
               book.chapters.map((chapter, index) => (

@@ -6,26 +6,6 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { deleteCloudinaryImage } from '@/lib/cloudinary-utils';
 
-// async function deleteCloudinaryImage(imageUrl: string) {
-//   try {
-//     const urlParts = imageUrl.split('/');
-//     const uploadIndex = urlParts.findIndex((part) => part === 'upload');
-//     if (uploadIndex === -1) return;
-
-//     const publicIdWithVersion = urlParts.slice(uploadIndex + 1).join('/');
-
-//     const publicId = publicIdWithVersion
-//       .replace(/^v\d+\//, '')
-//       .replace(/\.[^/.]+$/, '');
-
-//     await cloudinary.uploader.destroy(publicId);
-//   } catch (error) {
-//     console.error('Error deleting image from Cloudinary:', error);
-//   }
-// }
-
-//Books
-
 export async function getUserBooksAction() {
   try {
     const { user, error } = await getAuthenticatedUser();
@@ -63,7 +43,7 @@ export async function getBookByIdAction(bookId: string) {
       },
       include: {
         chapters: {
-          orderBy: { createdAt: 'asc' },
+          orderBy: { order: 'asc' },
         },
       },
     });
@@ -260,8 +240,6 @@ export async function getPublicBookByIdAction(bookId: string) {
   }
 }
 
-//Chapters
-
 export async function getChapterByIdAction(chapterId: string) {
   try {
     const { user, error } = await getAuthenticatedUser();
@@ -378,6 +356,8 @@ export async function addChapterToBookAction(
       .split(/\s+/)
       .filter((word) => word.length > 0).length;
 
+    const newOrder = book.chapterCount;
+
     await prisma.chapter.create({
       data: {
         title: parsedData.chapterTitle,
@@ -385,6 +365,7 @@ export async function addChapterToBookAction(
         content: parsedData.content,
         wordCount: wordCount,
         bookId: book.id,
+        order: newOrder,
       },
     });
 
@@ -902,5 +883,44 @@ export async function unlikeChapterCommentAction(commentId: string) {
   } catch (error) {
     console.error('Error unliking comment:', error);
     throw error;
+  }
+}
+
+export async function updateChapterOrderAction(
+  bookId: string,
+  chapterOrder: string[]
+) {
+  try {
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user) {
+      throw new Error(error || 'User not authenticated');
+    }
+
+    const book = await prisma.book.findFirst({
+      where: {
+        id: bookId,
+        userId: user.id,
+      },
+    });
+
+    if (!book) {
+      throw new Error('Book not found or access denied');
+    }
+
+    const updates = chapterOrder.map((chapterId, index) =>
+      prisma.chapter.update({
+        where: { id: chapterId, bookId },
+        data: { order: index },
+      })
+    );
+
+    await prisma.$transaction(updates);
+
+    revalidatePath(`/my-books/${bookId}`);
+
+    return { success: true, message: 'Chapter order updated successfully' };
+  } catch (error) {
+    console.error('Error updating chapter order:', error);
+    return { success: false, message: 'Failed to update chapter order' };
   }
 }

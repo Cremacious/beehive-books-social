@@ -10,6 +10,7 @@ import {
   addReplyToCommentAction,
   likeChapterCommentAction,
   unlikeChapterCommentAction,
+  updateChapterOrderAction,
 } from '@/actions/book.actions';
 import { z } from 'zod';
 import { bookSchema, chapterSchema } from '@/lib/schemas';
@@ -42,6 +43,8 @@ interface BookStoreType {
   addReply: (commentId: string, content: string) => Promise<Comment>;
   likeComment: (commentId: string) => Promise<void>;
   unlikeComment: (commentId: string) => Promise<void>;
+  updateChapterOrder: (bookId: string, chapterOrder: string[]) => Promise<void>;
+  copyURLToClipboard: (url: string) => void;
 }
 
 export const useBookStore = create<BookStoreType>((set) => ({
@@ -230,5 +233,34 @@ export const useBookStore = create<BookStoreType>((set) => ({
       toast.error(errorMessage);
       throw error;
     }
+  },
+  updateChapterOrder: async (bookId: string, chapterOrder: string[]) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await updateChapterOrderAction(bookId, chapterOrder);
+      if (response.success) {
+        toast.success(response.message);
+        window.location.reload();
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+      set({ error: 'Failed to update chapter order' });
+      toast.error('Failed to update chapter order');
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  copyURLToClipboard: (url: string) => {
+    navigator.clipboard.writeText(url).then(
+      () => {
+        toast.success('URL copied to clipboard');
+      },
+      (error) => {
+        toast.error('Failed to copy URL');
+        console.error(error);
+      }
+    );
   },
 }));

@@ -22,7 +22,7 @@ const ChapterListItem = ({
   return (
     <div
       key={chapter.id}
-      className="flex flex-col md:flex-row md:items-center md:justify-between p-4 md:p-6 darkContainer3 highlightYellow rounded-xl mb-4"
+      className="flex flex-col md:flex-row md:items-center md:justify-between p-4 md:p-6 darkContainer3 highlightYellow rounded-xl mb-4 w-full"
     >
       <div className="flex items-center gap-4 mb-4 md:mb-0">
         <div className="yellowBadge w-8 h-8">{index + 1}</div>

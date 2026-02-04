@@ -10,7 +10,7 @@ import {
   Bold,
   Italic,
   Underline as UnderlineIcon,
-//   Palette,
+  //   Palette,
 } from 'lucide-react';
 
 interface RichTextEditorProps {
@@ -38,12 +38,28 @@ const RichTextEditor = ({
   placeholder = 'Start writing...',
   className = '',
 }: RichTextEditorProps) => {
+  const normalizeHtml = (html: string) => {
+    if (!html) return html;
+    let out = html;
+    // Convert divs to paragraphs (common when pasting from Google Docs)
+    out = out.replace(/<div([^>]*)>/gi, '<p$1>');
+    out = out.replace(/<\/div>/gi, '</p>');
+    // Convert sequences of two or more <br> into paragraph breaks
+    out = out.replace(/(<br\s*\/?>\s*){2,}/gi, '</p><p>');
+    // Replace empty paragraphs with a non-breaking space so they render
+    out = out.replace(/<p>(\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, '<p>&nbsp;</p>');
+    // Trim leading/trailing whitespace
+    out = out.trim();
+    return out;
+  };
+
   const editor = useEditor({
     extensions: [StarterKit, Underline, Color, TabIndent],
     content: value,
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      const raw = editor.getHTML();
+      onChange(normalizeHtml(raw));
     },
     editorProps: {
       attributes: {
@@ -115,7 +131,6 @@ const RichTextEditor = ({
         </Button> */}
       </div>
 
-   
       <EditorContent
         editor={editor}
         className="text-white"
