@@ -35,13 +35,41 @@ const DesktopSidebar = () => {
   };
 
   const navLinks = [
-    { name: 'Dashboard', href: isDemo ? '/demo' : '/dashboard', icon: dashIcon },
-    { name: 'My Books', href: isDemo ? '/demo/my-books' : '/my-books', icon: myBooksIcon },
-    { name: 'Friends', href: isDemo ? '/demo/friends' : '/friends', icon: friendIcon },
-    { name: 'Book Clubs', href: isDemo ? '/demo/book-clubs' : '/book-clubs', icon: clubIcon },
-    { name: 'Reading Lists', href: isDemo ? '/demo/reading-lists' : '/reading-lists', icon: listIcon },
-    { name: 'Writing Prompts', href: isDemo ? '/demo/prompts' : '/prompts', icon: pencilIcon },
-    { name: 'Profile', href: isDemo ? '/demo/profile' : `/profile/${userId}`, icon: userIcon },
+    {
+      name: 'Dashboard',
+      href: isDemo ? '/demo' : '/dashboard',
+      icon: dashIcon,
+    },
+    {
+      name: 'My Books',
+      href: isDemo ? '/demo/my-books' : '/my-books',
+      icon: myBooksIcon,
+    },
+    {
+      name: 'Friends',
+      href: isDemo ? '/demo/friends' : '/friends',
+      icon: friendIcon,
+    },
+    {
+      name: 'Book Clubs',
+      href: isDemo ? '/demo/book-clubs' : '/book-clubs',
+      icon: clubIcon,
+    },
+    {
+      name: 'Reading Lists',
+      href: isDemo ? '/demo/reading-lists' : '/reading-lists',
+      icon: listIcon,
+    },
+    {
+      name: 'Writing Prompts',
+      href: isDemo ? '/demo/prompts' : '/prompts',
+      icon: pencilIcon,
+    },
+    {
+      name: 'Profile',
+      href: isDemo ? '/demo/profile' : `/profile/${userId}`,
+      icon: userIcon,
+    },
   ];
 
   return (

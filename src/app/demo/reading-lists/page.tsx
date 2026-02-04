@@ -73,7 +73,10 @@ const DemoReadingListsPage = () => {
                 <div className="w-full md:w-auto">
                   {mockReadingLists.length > 0 && (
                     <>
-                      <Link href="/demo/reading-lists/create" className="w-full">
+                      <Link
+                        href="/demo/reading-lists/create"
+                        className="w-full"
+                      >
                         <Button
                           className="w-full md:w-auto mt-4 md:mt-0"
                           variant={'beeYellow'}

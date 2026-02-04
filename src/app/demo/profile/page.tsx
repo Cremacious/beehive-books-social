@@ -34,7 +34,8 @@ const mockProfileData = {
       author: 'Harper Lee',
       genre: 'Fiction',
       category: 'Drama',
-      description: 'A gripping tale of racial injustice and childhood innocence.',
+      description:
+        'A gripping tale of racial injustice and childhood innocence.',
       chapterCount: 31,
       wordCount: 99121,
       commentCount: 8,

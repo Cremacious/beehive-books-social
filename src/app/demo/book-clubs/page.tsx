@@ -17,7 +17,8 @@ const mockClubs = [
   {
     id: 'club2',
     name: 'Sci-Fi Explorers',
-    description: 'Diving into the worlds of science fiction and speculative fiction.',
+    description:
+      'Diving into the worlds of science fiction and speculative fiction.',
     currentBook: 'Dune by Frank Herbert',
     cover: '/placeholder-club.jpg',
     members: 18,

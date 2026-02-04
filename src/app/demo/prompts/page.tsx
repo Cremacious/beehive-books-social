@@ -10,7 +10,8 @@ const mockPrompts = {
     {
       id: 'prompt1',
       title: 'Write about a lost memory',
-      description: 'Explore the theme of forgotten memories and their impact on identity.',
+      description:
+        'Explore the theme of forgotten memories and their impact on identity.',
       createdAt: new Date('2024-01-01'),
       endDate: new Date('2024-02-01'),
       status: 'OPEN' as const,
@@ -41,7 +42,8 @@ const mockPrompts = {
     {
       id: 'prompt2',
       title: 'A day in the life of a character',
-      description: 'Describe a single day from the perspective of an unusual character.',
+      description:
+        'Describe a single day from the perspective of an unusual character.',
       createdAt: new Date('2024-01-05'),
       endDate: new Date('2024-02-05'),
       status: 'OPEN' as const,
@@ -61,7 +63,8 @@ const mockPrompts = {
     {
       id: 'prompt3',
       title: 'Sci-fi world building',
-      description: 'Create a unique alien world with its own culture and technology.',
+      description:
+        'Create a unique alien world with its own culture and technology.',
       createdAt: new Date('2024-01-10'),
       endDate: new Date('2024-02-10'),
       status: 'OPEN' as const,

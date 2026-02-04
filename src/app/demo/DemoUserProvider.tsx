@@ -22,7 +22,9 @@ const mockUser: User = {
 const UserContext = createContext<User>(mockUser);
 
 export const DemoUserProvider = ({ children }: { children: ReactNode }) => {
-  return <UserContext.Provider value={mockUser}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={mockUser}>{children}</UserContext.Provider>
+  );
 };
 
 export const useUser = () => useContext(UserContext);
